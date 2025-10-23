@@ -6,10 +6,10 @@ on:
   # 1. 允许手动触发工作流
   workflow_dispatch:
   
-  # 2. 定时调度运行
+  # 2. 定时调度运行 (每 3 小时运行一次)
   schedule:
     - cron: '0 */3 * * *'
-    
+      
   # 3. 指定文件被修改并推送到仓库时自动触发
   push:
     paths:
@@ -30,18 +30,21 @@ jobs:
         with:
           # 关键：使用 GITHUB_TOKEN，以便能够推送到仓库
           token: ${{ secrets.GITHUB_TOKEN }}
-
+          # 增加 fetch-depth: 0 以确保拉取完整的历史记录，有助于 rebase
+          fetch-depth: 0 
+          
       # 步骤 2: 设置 Python 环境
       - name: 设置 Python 环境 (Set up Python)
         uses: actions/setup-python@v5
         with:
           python-version: '3.x' # 使用 Python 3.x 版本
-
+          
       # 步骤 3: 安装依赖
       - name: 安装依赖 (Install dependencies)
         run: |
           echo "无外部依赖需要安装。"
-
+          # 如果未来需要安装依赖，应在这里添加 pip install -r requirements.txt
+          
       # 步骤 4: 运行 Python 脚本并传入动态日期参数
       - name: 运行基金分析脚本 (Run fund analysis script)
         id: run-script
@@ -51,10 +54,10 @@ jobs:
           END_DATE=$(date --date='yesterday' +'%Y-%m-%d')
           
           echo "脚本运行日期范围: $START_DATE 到 $END_DATE"
-          # 执行 Python 脚本
+          # 执行 Python 脚本 (假设 fund-rank.py 会生成 result_*.txt 文件)
           python fund-rank.py "$START_DATE" "$END_DATE"
           
-      # 步骤 5: 将结果文件提交并推送到仓库 (使用 Git 替代 Artifact)
+      # 步骤 5: 将结果文件提交并推送到仓库 (修复了推送冲突问题)
       - name: 提交并推送结果文件 (Commit and Push results)
         run: |
           END_DATE=$(date --date='yesterday' +'%Y-%m-%d')
@@ -67,11 +70,17 @@ jobs:
           # '|| true' 确保即使文件不存在也不会导致作业失败
           git add result_*.txt || true 
           
-          # 3. 检查是否有新的文件变更需要提交 (如果 git diff --cached 成功返回 0，表示有变更)
-          # 注意: --exit-code 返回非 0 表示没有差异
+          # 3. 检查是否有新的文件变更需要提交 (如果有差异，返回值非0)
           if ! git diff --cached --exit-code; then
             # 4. 提交变更
             git commit -m "chore: 自动更新基金排名文件 for ${END_DATE}"
+            
+            # --- START 修复推送冲突的关键步骤 ---
+            echo "--- 正在拉取远程最新更改并变基 (Rebase) 以解决推送冲突 ---"
+            # 拉取远程 'main' 分支的最新内容，并将本地提交放置在远程最新提交之上
+            # 假设默认分支为 main
+            git pull --rebase origin main 
+            # --- END 修复推送冲突的关键步骤 ---
             
             # 5. 推送变更到 GitHub 仓库
             echo "--- 正在推送文件到仓库 ---"

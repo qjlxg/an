@@ -1,0 +1,1965 @@
+2025-10-23 06:27:52,708 - INFO - 脚本启动
+2025-10-23 06:27:52,708 - INFO - 正在解析 analysis_report.md 获取推荐基金代码...
+2025-10-23 06:27:52,709 - INFO - 提取到 13 个基金（测试限制前10个）: ['000013', '000189', '001177', '001530', '001548', '001801', '003692', '006160', '006855', '006990', '009688', '009926', '009995']
+2025-10-23 06:27:52,709 - INFO - 开始预加载本地缓存数据...
+2025-10-23 06:27:52,709 - INFO - 当前时间: 2025-10-23 06:27:52, 期望最新数据日期: 2025-10-22
+2025-10-23 06:27:52,710 - INFO - 基金 000013 本地数据不存在，需要从网络获取。
+2025-10-23 06:27:52,711 - INFO - 基金 000189 本地数据不存在，需要从网络获取。
+2025-10-23 06:27:52,711 - INFO - 基金 001177 本地数据不存在，需要从网络获取。
+2025-10-23 06:27:52,711 - INFO - 基金 001530 本地数据不存在，需要从网络获取。
+2025-10-23 06:27:52,712 - INFO - 基金 001548 本地数据不存在，需要从网络获取。
+2025-10-23 06:27:52,712 - INFO - 基金 001801 本地数据不存在，需要从网络获取。
+2025-10-23 06:27:52,713 - INFO - 基金 003692 本地数据不存在，需要从网络获取。
+2025-10-23 06:27:52,713 - INFO - 基金 006160 本地数据不存在，需要从网络获取。
+2025-10-23 06:27:52,713 - INFO - 基金 006855 本地数据不存在，需要从网络获取。
+2025-10-23 06:27:52,713 - INFO - 基金 006990 本地数据不存在，需要从网络获取。
+2025-10-23 06:27:52,714 - INFO - 基金 009688 本地数据不存在，需要从网络获取。
+2025-10-23 06:27:52,714 - INFO - 基金 009926 本地数据不存在，需要从网络获取。
+2025-10-23 06:27:52,719 - INFO - 本地已存在基金 009995 数据，共 1167 行，最新日期为: 2025-10-20
+2025-10-23 06:27:52,719 - INFO - 基金 009995 本地数据已过时（最新日期为 2025-10-20，期望 2025-10-22），需要从网络获取新数据。
+2025-10-23 06:27:52,719 - INFO - 开始使用多线程获取 13 个基金的新数据...
+2025-10-23 06:27:52,722 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000013&page=1&per=20
+2025-10-23 06:27:52,723 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=1&per=20
+2025-10-23 06:27:52,724 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001177&page=1&per=20
+2025-10-23 06:27:52,724 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=1&per=20
+2025-10-23 06:27:52,726 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=1&per=20
+2025-10-23 06:27:53,831 - INFO - 基金 000189 总页数: 119, 当前页: 1, 当前页行数: 20
+2025-10-23 06:27:53,833 - ERROR - 基金 001177 API数据解析失败: Length mismatch: Expected axis has 6 elements, new values have 7 elements
+2025-10-23 06:27:53,833 - INFO - 重试基金 <__main__.MarketMonitor object at 0x7f982ea9be20>，第 1 次
+2025-10-23 06:27:53,843 - INFO - 基金 001548 总页数: 126, 当前页: 1, 当前页行数: 20
+2025-10-23 06:27:53,846 - ERROR - 基金 000013 API数据解析失败: Length mismatch: Expected axis has 6 elements, new values have 7 elements
+2025-10-23 06:27:53,846 - INFO - 重试基金 <__main__.MarketMonitor object at 0x7f982ea9be20>，第 1 次
+2025-10-23 06:27:53,877 - INFO - 基金 001530 总页数: 109, 当前页: 1, 当前页行数: 20
+2025-10-23 06:27:55,049 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=2&per=20
+2025-10-23 06:27:55,254 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=2&per=20
+2025-10-23 06:27:55,600 - INFO - 基金 001548 总页数: 126, 当前页: 2, 当前页行数: 20
+2025-10-23 06:27:55,856 - INFO - 基金 000189 总页数: 119, 当前页: 2, 当前页行数: 20
+2025-10-23 06:27:55,856 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=2&per=20
+2025-10-23 06:27:56,429 - INFO - 基金 001530 总页数: 109, 当前页: 2, 当前页行数: 20
+2025-10-23 06:27:56,915 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=3&per=20
+2025-10-23 06:27:56,983 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=3&per=20
+2025-10-23 06:27:57,458 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=3&per=20
+2025-10-23 06:27:57,506 - INFO - 基金 001548 总页数: 126, 当前页: 3, 当前页行数: 20
+2025-10-23 06:27:57,652 - INFO - 基金 000189 总页数: 119, 当前页: 3, 当前页行数: 20
+2025-10-23 06:27:58,064 - INFO - 基金 001530 总页数: 109, 当前页: 3, 当前页行数: 20
+2025-10-23 06:27:58,698 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=4&per=20
+2025-10-23 06:27:59,360 - INFO - 基金 001548 总页数: 126, 当前页: 4, 当前页行数: 20
+2025-10-23 06:27:59,582 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=4&per=20
+2025-10-23 06:27:59,693 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=4&per=20
+2025-10-23 06:28:00,192 - INFO - 基金 000189 总页数: 119, 当前页: 4, 当前页行数: 20
+2025-10-23 06:28:00,394 - INFO - 基金 001530 总页数: 109, 当前页: 4, 当前页行数: 20
+2025-10-23 06:28:00,780 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=5&per=20
+2025-10-23 06:28:01,452 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=5&per=20
+2025-10-23 06:28:01,669 - INFO - 基金 001548 总页数: 126, 当前页: 5, 当前页行数: 20
+2025-10-23 06:28:01,930 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=5&per=20
+2025-10-23 06:28:02,239 - INFO - 基金 001530 总页数: 109, 当前页: 5, 当前页行数: 20
+2025-10-23 06:28:02,784 - INFO - 基金 000189 总页数: 119, 当前页: 5, 当前页行数: 20
+2025-10-23 06:28:02,898 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=6&per=20
+2025-10-23 06:28:03,562 - INFO - 基金 001548 总页数: 126, 当前页: 6, 当前页行数: 20
+2025-10-23 06:28:03,709 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=6&per=20
+2025-10-23 06:28:03,844 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001177&page=1&per=20
+2025-10-23 06:28:03,856 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000013&page=1&per=20
+2025-10-23 06:28:03,875 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=6&per=20
+2025-10-23 06:28:04,316 - INFO - 基金 001530 总页数: 109, 当前页: 6, 当前页行数: 20
+2025-10-23 06:28:04,464 - INFO - 基金 000189 总页数: 119, 当前页: 6, 当前页行数: 20
+2025-10-23 06:28:04,507 - ERROR - 基金 000013 API数据解析失败: Length mismatch: Expected axis has 6 elements, new values have 7 elements
+2025-10-23 06:28:04,508 - INFO - 重试基金 <__main__.MarketMonitor object at 0x7f982ea9be20>，第 2 次
+2025-10-23 06:28:04,635 - ERROR - 基金 001177 API数据解析失败: Length mismatch: Expected axis has 6 elements, new values have 7 elements
+2025-10-23 06:28:04,635 - INFO - 重试基金 <__main__.MarketMonitor object at 0x7f982ea9be20>，第 2 次
+2025-10-23 06:28:05,454 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=7&per=20
+2025-10-23 06:28:05,566 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=7&per=20
+2025-10-23 06:28:05,637 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=7&per=20
+2025-10-23 06:28:06,134 - INFO - 基金 000189 总页数: 119, 当前页: 7, 当前页行数: 20
+2025-10-23 06:28:06,151 - INFO - 基金 001548 总页数: 126, 当前页: 7, 当前页行数: 20
+2025-10-23 06:28:06,190 - INFO - 基金 001530 总页数: 109, 当前页: 7, 当前页行数: 20
+2025-10-23 06:28:07,925 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=8&per=20
+2025-10-23 06:28:08,043 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=8&per=20
+2025-10-23 06:28:08,110 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=8&per=20
+2025-10-23 06:28:08,518 - INFO - 基金 001548 总页数: 126, 当前页: 8, 当前页行数: 20
+2025-10-23 06:28:08,566 - INFO - 基金 001530 总页数: 109, 当前页: 8, 当前页行数: 20
+2025-10-23 06:28:08,733 - INFO - 基金 000189 总页数: 119, 当前页: 8, 当前页行数: 20
+2025-10-23 06:28:10,043 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=9&per=20
+2025-10-23 06:28:10,318 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=9&per=20
+2025-10-23 06:28:10,593 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=9&per=20
+2025-10-23 06:28:10,723 - INFO - 基金 001530 总页数: 109, 当前页: 9, 当前页行数: 20
+2025-10-23 06:28:10,862 - INFO - 基金 001548 总页数: 126, 当前页: 9, 当前页行数: 20
+2025-10-23 06:28:11,221 - INFO - 基金 000189 总页数: 119, 当前页: 9, 当前页行数: 20
+2025-10-23 06:28:11,726 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=10&per=20
+2025-10-23 06:28:12,193 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=10&per=20
+2025-10-23 06:28:12,536 - INFO - 基金 001530 总页数: 109, 当前页: 10, 当前页行数: 20
+2025-10-23 06:28:12,810 - INFO - 基金 001548 总页数: 126, 当前页: 10, 当前页行数: 20
+2025-10-23 06:28:13,026 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=10&per=20
+2025-10-23 06:28:13,580 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=11&per=20
+2025-10-23 06:28:13,638 - INFO - 基金 000189 总页数: 119, 当前页: 10, 当前页行数: 20
+2025-10-23 06:28:13,959 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=11&per=20
+2025-10-23 06:28:14,166 - INFO - 基金 001530 总页数: 109, 当前页: 11, 当前页行数: 20
+2025-10-23 06:28:14,518 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000013&page=1&per=20
+2025-10-23 06:28:14,635 - INFO - 基金 001548 总页数: 126, 当前页: 11, 当前页行数: 20
+2025-10-23 06:28:14,646 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001177&page=1&per=20
+2025-10-23 06:28:15,195 - ERROR - 基金 000013 API数据解析失败: Length mismatch: Expected axis has 6 elements, new values have 7 elements
+2025-10-23 06:28:15,195 - INFO - 重试基金 <__main__.MarketMonitor object at 0x7f982ea9be20>，第 3 次
+2025-10-23 06:28:15,239 - ERROR - 基金 001177 API数据解析失败: Length mismatch: Expected axis has 6 elements, new values have 7 elements
+2025-10-23 06:28:15,239 - INFO - 重试基金 <__main__.MarketMonitor object at 0x7f982ea9be20>，第 3 次
+2025-10-23 06:28:15,376 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=11&per=20
+2025-10-23 06:28:15,454 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=12&per=20
+2025-10-23 06:28:15,736 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=12&per=20
+2025-10-23 06:28:16,020 - INFO - 基金 000189 总页数: 119, 当前页: 11, 当前页行数: 20
+2025-10-23 06:28:16,069 - INFO - 基金 001530 总页数: 109, 当前页: 12, 当前页行数: 20
+2025-10-23 06:28:16,384 - INFO - 基金 001548 总页数: 126, 当前页: 12, 当前页行数: 20
+2025-10-23 06:28:17,078 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=13&per=20
+2025-10-23 06:28:17,729 - INFO - 基金 001530 总页数: 109, 当前页: 13, 当前页行数: 20
+2025-10-23 06:28:17,878 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=12&per=20
+2025-10-23 06:28:18,254 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=13&per=20
+2025-10-23 06:28:18,610 - INFO - 基金 000189 总页数: 119, 当前页: 12, 当前页行数: 20
+2025-10-23 06:28:18,771 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=14&per=20
+2025-10-23 06:28:18,877 - INFO - 基金 001548 总页数: 126, 当前页: 13, 当前页行数: 20
+2025-10-23 06:28:19,418 - INFO - 基金 001530 总页数: 109, 当前页: 14, 当前页行数: 20
+2025-10-23 06:28:19,767 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=13&per=20
+2025-10-23 06:28:20,382 - INFO - 基金 000189 总页数: 119, 当前页: 13, 当前页行数: 20
+2025-10-23 06:28:20,553 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=14&per=20
+2025-10-23 06:28:20,742 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=15&per=20
+2025-10-23 06:28:21,096 - INFO - 基金 001548 总页数: 126, 当前页: 14, 当前页行数: 20
+2025-10-23 06:28:21,342 - INFO - 基金 001530 总页数: 109, 当前页: 15, 当前页行数: 20
+2025-10-23 06:28:22,150 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=14&per=20
+2025-10-23 06:28:22,514 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=16&per=20
+2025-10-23 06:28:22,705 - INFO - 基金 000189 总页数: 119, 当前页: 14, 当前页行数: 20
+2025-10-23 06:28:22,959 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=15&per=20
+2025-10-23 06:28:23,043 - INFO - 基金 001530 总页数: 109, 当前页: 16, 当前页行数: 20
+2025-10-23 06:28:23,489 - INFO - 基金 001548 总页数: 126, 当前页: 15, 当前页行数: 20
+2025-10-23 06:28:24,321 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=15&per=20
+2025-10-23 06:28:24,856 - INFO - 基金 000189 总页数: 119, 当前页: 15, 当前页行数: 20
+2025-10-23 06:28:24,872 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=17&per=20
+2025-10-23 06:28:25,206 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000013&page=1&per=20
+2025-10-23 06:28:25,250 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001177&page=1&per=20
+2025-10-23 06:28:25,472 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=16&per=20
+2025-10-23 06:28:25,491 - INFO - 基金 001530 总页数: 109, 当前页: 17, 当前页行数: 20
+2025-10-23 06:28:25,844 - ERROR - 基金 001177 API数据解析失败: Length mismatch: Expected axis has 6 elements, new values have 7 elements
+2025-10-23 06:28:25,844 - INFO - 重试基金 <__main__.MarketMonitor object at 0x7f982ea9be20>，第 4 次
+2025-10-23 06:28:25,899 - ERROR - 基金 000013 API数据解析失败: Length mismatch: Expected axis has 6 elements, new values have 7 elements
+2025-10-23 06:28:25,899 - INFO - 重试基金 <__main__.MarketMonitor object at 0x7f982ea9be20>，第 4 次
+2025-10-23 06:28:26,016 - INFO - 基金 001548 总页数: 126, 当前页: 16, 当前页行数: 20
+2025-10-23 06:28:26,074 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=16&per=20
+2025-10-23 06:28:26,548 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=18&per=20
+2025-10-23 06:28:26,650 - INFO - 基金 000189 总页数: 119, 当前页: 16, 当前页行数: 20
+2025-10-23 06:28:27,140 - INFO - 基金 001530 总页数: 109, 当前页: 18, 当前页行数: 20
+2025-10-23 06:28:27,902 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=17&per=20
+2025-10-23 06:28:27,921 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=17&per=20
+2025-10-23 06:28:28,165 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=19&per=20
+2025-10-23 06:28:28,446 - INFO - 基金 000189 总页数: 119, 当前页: 17, 当前页行数: 20
+2025-10-23 06:28:28,507 - INFO - 基金 001548 总页数: 126, 当前页: 17, 当前页行数: 20
+2025-10-23 06:28:28,739 - INFO - 基金 001530 总页数: 109, 当前页: 19, 当前页行数: 20
+2025-10-23 06:28:29,722 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=18&per=20
+2025-10-23 06:28:29,846 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=20&per=20
+2025-10-23 06:28:30,316 - INFO - 基金 000189 总页数: 119, 当前页: 18, 当前页行数: 20
+2025-10-23 06:28:30,384 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=18&per=20
+2025-10-23 06:28:30,610 - INFO - 基金 001530 总页数: 109, 当前页: 20, 当前页行数: 20
+2025-10-23 06:28:30,948 - INFO - 基金 001548 总页数: 126, 当前页: 18, 当前页行数: 20
+2025-10-23 06:28:31,723 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=19&per=20
+2025-10-23 06:28:32,216 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=19&per=20
+2025-10-23 06:28:32,278 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=21&per=20
+2025-10-23 06:28:32,383 - INFO - 基金 000189 总页数: 119, 当前页: 19, 当前页行数: 20
+2025-10-23 06:28:32,779 - INFO - 基金 001548 总页数: 126, 当前页: 19, 当前页行数: 20
+2025-10-23 06:28:32,922 - INFO - 基金 001530 总页数: 109, 当前页: 21, 当前页行数: 20
+2025-10-23 06:28:34,138 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=20&per=20
+2025-10-23 06:28:34,162 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=20&per=20
+2025-10-23 06:28:34,513 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=22&per=20
+2025-10-23 06:28:34,771 - INFO - 基金 001548 总页数: 126, 当前页: 20, 当前页行数: 20
+2025-10-23 06:28:34,807 - INFO - 基金 000189 总页数: 119, 当前页: 20, 当前页行数: 20
+2025-10-23 06:28:35,217 - INFO - 基金 001530 总页数: 109, 当前页: 22, 当前页行数: 20
+2025-10-23 06:28:35,855 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001177&page=1&per=20
+2025-10-23 06:28:35,909 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000013&page=1&per=20
+2025-10-23 06:28:36,266 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=21&per=20
+2025-10-23 06:28:36,446 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=21&per=20
+2025-10-23 06:28:36,471 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=23&per=20
+2025-10-23 06:28:36,477 - ERROR - 基金 000013 API数据解析失败: Length mismatch: Expected axis has 6 elements, new values have 7 elements
+2025-10-23 06:28:36,477 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=1&per=20
+2025-10-23 06:28:36,478 - ERROR - 获取和处理基金 000013 数据时出错: RetryError[<Future at 0x7f982c338e80 state=finished raised ValueError>]
+2025-10-23 06:28:36,514 - ERROR - 基金 001177 API数据解析失败: Length mismatch: Expected axis has 6 elements, new values have 7 elements
+2025-10-23 06:28:36,515 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=1&per=20
+2025-10-23 06:28:36,515 - ERROR - 获取和处理基金 001177 数据时出错: RetryError[<Future at 0x7f982c2ebe80 state=finished raised ValueError>]
+2025-10-23 06:28:36,852 - INFO - 基金 001548 总页数: 126, 当前页: 21, 当前页行数: 20
+2025-10-23 06:28:37,053 - INFO - 基金 000189 总页数: 119, 当前页: 21, 当前页行数: 20
+2025-10-23 06:28:37,057 - INFO - 基金 001530 总页数: 109, 当前页: 23, 当前页行数: 20
+2025-10-23 06:28:37,068 - INFO - 基金 001801 总页数: 120, 当前页: 1, 当前页行数: 20
+2025-10-23 06:28:37,130 - INFO - 基金 003692 总页数: 107, 当前页: 1, 当前页行数: 20
+2025-10-23 06:28:38,005 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=22&per=20
+2025-10-23 06:28:38,247 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=22&per=20
+2025-10-23 06:28:38,436 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=2&per=20
+2025-10-23 06:28:38,484 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=2&per=20
+2025-10-23 06:28:38,719 - INFO - 基金 001548 总页数: 126, 当前页: 22, 当前页行数: 20
+2025-10-23 06:28:38,848 - INFO - 基金 000189 总页数: 119, 当前页: 22, 当前页行数: 20
+2025-10-23 06:28:38,901 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=24&per=20
+2025-10-23 06:28:39,277 - INFO - 基金 003692 总页数: 107, 当前页: 2, 当前页行数: 20
+2025-10-23 06:28:39,400 - INFO - 基金 001801 总页数: 120, 当前页: 2, 当前页行数: 20
+2025-10-23 06:28:39,830 - INFO - 基金 001530 总页数: 109, 当前页: 24, 当前页行数: 20
+2025-10-23 06:28:40,100 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=23&per=20
+2025-10-23 06:28:40,439 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=3&per=20
+2025-10-23 06:28:40,588 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=3&per=20
+2025-10-23 06:28:40,589 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=23&per=20
+2025-10-23 06:28:40,649 - INFO - 基金 000189 总页数: 119, 当前页: 23, 当前页行数: 20
+2025-10-23 06:28:41,019 - INFO - 基金 001801 总页数: 120, 当前页: 3, 当前页行数: 20
+2025-10-23 06:28:41,144 - INFO - 基金 003692 总页数: 107, 当前页: 3, 当前页行数: 20
+2025-10-23 06:28:41,211 - INFO - 基金 001548 总页数: 126, 当前页: 23, 当前页行数: 20
+2025-10-23 06:28:41,279 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=25&per=20
+2025-10-23 06:28:41,741 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=24&per=20
+2025-10-23 06:28:41,830 - INFO - 基金 001530 总页数: 109, 当前页: 25, 当前页行数: 20
+2025-10-23 06:28:42,125 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=4&per=20
+2025-10-23 06:28:42,365 - INFO - 基金 000189 总页数: 119, 当前页: 24, 当前页行数: 20
+2025-10-23 06:28:42,394 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=24&per=20
+2025-10-23 06:28:42,786 - INFO - 基金 001801 总页数: 120, 当前页: 4, 当前页行数: 20
+2025-10-23 06:28:42,933 - INFO - 基金 001548 总页数: 126, 当前页: 24, 当前页行数: 20
+2025-10-23 06:28:42,951 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=4&per=20
+2025-10-23 06:28:42,974 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=26&per=20
+2025-10-23 06:28:43,522 - INFO - 基金 001530 总页数: 109, 当前页: 26, 当前页行数: 20
+2025-10-23 06:28:43,538 - INFO - 基金 003692 总页数: 107, 当前页: 4, 当前页行数: 20
+2025-10-23 06:28:43,882 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=25&per=20
+2025-10-23 06:28:44,218 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=5&per=20
+2025-10-23 06:28:44,475 - INFO - 基金 000189 总页数: 119, 当前页: 25, 当前页行数: 20
+2025-10-23 06:28:44,522 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=25&per=20
+2025-10-23 06:28:44,947 - INFO - 基金 001801 总页数: 120, 当前页: 5, 当前页行数: 20
+2025-10-23 06:28:45,123 - INFO - 基金 001548 总页数: 126, 当前页: 25, 当前页行数: 20
+2025-10-23 06:28:45,324 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=5&per=20
+2025-10-23 06:28:45,413 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=27&per=20
+2025-10-23 06:28:45,984 - INFO - 基金 001530 总页数: 109, 当前页: 27, 当前页行数: 20
+2025-10-23 06:28:46,031 - INFO - 基金 003692 总页数: 107, 当前页: 5, 当前页行数: 20
+2025-10-23 06:28:46,259 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=26&per=20
+2025-10-23 06:28:46,391 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=6&per=20
+2025-10-23 06:28:46,615 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=26&per=20
+2025-10-23 06:28:46,925 - INFO - 基金 000189 总页数: 119, 当前页: 26, 当前页行数: 20
+2025-10-23 06:28:47,145 - INFO - 基金 001548 总页数: 126, 当前页: 26, 当前页行数: 20
+2025-10-23 06:28:47,363 - INFO - 基金 001801 总页数: 120, 当前页: 6, 当前页行数: 20
+2025-10-23 06:28:47,776 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=6&per=20
+2025-10-23 06:28:47,815 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=28&per=20
+2025-10-23 06:28:48,148 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=27&per=20
+2025-10-23 06:28:48,390 - INFO - 基金 003692 总页数: 107, 当前页: 6, 当前页行数: 20
+2025-10-23 06:28:48,403 - INFO - 基金 001530 总页数: 109, 当前页: 28, 当前页行数: 20
+2025-10-23 06:28:48,754 - INFO - 基金 000189 总页数: 119, 当前页: 27, 当前页行数: 20
+2025-10-23 06:28:48,760 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=27&per=20
+2025-10-23 06:28:48,927 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=7&per=20
+2025-10-23 06:28:49,343 - INFO - 基金 001548 总页数: 126, 当前页: 27, 当前页行数: 20
+2025-10-23 06:28:49,462 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=7&per=20
+2025-10-23 06:28:49,566 - INFO - 基金 001801 总页数: 120, 当前页: 7, 当前页行数: 20
+2025-10-23 06:28:49,764 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=28&per=20
+2025-10-23 06:28:49,833 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=29&per=20
+2025-10-23 06:28:50,078 - INFO - 基金 003692 总页数: 107, 当前页: 7, 当前页行数: 20
+2025-10-23 06:28:50,375 - INFO - 基金 000189 总页数: 119, 当前页: 28, 当前页行数: 20
+2025-10-23 06:28:50,466 - INFO - 基金 001530 总页数: 109, 当前页: 29, 当前页行数: 20
+2025-10-23 06:28:50,494 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=28&per=20
+2025-10-23 06:28:51,060 - INFO - 基金 001548 总页数: 126, 当前页: 28, 当前页行数: 20
+2025-10-23 06:28:51,208 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=8&per=20
+2025-10-23 06:28:51,242 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=8&per=20
+2025-10-23 06:28:51,533 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=30&per=20
+2025-10-23 06:28:51,782 - INFO - 基金 001801 总页数: 120, 当前页: 8, 当前页行数: 20
+2025-10-23 06:28:51,800 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=29&per=20
+2025-10-23 06:28:51,822 - INFO - 基金 003692 总页数: 107, 当前页: 8, 当前页行数: 20
+2025-10-23 06:28:52,132 - INFO - 基金 001530 总页数: 109, 当前页: 30, 当前页行数: 20
+2025-10-23 06:28:52,293 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=29&per=20
+2025-10-23 06:28:52,453 - INFO - 基金 000189 总页数: 119, 当前页: 29, 当前页行数: 20
+2025-10-23 06:28:53,141 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=9&per=20
+2025-10-23 06:28:53,258 - INFO - 基金 001548 总页数: 126, 当前页: 29, 当前页行数: 20
+2025-10-23 06:28:53,503 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=9&per=20
+2025-10-23 06:28:53,717 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=31&per=20
+2025-10-23 06:28:53,732 - INFO - 基金 003692 总页数: 107, 当前页: 9, 当前页行数: 20
+2025-10-23 06:28:54,005 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=30&per=20
+2025-10-23 06:28:54,064 - INFO - 基金 001801 总页数: 120, 当前页: 9, 当前页行数: 20
+2025-10-23 06:28:54,480 - INFO - 基金 001530 总页数: 109, 当前页: 31, 当前页行数: 20
+2025-10-23 06:28:54,725 - INFO - 基金 000189 总页数: 119, 当前页: 30, 当前页行数: 20
+2025-10-23 06:28:54,889 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=30&per=20
+2025-10-23 06:28:55,410 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=10&per=20
+2025-10-23 06:28:55,416 - INFO - 基金 001548 总页数: 126, 当前页: 30, 当前页行数: 20
+2025-10-23 06:28:55,989 - INFO - 基金 003692 总页数: 107, 当前页: 10, 当前页行数: 20
+2025-10-23 06:28:56,052 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=10&per=20
+2025-10-23 06:28:56,349 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=32&per=20
+2025-10-23 06:28:56,502 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=31&per=20
+2025-10-23 06:28:56,555 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=31&per=20
+2025-10-23 06:28:56,656 - INFO - 基金 001801 总页数: 120, 当前页: 10, 当前页行数: 20
+2025-10-23 06:28:56,882 - INFO - 基金 001530 总页数: 109, 当前页: 32, 当前页行数: 20
+2025-10-23 06:28:57,079 - INFO - 基金 000189 总页数: 119, 当前页: 31, 当前页行数: 20
+2025-10-23 06:28:57,100 - INFO - 基金 001548 总页数: 126, 当前页: 31, 当前页行数: 20
+2025-10-23 06:28:57,425 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=11&per=20
+2025-10-23 06:28:57,998 - INFO - 基金 003692 总页数: 107, 当前页: 11, 当前页行数: 20
+2025-10-23 06:28:58,260 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=33&per=20
+2025-10-23 06:28:58,302 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=32&per=20
+2025-10-23 06:28:58,396 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=11&per=20
+2025-10-23 06:28:58,838 - INFO - 基金 001530 总页数: 109, 当前页: 33, 当前页行数: 20
+2025-10-23 06:28:58,924 - INFO - 基金 001548 总页数: 126, 当前页: 32, 当前页行数: 20
+2025-10-23 06:28:58,960 - INFO - 基金 001801 总页数: 120, 当前页: 11, 当前页行数: 20
+2025-10-23 06:28:59,033 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=32&per=20
+2025-10-23 06:28:59,314 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=12&per=20
+2025-10-23 06:28:59,576 - INFO - 基金 000189 总页数: 119, 当前页: 32, 当前页行数: 20
+2025-10-23 06:28:59,863 - INFO - 基金 003692 总页数: 107, 当前页: 12, 当前页行数: 20
+2025-10-23 06:29:00,442 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=12&per=20
+2025-10-23 06:29:00,721 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=33&per=20
+2025-10-23 06:29:00,822 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=34&per=20
+2025-10-23 06:29:01,122 - INFO - 基金 001801 总页数: 120, 当前页: 12, 当前页行数: 20
+2025-10-23 06:29:01,164 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=33&per=20
+2025-10-23 06:29:01,396 - INFO - 基金 001530 总页数: 109, 当前页: 34, 当前页行数: 20
+2025-10-23 06:29:01,419 - INFO - 基金 001548 总页数: 126, 当前页: 33, 当前页行数: 20
+2025-10-23 06:29:01,548 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=13&per=20
+2025-10-23 06:29:02,154 - INFO - 基金 003692 总页数: 107, 当前页: 13, 当前页行数: 20
+2025-10-23 06:29:02,432 - INFO - 基金 000189 总页数: 119, 当前页: 33, 当前页行数: 20
+2025-10-23 06:29:02,451 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=13&per=20
+2025-10-23 06:29:02,562 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=34&per=20
+2025-10-23 06:29:03,029 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=35&per=20
+2025-10-23 06:29:03,065 - INFO - 基金 001801 总页数: 120, 当前页: 13, 当前页行数: 20
+2025-10-23 06:29:03,176 - INFO - 基金 001548 总页数: 126, 当前页: 34, 当前页行数: 20
+2025-10-23 06:29:03,421 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=14&per=20
+2025-10-23 06:29:03,667 - INFO - 基金 001530 总页数: 109, 当前页: 35, 当前页行数: 20
+2025-10-23 06:29:04,057 - INFO - 基金 003692 总页数: 107, 当前页: 14, 当前页行数: 20
+2025-10-23 06:29:04,060 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=34&per=20
+2025-10-23 06:29:04,601 - INFO - 基金 000189 总页数: 119, 当前页: 34, 当前页行数: 20
+2025-10-23 06:29:04,738 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=14&per=20
+2025-10-23 06:29:05,179 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=35&per=20
+2025-10-23 06:29:05,290 - INFO - 基金 001801 总页数: 120, 当前页: 14, 当前页行数: 20
+2025-10-23 06:29:05,421 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=36&per=20
+2025-10-23 06:29:05,637 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=15&per=20
+2025-10-23 06:29:05,741 - INFO - 基金 001548 总页数: 126, 当前页: 35, 当前页行数: 20
+2025-10-23 06:29:05,881 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=35&per=20
+2025-10-23 06:29:06,010 - INFO - 基金 001530 总页数: 109, 当前页: 36, 当前页行数: 20
+2025-10-23 06:29:06,186 - INFO - 基金 003692 总页数: 107, 当前页: 15, 当前页行数: 20
+2025-10-23 06:29:06,499 - INFO - 基金 000189 总页数: 119, 当前页: 35, 当前页行数: 20
+2025-10-23 06:29:06,867 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=15&per=20
+2025-10-23 06:29:07,424 - INFO - 基金 001801 总页数: 120, 当前页: 15, 当前页行数: 20
+2025-10-23 06:29:07,504 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=36&per=20
+2025-10-23 06:29:07,649 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=36&per=20
+2025-10-23 06:29:07,656 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=16&per=20
+2025-10-23 06:29:07,676 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=37&per=20
+2025-10-23 06:29:08,143 - INFO - 基金 000189 总页数: 119, 当前页: 36, 当前页行数: 20
+2025-10-23 06:29:08,228 - INFO - 基金 003692 总页数: 107, 当前页: 16, 当前页行数: 20
+2025-10-23 06:29:08,238 - INFO - 基金 001548 总页数: 126, 当前页: 36, 当前页行数: 20
+2025-10-23 06:29:08,294 - INFO - 基金 001530 总页数: 109, 当前页: 37, 当前页行数: 20
+2025-10-23 06:29:09,146 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=16&per=20
+2025-10-23 06:29:09,557 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=38&per=20
+2025-10-23 06:29:09,582 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=17&per=20
+2025-10-23 06:29:09,730 - INFO - 基金 001801 总页数: 120, 当前页: 16, 当前页行数: 20
+2025-10-23 06:29:10,034 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=37&per=20
+2025-10-23 06:29:10,107 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=37&per=20
+2025-10-23 06:29:10,170 - INFO - 基金 001530 总页数: 109, 当前页: 38, 当前页行数: 20
+2025-10-23 06:29:10,211 - INFO - 基金 003692 总页数: 107, 当前页: 17, 当前页行数: 20
+2025-10-23 06:29:10,575 - INFO - 基金 001548 总页数: 126, 当前页: 37, 当前页行数: 20
+2025-10-23 06:29:10,740 - INFO - 基金 000189 总页数: 119, 当前页: 37, 当前页行数: 20
+2025-10-23 06:29:11,559 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=39&per=20
+2025-10-23 06:29:11,599 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=17&per=20
+2025-10-23 06:29:11,893 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=38&per=20
+2025-10-23 06:29:12,117 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=18&per=20
+2025-10-23 06:29:12,125 - INFO - 基金 001530 总页数: 109, 当前页: 39, 当前页行数: 20
+2025-10-23 06:29:12,284 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=38&per=20
+2025-10-23 06:29:12,305 - INFO - 基金 001801 总页数: 120, 当前页: 17, 当前页行数: 20
+2025-10-23 06:29:12,475 - INFO - 基金 000189 总页数: 119, 当前页: 38, 当前页行数: 20
+2025-10-23 06:29:12,724 - INFO - 基金 003692 总页数: 107, 当前页: 18, 当前页行数: 20
+2025-10-23 06:29:12,833 - INFO - 基金 001548 总页数: 126, 当前页: 38, 当前页行数: 20
+2025-10-23 06:29:13,503 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=40&per=20
+2025-10-23 06:29:13,528 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=18&per=20
+2025-10-23 06:29:13,592 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=39&per=20
+2025-10-23 06:29:13,919 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=19&per=20
+2025-10-23 06:29:14,096 - INFO - 基金 001530 总页数: 109, 当前页: 40, 当前页行数: 20
+2025-10-23 06:29:14,148 - INFO - 基金 000189 总页数: 119, 当前页: 39, 当前页行数: 20
+2025-10-23 06:29:14,156 - INFO - 基金 001801 总页数: 120, 当前页: 18, 当前页行数: 20
+2025-10-23 06:29:14,569 - INFO - 基金 003692 总页数: 107, 当前页: 19, 当前页行数: 20
+2025-10-23 06:29:14,690 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=39&per=20
+2025-10-23 06:29:15,245 - INFO - 基金 001548 总页数: 126, 当前页: 39, 当前页行数: 20
+2025-10-23 06:29:15,268 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=41&per=20
+2025-10-23 06:29:15,616 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=40&per=20
+2025-10-23 06:29:15,905 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=20&per=20
+2025-10-23 06:29:15,950 - INFO - 基金 001530 总页数: 109, 当前页: 41, 当前页行数: 20
+2025-10-23 06:29:16,150 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=19&per=20
+2025-10-23 06:29:16,302 - INFO - 基金 000189 总页数: 119, 当前页: 40, 当前页行数: 20
+2025-10-23 06:29:16,569 - INFO - 基金 003692 总页数: 107, 当前页: 20, 当前页行数: 20
+2025-10-23 06:29:16,588 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=40&per=20
+2025-10-23 06:29:16,876 - INFO - 基金 001801 总页数: 120, 当前页: 19, 当前页行数: 20
+2025-10-23 06:29:17,138 - INFO - 基金 001548 总页数: 126, 当前页: 40, 当前页行数: 20
+2025-10-23 06:29:17,812 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=42&per=20
+2025-10-23 06:29:17,877 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=21&per=20
+2025-10-23 06:29:17,888 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=41&per=20
+2025-10-23 06:29:18,233 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=20&per=20
+2025-10-23 06:29:18,497 - INFO - 基金 003692 总页数: 107, 当前页: 21, 当前页行数: 20
+2025-10-23 06:29:18,548 - INFO - 基金 001530 总页数: 109, 当前页: 42, 当前页行数: 20
+2025-10-23 06:29:18,566 - INFO - 基金 000189 总页数: 119, 当前页: 41, 当前页行数: 20
+2025-10-23 06:29:18,699 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=41&per=20
+2025-10-23 06:29:18,840 - INFO - 基金 001801 总页数: 120, 当前页: 20, 当前页行数: 20
+2025-10-23 06:29:19,277 - INFO - 基金 001548 总页数: 126, 当前页: 41, 当前页行数: 20
+2025-10-23 06:29:20,017 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=22&per=20
+2025-10-23 06:29:20,106 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=42&per=20
+2025-10-23 06:29:20,208 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=21&per=20
+2025-10-23 06:29:20,491 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=43&per=20
+2025-10-23 06:29:20,539 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=42&per=20
+2025-10-23 06:29:20,662 - INFO - 基金 003692 总页数: 107, 当前页: 22, 当前页行数: 20
+2025-10-23 06:29:20,711 - INFO - 基金 000189 总页数: 119, 当前页: 42, 当前页行数: 20
+2025-10-23 06:29:20,741 - INFO - 基金 001801 总页数: 120, 当前页: 21, 当前页行数: 20
+2025-10-23 06:29:21,079 - INFO - 基金 001530 总页数: 109, 当前页: 43, 当前页行数: 20
+2025-10-23 06:29:21,087 - INFO - 基金 001548 总页数: 126, 当前页: 42, 当前页行数: 20
+2025-10-23 06:29:22,204 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=22&per=20
+2025-10-23 06:29:22,447 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=23&per=20
+2025-10-23 06:29:22,610 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=43&per=20
+2025-10-23 06:29:22,653 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=43&per=20
+2025-10-23 06:29:22,710 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=44&per=20
+2025-10-23 06:29:22,729 - INFO - 基金 001801 总页数: 120, 当前页: 22, 当前页行数: 20
+2025-10-23 06:29:23,088 - INFO - 基金 003692 总页数: 107, 当前页: 23, 当前页行数: 20
+2025-10-23 06:29:23,160 - INFO - 基金 000189 总页数: 119, 当前页: 43, 当前页行数: 20
+2025-10-23 06:29:23,309 - INFO - 基金 001530 总页数: 109, 当前页: 44, 当前页行数: 20
+2025-10-23 06:29:23,340 - INFO - 基金 001548 总页数: 126, 当前页: 43, 当前页行数: 20
+2025-10-23 06:29:24,329 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=24&per=20
+2025-10-23 06:29:24,543 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=23&per=20
+2025-10-23 06:29:24,937 - INFO - 基金 003692 总页数: 107, 当前页: 24, 当前页行数: 20
+2025-10-23 06:29:25,056 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=45&per=20
+2025-10-23 06:29:25,067 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=44&per=20
+2025-10-23 06:29:25,112 - INFO - 基金 001801 总页数: 120, 当前页: 23, 当前页行数: 20
+2025-10-23 06:29:25,165 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=44&per=20
+2025-10-23 06:29:25,584 - INFO - 基金 001530 总页数: 109, 当前页: 45, 当前页行数: 20
+2025-10-23 06:29:25,657 - INFO - 基金 000189 总页数: 119, 当前页: 44, 当前页行数: 20
+2025-10-23 06:29:25,805 - INFO - 基金 001548 总页数: 126, 当前页: 44, 当前页行数: 20
+2025-10-23 06:29:26,247 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=25&per=20
+2025-10-23 06:29:26,298 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=24&per=20
+2025-10-23 06:29:26,864 - INFO - 基金 003692 总页数: 107, 当前页: 25, 当前页行数: 20
+2025-10-23 06:29:26,898 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=46&per=20
+2025-10-23 06:29:26,905 - INFO - 基金 001801 总页数: 120, 当前页: 24, 当前页行数: 20
+2025-10-23 06:29:27,093 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=45&per=20
+2025-10-23 06:29:27,497 - INFO - 基金 001530 总页数: 109, 当前页: 46, 当前页行数: 20
+2025-10-23 06:29:27,537 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=45&per=20
+2025-10-23 06:29:27,719 - INFO - 基金 001548 总页数: 126, 当前页: 45, 当前页行数: 20
+2025-10-23 06:29:28,103 - INFO - 基金 000189 总页数: 119, 当前页: 45, 当前页行数: 20
+2025-10-23 06:29:28,350 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=26&per=20
+2025-10-23 06:29:28,627 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=25&per=20
+2025-10-23 06:29:28,863 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=46&per=20
+2025-10-23 06:29:29,001 - INFO - 基金 003692 总页数: 107, 当前页: 26, 当前页行数: 20
+2025-10-23 06:29:29,233 - INFO - 基金 001801 总页数: 120, 当前页: 25, 当前页行数: 20
+2025-10-23 06:29:29,463 - INFO - 基金 001548 总页数: 126, 当前页: 46, 当前页行数: 20
+2025-10-23 06:29:29,498 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=47&per=20
+2025-10-23 06:29:29,568 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=46&per=20
+2025-10-23 06:29:30,049 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=27&per=20
+2025-10-23 06:29:30,118 - INFO - 基金 000189 总页数: 119, 当前页: 46, 当前页行数: 20
+2025-10-23 06:29:30,138 - INFO - 基金 001530 总页数: 109, 当前页: 47, 当前页行数: 20
+2025-10-23 06:29:30,586 - INFO - 基金 003692 总页数: 107, 当前页: 27, 当前页行数: 20
+2025-10-23 06:29:30,638 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=26&per=20
+2025-10-23 06:29:30,809 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=47&per=20
+2025-10-23 06:29:31,179 - INFO - 基金 001801 总页数: 120, 当前页: 26, 当前页行数: 20
+2025-10-23 06:29:31,355 - INFO - 基金 001548 总页数: 126, 当前页: 47, 当前页行数: 20
+2025-10-23 06:29:31,453 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=48&per=20
+2025-10-23 06:29:32,081 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=47&per=20
+2025-10-23 06:29:32,187 - INFO - 基金 001530 总页数: 109, 当前页: 48, 当前页行数: 20
+2025-10-23 06:29:32,389 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=28&per=20
+2025-10-23 06:29:32,609 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=27&per=20
+2025-10-23 06:29:32,682 - INFO - 基金 000189 总页数: 119, 当前页: 47, 当前页行数: 20
+2025-10-23 06:29:32,783 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=48&per=20
+2025-10-23 06:29:32,973 - INFO - 基金 003692 总页数: 107, 当前页: 28, 当前页行数: 20
+2025-10-23 06:29:33,237 - INFO - 基金 001801 总页数: 120, 当前页: 27, 当前页行数: 20
+2025-10-23 06:29:33,298 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=49&per=20
+2025-10-23 06:29:33,551 - INFO - 基金 001548 总页数: 126, 当前页: 48, 当前页行数: 20
+2025-10-23 06:29:33,777 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=48&per=20
+2025-10-23 06:29:33,962 - INFO - 基金 001530 总页数: 109, 当前页: 49, 当前页行数: 20
+2025-10-23 06:29:34,364 - INFO - 基金 000189 总页数: 119, 当前页: 48, 当前页行数: 20
+2025-10-23 06:29:34,661 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=29&per=20
+2025-10-23 06:29:34,802 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=28&per=20
+2025-10-23 06:29:35,134 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=50&per=20
+2025-10-23 06:29:35,202 - INFO - 基金 003692 总页数: 107, 当前页: 29, 当前页行数: 20
+2025-10-23 06:29:35,304 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=49&per=20
+2025-10-23 06:29:35,395 - INFO - 基金 001801 总页数: 120, 当前页: 28, 当前页行数: 20
+2025-10-23 06:29:35,760 - INFO - 基金 001530 总页数: 109, 当前页: 50, 当前页行数: 20
+2025-10-23 06:29:35,908 - INFO - 基金 001548 总页数: 126, 当前页: 49, 当前页行数: 20
+2025-10-23 06:29:36,057 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=49&per=20
+2025-10-23 06:29:36,695 - INFO - 基金 000189 总页数: 119, 当前页: 49, 当前页行数: 20
+2025-10-23 06:29:36,696 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=29&per=20
+2025-10-23 06:29:36,948 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=30&per=20
+2025-10-23 06:29:36,977 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=50&per=20
+2025-10-23 06:29:37,364 - INFO - 基金 001801 总页数: 120, 当前页: 29, 当前页行数: 20
+2025-10-23 06:29:37,501 - INFO - 基金 003692 总页数: 107, 当前页: 30, 当前页行数: 20
+2025-10-23 06:29:37,523 - INFO - 基金 001548 总页数: 126, 当前页: 50, 当前页行数: 20
+2025-10-23 06:29:37,659 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=51&per=20
+2025-10-23 06:29:38,040 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=50&per=20
+2025-10-23 06:29:38,264 - INFO - 基金 001530 总页数: 109, 当前页: 51, 当前页行数: 20
+2025-10-23 06:29:38,693 - INFO - 基金 000189 总页数: 119, 当前页: 50, 当前页行数: 20
+2025-10-23 06:29:38,842 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=30&per=20
+2025-10-23 06:29:39,190 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=31&per=20
+2025-10-23 06:29:39,364 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=51&per=20
+2025-10-23 06:29:39,394 - INFO - 基金 001801 总页数: 120, 当前页: 30, 当前页行数: 20
+2025-10-23 06:29:39,727 - INFO - 基金 003692 总页数: 107, 当前页: 31, 当前页行数: 20
+2025-10-23 06:29:40,001 - INFO - 基金 001548 总页数: 126, 当前页: 51, 当前页行数: 20
+2025-10-23 06:29:40,169 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=51&per=20
+2025-10-23 06:29:40,231 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=52&per=20
+2025-10-23 06:29:40,797 - INFO - 基金 001530 总页数: 109, 当前页: 52, 当前页行数: 20
+2025-10-23 06:29:40,804 - INFO - 基金 000189 总页数: 119, 当前页: 51, 当前页行数: 20
+2025-10-23 06:29:40,885 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=31&per=20
+2025-10-23 06:29:41,215 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=52&per=20
+2025-10-23 06:29:41,327 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=32&per=20
+2025-10-23 06:29:41,483 - INFO - 基金 001801 总页数: 120, 当前页: 31, 当前页行数: 20
+2025-10-23 06:29:41,812 - INFO - 基金 001548 总页数: 126, 当前页: 52, 当前页行数: 20
+2025-10-23 06:29:41,934 - INFO - 基金 003692 总页数: 107, 当前页: 32, 当前页行数: 20
+2025-10-23 06:29:42,161 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=53&per=20
+2025-10-23 06:29:42,728 - INFO - 基金 001530 总页数: 109, 当前页: 53, 当前页行数: 20
+2025-10-23 06:29:42,752 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=52&per=20
+2025-10-23 06:29:43,267 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=32&per=20
+2025-10-23 06:29:43,274 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=33&per=20
+2025-10-23 06:29:43,338 - INFO - 基金 000189 总页数: 119, 当前页: 52, 当前页行数: 20
+2025-10-23 06:29:43,404 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=53&per=20
+2025-10-23 06:29:43,858 - INFO - 基金 001801 总页数: 120, 当前页: 32, 当前页行数: 20
+2025-10-23 06:29:43,924 - INFO - 基金 003692 总页数: 107, 当前页: 33, 当前页行数: 20
+2025-10-23 06:29:43,945 - INFO - 基金 001548 总页数: 126, 当前页: 53, 当前页行数: 20
+2025-10-23 06:29:44,551 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=54&per=20
+2025-10-23 06:29:45,154 - INFO - 基金 001530 总页数: 109, 当前页: 54, 当前页行数: 20
+2025-10-23 06:29:45,181 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=53&per=20
+2025-10-23 06:29:45,336 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=33&per=20
+2025-10-23 06:29:45,378 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=34&per=20
+2025-10-23 06:29:45,676 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=54&per=20
+2025-10-23 06:29:45,950 - INFO - 基金 000189 总页数: 119, 当前页: 53, 当前页行数: 20
+2025-10-23 06:29:45,963 - INFO - 基金 001801 总页数: 120, 当前页: 33, 当前页行数: 20
+2025-10-23 06:29:45,996 - INFO - 基金 003692 总页数: 107, 当前页: 34, 当前页行数: 20
+2025-10-23 06:29:46,378 - INFO - 基金 001548 总页数: 126, 当前页: 54, 当前页行数: 20
+2025-10-23 06:29:46,985 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=55&per=20
+2025-10-23 06:29:47,191 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=35&per=20
+2025-10-23 06:29:47,198 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=54&per=20
+2025-10-23 06:29:47,454 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=34&per=20
+2025-10-23 06:29:47,681 - INFO - 基金 001530 总页数: 109, 当前页: 55, 当前页行数: 20
+2025-10-23 06:29:47,883 - INFO - 基金 000189 总页数: 119, 当前页: 54, 当前页行数: 20
+2025-10-23 06:29:47,911 - INFO - 基金 003692 总页数: 107, 当前页: 35, 当前页行数: 20
+2025-10-23 06:29:48,006 - INFO - 基金 001801 总页数: 120, 当前页: 34, 当前页行数: 20
+2025-10-23 06:29:48,121 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=55&per=20
+2025-10-23 06:29:48,718 - INFO - 基金 001548 总页数: 126, 当前页: 55, 当前页行数: 20
+2025-10-23 06:29:49,211 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=56&per=20
+2025-10-23 06:29:49,699 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=55&per=20
+2025-10-23 06:29:49,785 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=36&per=20
+2025-10-23 06:29:49,823 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=35&per=20
+2025-10-23 06:29:50,006 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=56&per=20
+2025-10-23 06:29:50,012 - INFO - 基金 001530 总页数: 109, 当前页: 56, 当前页行数: 20
+2025-10-23 06:29:50,366 - INFO - 基金 000189 总页数: 119, 当前页: 55, 当前页行数: 20
+2025-10-23 06:29:50,420 - INFO - 基金 003692 总页数: 107, 当前页: 36, 当前页行数: 20
+2025-10-23 06:29:50,431 - INFO - 基金 001801 总页数: 120, 当前页: 35, 当前页行数: 20
+2025-10-23 06:29:50,712 - INFO - 基金 001548 总页数: 126, 当前页: 56, 当前页行数: 20
+2025-10-23 06:29:51,264 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=57&per=20
+2025-10-23 06:29:51,486 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=36&per=20
+2025-10-23 06:29:51,832 - INFO - 基金 001530 总页数: 109, 当前页: 57, 当前页行数: 20
+2025-10-23 06:29:51,924 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=56&per=20
+2025-10-23 06:29:51,959 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=57&per=20
+2025-10-23 06:29:51,983 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=37&per=20
+2025-10-23 06:29:52,100 - INFO - 基金 001801 总页数: 120, 当前页: 36, 当前页行数: 20
+2025-10-23 06:29:52,530 - INFO - 基金 000189 总页数: 119, 当前页: 56, 当前页行数: 20
+2025-10-23 06:29:52,552 - INFO - 基金 003692 总页数: 107, 当前页: 37, 当前页行数: 20
+2025-10-23 06:29:52,651 - INFO - 基金 001548 总页数: 126, 当前页: 57, 当前页行数: 20
+2025-10-23 06:29:53,658 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=38&per=20
+2025-10-23 06:29:53,794 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=58&per=20
+2025-10-23 06:29:54,002 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=37&per=20
+2025-10-23 06:29:54,265 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=57&per=20
+2025-10-23 06:29:54,619 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=58&per=20
+2025-10-23 06:29:54,632 - INFO - 基金 001530 总页数: 109, 当前页: 58, 当前页行数: 20
+2025-10-23 06:29:54,665 - INFO - 基金 001801 总页数: 120, 当前页: 37, 当前页行数: 20
+2025-10-23 06:29:54,669 - INFO - 基金 003692 总页数: 107, 当前页: 38, 当前页行数: 20
+2025-10-23 06:29:54,850 - INFO - 基金 000189 总页数: 119, 当前页: 57, 当前页行数: 20
+2025-10-23 06:29:55,158 - INFO - 基金 001548 总页数: 126, 当前页: 58, 当前页行数: 20
+2025-10-23 06:29:55,824 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=59&per=20
+2025-10-23 06:29:56,239 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=39&per=20
+2025-10-23 06:29:56,381 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=58&per=20
+2025-10-23 06:29:56,450 - INFO - 基金 001530 总页数: 109, 当前页: 59, 当前页行数: 20
+2025-10-23 06:29:56,489 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=38&per=20
+2025-10-23 06:29:56,631 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=59&per=20
+2025-10-23 06:29:56,908 - INFO - 基金 003692 总页数: 107, 当前页: 39, 当前页行数: 20
+2025-10-23 06:29:56,993 - INFO - 基金 000189 总页数: 119, 当前页: 58, 当前页行数: 20
+2025-10-23 06:29:57,027 - INFO - 基金 001801 总页数: 120, 当前页: 38, 当前页行数: 20
+2025-10-23 06:29:57,266 - INFO - 基金 001548 总页数: 126, 当前页: 59, 当前页行数: 20
+2025-10-23 06:29:57,699 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=60&per=20
+2025-10-23 06:29:58,381 - INFO - 基金 001530 总页数: 109, 当前页: 60, 当前页行数: 20
+2025-10-23 06:29:58,425 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=59&per=20
+2025-10-23 06:29:58,813 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=39&per=20
+2025-10-23 06:29:58,906 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=40&per=20
+2025-10-23 06:29:58,974 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=60&per=20
+2025-10-23 06:29:59,090 - INFO - 基金 000189 总页数: 119, 当前页: 59, 当前页行数: 20
+2025-10-23 06:29:59,379 - INFO - 基金 001801 总页数: 120, 当前页: 39, 当前页行数: 20
+2025-10-23 06:29:59,435 - INFO - 基金 003692 总页数: 107, 当前页: 40, 当前页行数: 20
+2025-10-23 06:29:59,541 - INFO - 基金 001548 总页数: 126, 当前页: 60, 当前页行数: 20
+2025-10-23 06:30:00,297 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=61&per=20
+2025-10-23 06:30:00,652 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=60&per=20
+2025-10-23 06:30:00,686 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=41&per=20
+2025-10-23 06:30:00,703 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=40&per=20
+2025-10-23 06:30:00,710 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=61&per=20
+2025-10-23 06:30:00,838 - INFO - 基金 001530 总页数: 109, 当前页: 61, 当前页行数: 20
+2025-10-23 06:30:01,228 - INFO - 基金 000189 总页数: 119, 当前页: 60, 当前页行数: 20
+2025-10-23 06:30:01,398 - INFO - 基金 003692 总页数: 107, 当前页: 41, 当前页行数: 20
+2025-10-23 06:30:01,428 - INFO - 基金 001801 总页数: 120, 当前页: 40, 当前页行数: 20
+2025-10-23 06:30:01,431 - INFO - 基金 001548 总页数: 126, 当前页: 61, 当前页行数: 20
+2025-10-23 06:30:02,507 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=61&per=20
+2025-10-23 06:30:02,516 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=42&per=20
+2025-10-23 06:30:02,732 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=62&per=20
+2025-10-23 06:30:02,742 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=62&per=20
+2025-10-23 06:30:03,160 - INFO - 基金 003692 总页数: 107, 当前页: 42, 当前页行数: 20
+2025-10-23 06:30:03,192 - INFO - 基金 000189 总页数: 119, 当前页: 61, 当前页行数: 20
+2025-10-23 06:30:03,218 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=41&per=20
+2025-10-23 06:30:03,404 - INFO - 基金 001530 总页数: 109, 当前页: 62, 当前页行数: 20
+2025-10-23 06:30:03,481 - INFO - 基金 001548 总页数: 126, 当前页: 62, 当前页行数: 20
+2025-10-23 06:30:03,851 - INFO - 基金 001801 总页数: 120, 当前页: 41, 当前页行数: 20
+2025-10-23 06:30:04,417 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=62&per=20
+2025-10-23 06:30:04,508 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=63&per=20
+2025-10-23 06:30:04,786 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=63&per=20
+2025-10-23 06:30:04,975 - INFO - 基金 000189 总页数: 119, 当前页: 62, 当前页行数: 20
+2025-10-23 06:30:04,978 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=43&per=20
+2025-10-23 06:30:05,106 - INFO - 基金 001530 总页数: 109, 当前页: 63, 当前页行数: 20
+2025-10-23 06:30:05,406 - INFO - 基金 001548 总页数: 126, 当前页: 63, 当前页行数: 20
+2025-10-23 06:30:05,792 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=42&per=20
+2025-10-23 06:30:05,815 - INFO - 基金 003692 总页数: 107, 当前页: 43, 当前页行数: 20
+2025-10-23 06:30:06,210 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=63&per=20
+2025-10-23 06:30:06,594 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=64&per=20
+2025-10-23 06:30:06,694 - INFO - 基金 001801 总页数: 120, 当前页: 42, 当前页行数: 20
+2025-10-23 06:30:07,119 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=64&per=20
+2025-10-23 06:30:07,293 - INFO - 基金 001530 总页数: 109, 当前页: 64, 当前页行数: 20
+2025-10-23 06:30:07,510 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=44&per=20
+2025-10-23 06:30:07,735 - INFO - 基金 001548 总页数: 126, 当前页: 64, 当前页行数: 20
+2025-10-23 06:30:07,851 - INFO - 基金 000189 总页数: 119, 当前页: 63, 当前页行数: 20
+2025-10-23 06:30:08,107 - INFO - 基金 003692 总页数: 107, 当前页: 44, 当前页行数: 20
+2025-10-23 06:30:08,179 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=43&per=20
+2025-10-23 06:30:08,778 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=65&per=20
+2025-10-23 06:30:08,799 - INFO - 基金 001801 总页数: 120, 当前页: 43, 当前页行数: 20
+2025-10-23 06:30:09,465 - INFO - 基金 001530 总页数: 109, 当前页: 65, 当前页行数: 20
+2025-10-23 06:30:09,483 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=65&per=20
+2025-10-23 06:30:09,718 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=45&per=20
+2025-10-23 06:30:09,746 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=64&per=20
+2025-10-23 06:30:09,943 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=44&per=20
+2025-10-23 06:30:10,052 - INFO - 基金 001548 总页数: 126, 当前页: 65, 当前页行数: 20
+2025-10-23 06:30:10,268 - INFO - 基金 003692 总页数: 107, 当前页: 45, 当前页行数: 20
+2025-10-23 06:30:10,317 - INFO - 基金 000189 总页数: 119, 当前页: 64, 当前页行数: 20
+2025-10-23 06:30:10,573 - INFO - 基金 001801 总页数: 120, 当前页: 44, 当前页行数: 20
+2025-10-23 06:30:10,926 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=66&per=20
+2025-10-23 06:30:11,525 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=66&per=20
+2025-10-23 06:30:11,526 - INFO - 基金 001530 总页数: 109, 当前页: 66, 当前页行数: 20
+2025-10-23 06:30:11,721 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=65&per=20
+2025-10-23 06:30:11,921 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=46&per=20
+2025-10-23 06:30:11,965 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=45&per=20
+2025-10-23 06:30:12,153 - INFO - 基金 001548 总页数: 126, 当前页: 66, 当前页行数: 20
+2025-10-23 06:30:12,428 - INFO - 基金 000189 总页数: 119, 当前页: 65, 当前页行数: 20
+2025-10-23 06:30:12,509 - INFO - 基金 003692 总页数: 107, 当前页: 46, 当前页行数: 20
+2025-10-23 06:30:12,560 - INFO - 基金 001801 总页数: 120, 当前页: 45, 当前页行数: 20
+2025-10-23 06:30:12,628 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=67&per=20
+2025-10-23 06:30:13,384 - INFO - 基金 001530 总页数: 109, 当前页: 67, 当前页行数: 20
+2025-10-23 06:30:13,764 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=66&per=20
+2025-10-23 06:30:13,891 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=67&per=20
+2025-10-23 06:30:14,285 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=46&per=20
+2025-10-23 06:30:14,312 - INFO - 基金 000189 总页数: 119, 当前页: 66, 当前页行数: 20
+2025-10-23 06:30:14,450 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=47&per=20
+2025-10-23 06:30:14,489 - INFO - 基金 001548 总页数: 126, 当前页: 67, 当前页行数: 20
+2025-10-23 06:30:14,983 - INFO - 基金 001801 总页数: 120, 当前页: 46, 当前页行数: 20
+2025-10-23 06:30:15,083 - INFO - 基金 003692 总页数: 107, 当前页: 47, 当前页行数: 20
+2025-10-23 06:30:15,372 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=68&per=20
+2025-10-23 06:30:15,432 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=67&per=20
+2025-10-23 06:30:15,972 - INFO - 基金 000189 总页数: 119, 当前页: 67, 当前页行数: 20
+2025-10-23 06:30:16,020 - INFO - 基金 001530 总页数: 109, 当前页: 68, 当前页行数: 20
+2025-10-23 06:30:16,353 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=68&per=20
+2025-10-23 06:30:16,750 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=48&per=20
+2025-10-23 06:30:16,763 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=47&per=20
+2025-10-23 06:30:17,021 - INFO - 基金 001548 总页数: 126, 当前页: 68, 当前页行数: 20
+2025-10-23 06:30:17,147 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=69&per=20
+2025-10-23 06:30:17,366 - INFO - 基金 001801 总页数: 120, 当前页: 47, 当前页行数: 20
+2025-10-23 06:30:17,423 - INFO - 基金 003692 总页数: 107, 当前页: 48, 当前页行数: 20
+2025-10-23 06:30:17,733 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=68&per=20
+2025-10-23 06:30:17,952 - INFO - 基金 001530 总页数: 109, 当前页: 69, 当前页行数: 20
+2025-10-23 06:30:18,518 - INFO - 基金 000189 总页数: 119, 当前页: 68, 当前页行数: 20
+2025-10-23 06:30:18,982 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=69&per=20
+2025-10-23 06:30:19,170 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=49&per=20
+2025-10-23 06:30:19,180 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=70&per=20
+2025-10-23 06:30:19,306 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=48&per=20
+2025-10-23 06:30:19,523 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=69&per=20
+2025-10-23 06:30:19,583 - INFO - 基金 001548 总页数: 126, 当前页: 69, 当前页行数: 20
+2025-10-23 06:30:19,868 - INFO - 基金 001530 总页数: 109, 当前页: 70, 当前页行数: 20
+2025-10-23 06:30:19,877 - INFO - 基金 003692 总页数: 107, 当前页: 49, 当前页行数: 20
+2025-10-23 06:30:19,939 - INFO - 基金 001801 总页数: 120, 当前页: 48, 当前页行数: 20
+2025-10-23 06:30:20,217 - INFO - 基金 000189 总页数: 119, 当前页: 69, 当前页行数: 20
+2025-10-23 06:30:20,618 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=70&per=20
+2025-10-23 06:30:21,136 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=50&per=20
+2025-10-23 06:30:21,232 - INFO - 基金 001548 总页数: 126, 当前页: 70, 当前页行数: 20
+2025-10-23 06:30:21,252 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=70&per=20
+2025-10-23 06:30:21,419 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=71&per=20
+2025-10-23 06:30:21,777 - INFO - 基金 003692 总页数: 107, 当前页: 50, 当前页行数: 20
+2025-10-23 06:30:21,808 - INFO - 基金 000189 总页数: 119, 当前页: 70, 当前页行数: 20
+2025-10-23 06:30:21,864 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=49&per=20
+2025-10-23 06:30:21,960 - INFO - 基金 001530 总页数: 109, 当前页: 71, 当前页行数: 20
+2025-10-23 06:30:22,468 - INFO - 基金 001801 总页数: 120, 当前页: 49, 当前页行数: 20
+2025-10-23 06:30:22,812 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=71&per=20
+2025-10-23 06:30:23,367 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=71&per=20
+2025-10-23 06:30:23,378 - INFO - 基金 001548 总页数: 126, 当前页: 71, 当前页行数: 20
+2025-10-23 06:30:23,564 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=51&per=20
+2025-10-23 06:30:23,802 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=50&per=20
+2025-10-23 06:30:23,817 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=72&per=20
+2025-10-23 06:30:23,954 - INFO - 基金 000189 总页数: 119, 当前页: 71, 当前页行数: 20
+2025-10-23 06:30:24,163 - INFO - 基金 003692 总页数: 107, 当前页: 51, 当前页行数: 20
+2025-10-23 06:30:24,414 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=72&per=20
+2025-10-23 06:30:24,494 - INFO - 基金 001530 总页数: 109, 当前页: 72, 当前页行数: 20
+2025-10-23 06:30:24,529 - INFO - 基金 001801 总页数: 120, 当前页: 50, 当前页行数: 20
+2025-10-23 06:30:24,992 - INFO - 基金 001548 总页数: 126, 当前页: 72, 当前页行数: 20
+2025-10-23 06:30:25,520 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=72&per=20
+2025-10-23 06:30:25,596 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=51&per=20
+2025-10-23 06:30:25,691 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=52&per=20
+2025-10-23 06:30:26,118 - INFO - 基金 000189 总页数: 119, 当前页: 72, 当前页行数: 20
+2025-10-23 06:30:26,154 - INFO - 基金 001801 总页数: 120, 当前页: 51, 当前页行数: 20
+2025-10-23 06:30:26,260 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=73&per=20
+2025-10-23 06:30:26,370 - INFO - 基金 003692 总页数: 107, 当前页: 52, 当前页行数: 20
+2025-10-23 06:30:26,440 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=73&per=20
+2025-10-23 06:30:27,021 - INFO - 基金 001530 总页数: 109, 当前页: 73, 当前页行数: 20
+2025-10-23 06:30:27,044 - INFO - 基金 001548 总页数: 126, 当前页: 73, 当前页行数: 20
+2025-10-23 06:30:27,444 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=53&per=20
+2025-10-23 06:30:27,449 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=73&per=20
+2025-10-23 06:30:27,973 - INFO - 基金 003692 总页数: 107, 当前页: 53, 当前页行数: 20
+2025-10-23 06:30:27,976 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=52&per=20
+2025-10-23 06:30:28,052 - INFO - 基金 000189 总页数: 119, 当前页: 73, 当前页行数: 20
+2025-10-23 06:30:28,583 - INFO - 基金 001801 总页数: 120, 当前页: 52, 当前页行数: 20
+2025-10-23 06:30:28,962 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=74&per=20
+2025-10-23 06:30:28,970 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=74&per=20
+2025-10-23 06:30:29,138 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=54&per=20
+2025-10-23 06:30:29,559 - INFO - 基金 001530 总页数: 109, 当前页: 74, 当前页行数: 20
+2025-10-23 06:30:29,596 - INFO - 基金 001548 总页数: 126, 当前页: 74, 当前页行数: 20
+2025-10-23 06:30:29,754 - INFO - 基金 003692 总页数: 107, 当前页: 54, 当前页行数: 20
+2025-10-23 06:30:30,033 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=74&per=20
+2025-10-23 06:30:30,538 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=53&per=20
+2025-10-23 06:30:30,564 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=75&per=20
+2025-10-23 06:30:30,674 - INFO - 基金 000189 总页数: 119, 当前页: 74, 当前页行数: 20
+2025-10-23 06:30:30,747 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=75&per=20
+2025-10-23 06:30:30,791 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=55&per=20
+2025-10-23 06:30:31,094 - INFO - 基金 001530 总页数: 109, 当前页: 75, 当前页行数: 20
+2025-10-23 06:30:31,099 - INFO - 基金 001801 总页数: 120, 当前页: 53, 当前页行数: 20
+2025-10-23 06:30:31,333 - INFO - 基金 003692 总页数: 107, 当前页: 55, 当前页行数: 20
+2025-10-23 06:30:31,503 - INFO - 基金 001548 总页数: 126, 当前页: 75, 当前页行数: 20
+2025-10-23 06:30:31,936 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=75&per=20
+2025-10-23 06:30:32,160 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=54&per=20
+2025-10-23 06:30:32,363 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=56&per=20
+2025-10-23 06:30:32,501 - INFO - 基金 000189 总页数: 119, 当前页: 75, 当前页行数: 20
+2025-10-23 06:30:32,607 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=76&per=20
+2025-10-23 06:30:32,768 - INFO - 基金 001801 总页数: 120, 当前页: 54, 当前页行数: 20
+2025-10-23 06:30:32,964 - INFO - 基金 003692 总页数: 107, 当前页: 56, 当前页行数: 20
+2025-10-23 06:30:33,207 - INFO - 基金 001530 总页数: 109, 当前页: 76, 当前页行数: 20
+2025-10-23 06:30:33,484 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=76&per=20
+2025-10-23 06:30:34,116 - INFO - 基金 001548 总页数: 126, 当前页: 76, 当前页行数: 20
+2025-10-23 06:30:34,122 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=55&per=20
+2025-10-23 06:30:34,377 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=76&per=20
+2025-10-23 06:30:34,412 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=57&per=20
+2025-10-23 06:30:34,423 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=77&per=20
+2025-10-23 06:30:34,800 - INFO - 基金 001801 总页数: 120, 当前页: 55, 当前页行数: 20
+2025-10-23 06:30:35,024 - INFO - 基金 003692 总页数: 107, 当前页: 57, 当前页行数: 20
+2025-10-23 06:30:35,058 - INFO - 基金 000189 总页数: 119, 当前页: 76, 当前页行数: 20
+2025-10-23 06:30:35,063 - INFO - 基金 001530 总页数: 109, 当前页: 77, 当前页行数: 20
+2025-10-23 06:30:35,438 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=77&per=20
+2025-10-23 06:30:36,004 - INFO - 基金 001548 总页数: 126, 当前页: 77, 当前页行数: 20
+2025-10-23 06:30:36,148 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=56&per=20
+2025-10-23 06:30:36,276 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=58&per=20
+2025-10-23 06:30:36,663 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=77&per=20
+2025-10-23 06:30:36,777 - INFO - 基金 001801 总页数: 120, 当前页: 56, 当前页行数: 20
+2025-10-23 06:30:36,800 - INFO - 基金 003692 总页数: 107, 当前页: 58, 当前页行数: 20
+2025-10-23 06:30:36,837 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=78&per=20
+2025-10-23 06:30:37,322 - INFO - 基金 000189 总页数: 119, 当前页: 77, 当前页行数: 20
+2025-10-23 06:30:37,463 - INFO - 基金 001530 总页数: 109, 当前页: 78, 当前页行数: 20
+2025-10-23 06:30:37,987 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=78&per=20
+2025-10-23 06:30:38,254 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=57&per=20
+2025-10-23 06:30:38,441 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=59&per=20
+2025-10-23 06:30:38,564 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=79&per=20
+2025-10-23 06:30:38,641 - INFO - 基金 001548 总页数: 126, 当前页: 78, 当前页行数: 20
+2025-10-23 06:30:38,859 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=78&per=20
+2025-10-23 06:30:38,876 - INFO - 基金 001801 总页数: 120, 当前页: 57, 当前页行数: 20
+2025-10-23 06:30:38,987 - INFO - 基金 003692 总页数: 107, 当前页: 59, 当前页行数: 20
+2025-10-23 06:30:39,206 - INFO - 基金 001530 总页数: 109, 当前页: 79, 当前页行数: 20
+2025-10-23 06:30:39,521 - INFO - 基金 000189 总页数: 119, 当前页: 78, 当前页行数: 20
+2025-10-23 06:30:40,082 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=58&per=20
+2025-10-23 06:30:40,417 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=60&per=20
+2025-10-23 06:30:40,599 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=79&per=20
+2025-10-23 06:30:40,764 - INFO - 基金 001801 总页数: 120, 当前页: 58, 当前页行数: 20
+2025-10-23 06:30:40,847 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=80&per=20
+2025-10-23 06:30:40,968 - INFO - 基金 003692 总页数: 107, 当前页: 60, 当前页行数: 20
+2025-10-23 06:30:41,170 - INFO - 基金 001548 总页数: 126, 当前页: 79, 当前页行数: 20
+2025-10-23 06:30:41,420 - INFO - 基金 001530 总页数: 109, 当前页: 80, 当前页行数: 20
+2025-10-23 06:30:41,420 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=79&per=20
+2025-10-23 06:30:41,980 - INFO - 基金 000189 总页数: 119, 当前页: 79, 当前页行数: 20
+2025-10-23 06:30:42,502 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=59&per=20
+2025-10-23 06:30:42,583 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=61&per=20
+2025-10-23 06:30:42,751 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=81&per=20
+2025-10-23 06:30:43,113 - INFO - 基金 001801 总页数: 120, 当前页: 59, 当前页行数: 20
+2025-10-23 06:30:43,130 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=80&per=20
+2025-10-23 06:30:43,235 - INFO - 基金 003692 总页数: 107, 当前页: 61, 当前页行数: 20
+2025-10-23 06:30:43,302 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=80&per=20
+2025-10-23 06:30:43,399 - INFO - 基金 001530 总页数: 109, 当前页: 81, 当前页行数: 20
+2025-10-23 06:30:43,758 - INFO - 基金 001548 总页数: 126, 当前页: 80, 当前页行数: 20
+2025-10-23 06:30:43,864 - INFO - 基金 000189 总页数: 119, 当前页: 80, 当前页行数: 20
+2025-10-23 06:30:44,316 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=60&per=20
+2025-10-23 06:30:44,368 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=62&per=20
+2025-10-23 06:30:44,778 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=82&per=20
+2025-10-23 06:30:44,888 - INFO - 基金 001801 总页数: 120, 当前页: 60, 当前页行数: 20
+2025-10-23 06:30:44,917 - INFO - 基金 003692 总页数: 107, 当前页: 62, 当前页行数: 20
+2025-10-23 06:30:44,930 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=81&per=20
+2025-10-23 06:30:45,031 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=81&per=20
+2025-10-23 06:30:45,544 - INFO - 基金 001548 总页数: 126, 当前页: 81, 当前页行数: 20
+2025-10-23 06:30:45,674 - INFO - 基金 000189 总页数: 119, 当前页: 81, 当前页行数: 20
+2025-10-23 06:30:45,761 - INFO - 基金 001530 总页数: 109, 当前页: 82, 当前页行数: 20
+2025-10-23 06:30:46,275 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=61&per=20
+2025-10-23 06:30:46,741 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=63&per=20
+2025-10-23 06:30:46,838 - INFO - 基金 001801 总页数: 120, 当前页: 61, 当前页行数: 20
+2025-10-23 06:30:47,167 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=83&per=20
+2025-10-23 06:30:47,405 - INFO - 基金 003692 总页数: 107, 当前页: 63, 当前页行数: 20
+2025-10-23 06:30:47,498 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=82&per=20
+2025-10-23 06:30:47,588 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=82&per=20
+2025-10-23 06:30:47,787 - INFO - 基金 001530 总页数: 109, 当前页: 83, 当前页行数: 20
+2025-10-23 06:30:48,075 - INFO - 基金 001548 总页数: 126, 当前页: 82, 当前页行数: 20
+2025-10-23 06:30:48,247 - INFO - 基金 000189 总页数: 119, 当前页: 82, 当前页行数: 20
+2025-10-23 06:30:48,812 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=64&per=20
+2025-10-23 06:30:48,839 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=62&per=20
+2025-10-23 06:30:48,988 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=84&per=20
+2025-10-23 06:30:49,362 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=83&per=20
+2025-10-23 06:30:49,395 - INFO - 基金 001801 总页数: 120, 当前页: 62, 当前页行数: 20
+2025-10-23 06:30:49,527 - INFO - 基金 003692 总页数: 107, 当前页: 64, 当前页行数: 20
+2025-10-23 06:30:49,566 - INFO - 基金 001530 总页数: 109, 当前页: 84, 当前页行数: 20
+2025-10-23 06:30:49,904 - INFO - 基金 000189 总页数: 119, 当前页: 83, 当前页行数: 20
+2025-10-23 06:30:50,061 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=83&per=20
+2025-10-23 06:30:50,503 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=63&per=20
+2025-10-23 06:30:50,552 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=65&per=20
+2025-10-23 06:30:50,718 - INFO - 基金 001548 总页数: 126, 当前页: 83, 当前页行数: 20
+2025-10-23 06:30:51,043 - INFO - 基金 001801 总页数: 120, 当前页: 63, 当前页行数: 20
+2025-10-23 06:30:51,058 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=85&per=20
+2025-10-23 06:30:51,098 - INFO - 基金 003692 总页数: 107, 当前页: 65, 当前页行数: 20
+2025-10-23 06:30:51,612 - INFO - 基金 001530 总页数: 109, 当前页: 85, 当前页行数: 20
+2025-10-23 06:30:51,618 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=84&per=20
+2025-10-23 06:30:52,187 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=64&per=20
+2025-10-23 06:30:52,306 - INFO - 基金 000189 总页数: 119, 当前页: 84, 当前页行数: 20
+2025-10-23 06:30:52,401 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=66&per=20
+2025-10-23 06:30:52,629 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=84&per=20
+2025-10-23 06:30:52,715 - INFO - 基金 001801 总页数: 120, 当前页: 64, 当前页行数: 20
+2025-10-23 06:30:52,721 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=86&per=20
+2025-10-23 06:30:52,968 - INFO - 基金 003692 总页数: 107, 当前页: 66, 当前页行数: 20
+2025-10-23 06:30:53,245 - INFO - 基金 001548 总页数: 126, 当前页: 84, 当前页行数: 20
+2025-10-23 06:30:53,259 - INFO - 基金 001530 总页数: 109, 当前页: 86, 当前页行数: 20
+2025-10-23 06:30:53,882 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=65&per=20
+2025-10-23 06:30:53,898 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=85&per=20
+2025-10-23 06:30:54,287 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=67&per=20
+2025-10-23 06:30:54,520 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=87&per=20
+2025-10-23 06:30:54,675 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=85&per=20
+2025-10-23 06:30:54,863 - INFO - 基金 000189 总页数: 119, 当前页: 85, 当前页行数: 20
+2025-10-23 06:30:54,867 - INFO - 基金 003692 总页数: 107, 当前页: 67, 当前页行数: 20
+2025-10-23 06:30:54,905 - INFO - 基金 001801 总页数: 120, 当前页: 65, 当前页行数: 20
+2025-10-23 06:30:55,113 - INFO - 基金 001530 总页数: 109, 当前页: 87, 当前页行数: 20
+2025-10-23 06:30:55,239 - INFO - 基金 001548 总页数: 126, 当前页: 85, 当前页行数: 20
+2025-10-23 06:30:56,008 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=86&per=20
+2025-10-23 06:30:56,416 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=68&per=20
+2025-10-23 06:30:56,485 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=66&per=20
+2025-10-23 06:30:56,510 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=86&per=20
+2025-10-23 06:30:56,555 - INFO - 基金 000189 总页数: 119, 当前页: 86, 当前页行数: 20
+2025-10-23 06:30:56,722 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=88&per=20
+2025-10-23 06:30:57,015 - INFO - 基金 003692 总页数: 107, 当前页: 68, 当前页行数: 20
+2025-10-23 06:30:57,122 - INFO - 基金 001801 总页数: 120, 当前页: 66, 当前页行数: 20
+2025-10-23 06:30:57,129 - INFO - 基金 001548 总页数: 126, 当前页: 86, 当前页行数: 20
+2025-10-23 06:30:57,335 - INFO - 基金 001530 总页数: 109, 当前页: 88, 当前页行数: 20
+2025-10-23 06:30:57,664 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=87&per=20
+2025-10-23 06:30:58,280 - INFO - 基金 000189 总页数: 119, 当前页: 87, 当前页行数: 20
+2025-10-23 06:30:58,473 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=67&per=20
+2025-10-23 06:30:58,754 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=69&per=20
+2025-10-23 06:30:58,994 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=87&per=20
+2025-10-23 06:30:59,008 - INFO - 基金 001801 总页数: 120, 当前页: 67, 当前页行数: 20
+2025-10-23 06:30:59,309 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=89&per=20
+2025-10-23 06:30:59,390 - INFO - 基金 003692 总页数: 107, 当前页: 69, 当前页行数: 20
+2025-10-23 06:30:59,669 - INFO - 基金 001548 总页数: 126, 当前页: 87, 当前页行数: 20
+2025-10-23 06:30:59,876 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=88&per=20
+2025-10-23 06:30:59,986 - INFO - 基金 001530 总页数: 109, 当前页: 89, 当前页行数: 20
+2025-10-23 06:31:00,380 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=68&per=20
+2025-10-23 06:31:00,536 - INFO - 基金 000189 总页数: 119, 当前页: 88, 当前页行数: 20
+2025-10-23 06:31:00,851 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=70&per=20
+2025-10-23 06:31:00,974 - INFO - 基金 001801 总页数: 120, 当前页: 68, 当前页行数: 20
+2025-10-23 06:31:01,305 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=90&per=20
+2025-10-23 06:31:01,607 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=88&per=20
+2025-10-23 06:31:01,618 - INFO - 基金 003692 总页数: 107, 当前页: 70, 当前页行数: 20
+2025-10-23 06:31:01,785 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=89&per=20
+2025-10-23 06:31:01,921 - INFO - 基金 001530 总页数: 109, 当前页: 90, 当前页行数: 20
+2025-10-23 06:31:02,221 - INFO - 基金 001548 总页数: 126, 当前页: 88, 当前页行数: 20
+2025-10-23 06:31:02,444 - INFO - 基金 000189 总页数: 119, 当前页: 89, 当前页行数: 20
+2025-10-23 06:31:02,779 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=69&per=20
+2025-10-23 06:31:03,060 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=91&per=20
+2025-10-23 06:31:03,068 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=71&per=20
+2025-10-23 06:31:03,413 - INFO - 基金 001801 总页数: 120, 当前页: 69, 当前页行数: 20
+2025-10-23 06:31:03,684 - INFO - 基金 001530 总页数: 109, 当前页: 91, 当前页行数: 20
+2025-10-23 06:31:03,740 - INFO - 基金 003692 总页数: 107, 当前页: 71, 当前页行数: 20
+2025-10-23 06:31:03,811 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=89&per=20
+2025-10-23 06:31:03,873 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=90&per=20
+2025-10-23 06:31:04,365 - INFO - 基金 001548 总页数: 126, 当前页: 89, 当前页行数: 20
+2025-10-23 06:31:04,451 - INFO - 基金 000189 总页数: 119, 当前页: 90, 当前页行数: 20
+2025-10-23 06:31:04,533 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=70&per=20
+2025-10-23 06:31:04,924 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=92&per=20
+2025-10-23 06:31:05,084 - INFO - 基金 001801 总页数: 120, 当前页: 70, 当前页行数: 20
+2025-10-23 06:31:05,405 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=90&per=20
+2025-10-23 06:31:05,618 - INFO - 基金 001530 总页数: 109, 当前页: 92, 当前页行数: 20
+2025-10-23 06:31:05,730 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=72&per=20
+2025-10-23 06:31:06,025 - INFO - 基金 001548 总页数: 126, 当前页: 90, 当前页行数: 20
+2025-10-23 06:31:06,149 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=71&per=20
+2025-10-23 06:31:06,314 - INFO - 基金 003692 总页数: 107, 当前页: 72, 当前页行数: 20
+2025-10-23 06:31:06,404 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=91&per=20
+2025-10-23 06:31:06,718 - INFO - 基金 001801 总页数: 120, 当前页: 71, 当前页行数: 20
+2025-10-23 06:31:06,926 - INFO - 基金 000189 总页数: 119, 当前页: 91, 当前页行数: 20
+2025-10-23 06:31:07,308 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=93&per=20
+2025-10-23 06:31:07,510 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=91&per=20
+2025-10-23 06:31:07,879 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=72&per=20
+2025-10-23 06:31:07,933 - INFO - 基金 001530 总页数: 109, 当前页: 93, 当前页行数: 20
+2025-10-23 06:31:08,052 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=92&per=20
+2025-10-23 06:31:08,125 - INFO - 基金 001548 总页数: 126, 当前页: 91, 当前页行数: 20
+2025-10-23 06:31:08,212 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=73&per=20
+2025-10-23 06:31:08,549 - INFO - 基金 001801 总页数: 120, 当前页: 72, 当前页行数: 20
+2025-10-23 06:31:08,594 - INFO - 基金 000189 总页数: 119, 当前页: 92, 当前页行数: 20
+2025-10-23 06:31:08,753 - INFO - 基金 003692 总页数: 107, 当前页: 73, 当前页行数: 20
+2025-10-23 06:31:09,722 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=93&per=20
+2025-10-23 06:31:09,731 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=92&per=20
+2025-10-23 06:31:09,866 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=94&per=20
+2025-10-23 06:31:10,338 - INFO - 基金 001548 总页数: 126, 当前页: 92, 当前页行数: 20
+2025-10-23 06:31:10,343 - INFO - 基金 000189 总页数: 119, 当前页: 93, 当前页行数: 20
+2025-10-23 06:31:10,476 - INFO - 基金 001530 总页数: 109, 当前页: 94, 当前页行数: 20
+2025-10-23 06:31:10,516 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=73&per=20
+2025-10-23 06:31:10,557 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=74&per=20
+2025-10-23 06:31:11,034 - INFO - 基金 001801 总页数: 120, 当前页: 73, 当前页行数: 20
+2025-10-23 06:31:11,124 - INFO - 基金 003692 总页数: 107, 当前页: 74, 当前页行数: 20
+2025-10-23 06:31:11,853 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=95&per=20
+2025-10-23 06:31:11,962 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=94&per=20
+2025-10-23 06:31:12,004 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=93&per=20
+2025-10-23 06:31:12,450 - INFO - 基金 001530 总页数: 109, 当前页: 95, 当前页行数: 20
+2025-10-23 06:31:12,497 - INFO - 基金 000189 总页数: 119, 当前页: 94, 当前页行数: 20
+2025-10-23 06:31:12,609 - INFO - 基金 001548 总页数: 126, 当前页: 93, 当前页行数: 20
+2025-10-23 06:31:12,650 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=75&per=20
+2025-10-23 06:31:12,751 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=74&per=20
+2025-10-23 06:31:13,190 - INFO - 基金 003692 总页数: 107, 当前页: 75, 当前页行数: 20
+2025-10-23 06:31:13,353 - INFO - 基金 001801 总页数: 120, 当前页: 74, 当前页行数: 20
+2025-10-23 06:31:13,550 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=95&per=20
+2025-10-23 06:31:13,758 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=96&per=20
+2025-10-23 06:31:14,034 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=94&per=20
+2025-10-23 06:31:14,127 - INFO - 基金 000189 总页数: 119, 当前页: 95, 当前页行数: 20
+2025-10-23 06:31:14,356 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=75&per=20
+2025-10-23 06:31:14,396 - INFO - 基金 001530 总页数: 109, 当前页: 96, 当前页行数: 20
+2025-10-23 06:31:14,614 - INFO - 基金 001548 总页数: 126, 当前页: 94, 当前页行数: 20
+2025-10-23 06:31:14,870 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=76&per=20
+2025-10-23 06:31:14,926 - INFO - 基金 001801 总页数: 120, 当前页: 75, 当前页行数: 20
+2025-10-23 06:31:15,450 - INFO - 基金 003692 总页数: 107, 当前页: 76, 当前页行数: 20
+2025-10-23 06:31:15,450 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=97&per=20
+2025-10-23 06:31:16,025 - INFO - 基金 001530 总页数: 109, 当前页: 97, 当前页行数: 20
+2025-10-23 06:31:16,045 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=96&per=20
+2025-10-23 06:31:16,132 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=95&per=20
+2025-10-23 06:31:16,314 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=76&per=20
+2025-10-23 06:31:16,576 - INFO - 基金 000189 总页数: 119, 当前页: 96, 当前页行数: 20
+2025-10-23 06:31:16,793 - INFO - 基金 001548 总页数: 126, 当前页: 95, 当前页行数: 20
+2025-10-23 06:31:16,970 - INFO - 基金 001801 总页数: 120, 当前页: 76, 当前页行数: 20
+2025-10-23 06:31:17,373 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=77&per=20
+2025-10-23 06:31:17,570 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=98&per=20
+2025-10-23 06:31:17,840 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=97&per=20
+2025-10-23 06:31:17,960 - INFO - 基金 003692 总页数: 107, 当前页: 77, 当前页行数: 20
+2025-10-23 06:31:18,120 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=96&per=20
+2025-10-23 06:31:18,152 - INFO - 基金 001530 总页数: 109, 当前页: 98, 当前页行数: 20
+2025-10-23 06:31:18,488 - INFO - 基金 000189 总页数: 119, 当前页: 97, 当前页行数: 20
+2025-10-23 06:31:18,799 - INFO - 基金 001548 总页数: 126, 当前页: 96, 当前页行数: 20
+2025-10-23 06:31:18,879 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=77&per=20
+2025-10-23 06:31:19,150 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=78&per=20
+2025-10-23 06:31:19,154 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=99&per=20
+2025-10-23 06:31:19,550 - INFO - 基金 001801 总页数: 120, 当前页: 77, 当前页行数: 20
+2025-10-23 06:31:19,749 - INFO - 基金 003692 总页数: 107, 当前页: 78, 当前页行数: 20
+2025-10-23 06:31:19,771 - INFO - 基金 001530 总页数: 109, 当前页: 99, 当前页行数: 20
+2025-10-23 06:31:19,904 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=98&per=20
+2025-10-23 06:31:20,249 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=97&per=20
+2025-10-23 06:31:20,457 - INFO - 基金 000189 总页数: 119, 当前页: 98, 当前页行数: 20
+2025-10-23 06:31:20,713 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=78&per=20
+2025-10-23 06:31:20,882 - INFO - 基金 001548 总页数: 126, 当前页: 97, 当前页行数: 20
+2025-10-23 06:31:21,009 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=79&per=20
+2025-10-23 06:31:21,164 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=100&per=20
+2025-10-23 06:31:21,311 - INFO - 基金 001801 总页数: 120, 当前页: 78, 当前页行数: 20
+2025-10-23 06:31:21,568 - INFO - 基金 003692 总页数: 107, 当前页: 79, 当前页行数: 20
+2025-10-23 06:31:21,794 - INFO - 基金 001530 总页数: 109, 当前页: 100, 当前页行数: 20
+2025-10-23 06:31:22,205 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=99&per=20
+2025-10-23 06:31:22,752 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=80&per=20
+2025-10-23 06:31:22,774 - INFO - 基金 000189 总页数: 119, 当前页: 99, 当前页行数: 20
+2025-10-23 06:31:22,799 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=98&per=20
+2025-10-23 06:31:23,140 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=79&per=20
+2025-10-23 06:31:23,348 - INFO - 基金 003692 总页数: 107, 当前页: 80, 当前页行数: 20
+2025-10-23 06:31:23,385 - INFO - 基金 001548 总页数: 126, 当前页: 98, 当前页行数: 20
+2025-10-23 06:31:23,729 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=101&per=20
+2025-10-23 06:31:23,803 - INFO - 基金 001801 总页数: 120, 当前页: 79, 当前页行数: 20
+2025-10-23 06:31:24,367 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=100&per=20
+2025-10-23 06:31:24,545 - INFO - 基金 001530 总页数: 109, 当前页: 101, 当前页行数: 20
+2025-10-23 06:31:24,841 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=99&per=20
+2025-10-23 06:31:24,947 - INFO - 基金 000189 总页数: 119, 当前页: 100, 当前页行数: 20
+2025-10-23 06:31:25,142 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=81&per=20
+2025-10-23 06:31:25,484 - INFO - 基金 001548 总页数: 126, 当前页: 99, 当前页行数: 20
+2025-10-23 06:31:25,627 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=80&per=20
+2025-10-23 06:31:25,742 - INFO - 基金 003692 总页数: 107, 当前页: 81, 当前页行数: 20
+2025-10-23 06:31:26,073 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=102&per=20
+2025-10-23 06:31:26,236 - INFO - 基金 001801 总页数: 120, 当前页: 80, 当前页行数: 20
+2025-10-23 06:31:26,438 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=101&per=20
+2025-10-23 06:31:26,659 - INFO - 基金 001530 总页数: 109, 当前页: 102, 当前页行数: 20
+2025-10-23 06:31:26,796 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=82&per=20
+2025-10-23 06:31:26,937 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=100&per=20
+2025-10-23 06:31:27,034 - INFO - 基金 000189 总页数: 119, 当前页: 101, 当前页行数: 20
+2025-10-23 06:31:27,320 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=81&per=20
+2025-10-23 06:31:27,379 - INFO - 基金 003692 总页数: 107, 当前页: 82, 当前页行数: 20
+2025-10-23 06:31:27,680 - INFO - 基金 001548 总页数: 126, 当前页: 100, 当前页行数: 20
+2025-10-23 06:31:27,971 - INFO - 基金 001801 总页数: 120, 当前页: 81, 当前页行数: 20
+2025-10-23 06:31:28,401 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=103&per=20
+2025-10-23 06:31:28,591 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=102&per=20
+2025-10-23 06:31:28,872 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=83&per=20
+2025-10-23 06:31:28,949 - INFO - 基金 001530 总页数: 109, 当前页: 103, 当前页行数: 20
+2025-10-23 06:31:29,075 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=101&per=20
+2025-10-23 06:31:29,242 - INFO - 基金 000189 总页数: 119, 当前页: 102, 当前页行数: 20
+2025-10-23 06:31:29,303 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=82&per=20
+2025-10-23 06:31:29,429 - INFO - 基金 003692 总页数: 107, 当前页: 83, 当前页行数: 20
+2025-10-23 06:31:29,633 - INFO - 基金 001548 总页数: 126, 当前页: 101, 当前页行数: 20
+2025-10-23 06:31:29,917 - INFO - 基金 001801 总页数: 120, 当前页: 82, 当前页行数: 20
+2025-10-23 06:31:30,097 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=104&per=20
+2025-10-23 06:31:30,603 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=103&per=20
+2025-10-23 06:31:30,694 - INFO - 基金 001530 总页数: 109, 当前页: 104, 当前页行数: 20
+2025-10-23 06:31:30,786 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=84&per=20
+2025-10-23 06:31:31,196 - INFO - 基金 000189 总页数: 119, 当前页: 103, 当前页行数: 20
+2025-10-23 06:31:31,301 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=83&per=20
+2025-10-23 06:31:31,313 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=102&per=20
+2025-10-23 06:31:31,488 - INFO - 基金 003692 总页数: 107, 当前页: 84, 当前页行数: 20
+2025-10-23 06:31:31,948 - INFO - 基金 001548 总页数: 126, 当前页: 102, 当前页行数: 20
+2025-10-23 06:31:31,953 - INFO - 基金 001801 总页数: 120, 当前页: 83, 当前页行数: 20
+2025-10-23 06:31:32,329 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=105&per=20
+2025-10-23 06:31:32,809 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=104&per=20
+2025-10-23 06:31:33,052 - INFO - 基金 001530 总页数: 109, 当前页: 105, 当前页行数: 20
+2025-10-23 06:31:33,374 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=85&per=20
+2025-10-23 06:31:33,503 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=84&per=20
+2025-10-23 06:31:33,525 - INFO - 基金 000189 总页数: 119, 当前页: 104, 当前页行数: 20
+2025-10-23 06:31:33,675 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=103&per=20
+2025-10-23 06:31:34,026 - INFO - 基金 003692 总页数: 107, 当前页: 85, 当前页行数: 20
+2025-10-23 06:31:34,133 - INFO - 基金 001801 总页数: 120, 当前页: 84, 当前页行数: 20
+2025-10-23 06:31:34,294 - INFO - 基金 001548 总页数: 126, 当前页: 103, 当前页行数: 20
+2025-10-23 06:31:34,555 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=105&per=20
+2025-10-23 06:31:34,622 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=106&per=20
+2025-10-23 06:31:35,163 - INFO - 基金 000189 总页数: 119, 当前页: 105, 当前页行数: 20
+2025-10-23 06:31:35,250 - INFO - 基金 001530 总页数: 109, 当前页: 106, 当前页行数: 20
+2025-10-23 06:31:35,350 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=86&per=20
+2025-10-23 06:31:35,772 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=85&per=20
+2025-10-23 06:31:35,940 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=104&per=20
+2025-10-23 06:31:35,976 - INFO - 基金 003692 总页数: 107, 当前页: 86, 当前页行数: 20
+2025-10-23 06:31:36,423 - INFO - 基金 001801 总页数: 120, 当前页: 85, 当前页行数: 20
+2025-10-23 06:31:36,429 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=107&per=20
+2025-10-23 06:31:36,563 - INFO - 基金 001548 总页数: 126, 当前页: 104, 当前页行数: 20
+2025-10-23 06:31:36,966 - INFO - 基金 001530 总页数: 109, 当前页: 107, 当前页行数: 20
+2025-10-23 06:31:37,028 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=106&per=20
+2025-10-23 06:31:37,622 - INFO - 基金 000189 总页数: 119, 当前页: 106, 当前页行数: 20
+2025-10-23 06:31:37,881 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=87&per=20
+2025-10-23 06:31:38,116 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=86&per=20
+2025-10-23 06:31:38,437 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=105&per=20
+2025-10-23 06:31:38,472 - INFO - 基金 003692 总页数: 107, 当前页: 87, 当前页行数: 20
+2025-10-23 06:31:38,624 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=108&per=20
+2025-10-23 06:31:38,669 - INFO - 基金 001801 总页数: 120, 当前页: 86, 当前页行数: 20
+2025-10-23 06:31:38,733 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=107&per=20
+2025-10-23 06:31:38,992 - INFO - 基金 001548 总页数: 126, 当前页: 105, 当前页行数: 20
+2025-10-23 06:31:39,351 - INFO - 基金 001530 总页数: 109, 当前页: 108, 当前页行数: 20
+2025-10-23 06:31:39,355 - INFO - 基金 000189 总页数: 119, 当前页: 107, 当前页行数: 20
+2025-10-23 06:31:39,887 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=87&per=20
+2025-10-23 06:31:40,450 - INFO - 基金 001801 总页数: 120, 当前页: 87, 当前页行数: 20
+2025-10-23 06:31:40,451 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=88&per=20
+2025-10-23 06:31:40,968 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=106&per=20
+2025-10-23 06:31:40,979 - INFO - 基金 003692 总页数: 107, 当前页: 88, 当前页行数: 20
+2025-10-23 06:31:41,119 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001530&page=109&per=20
+2025-10-23 06:31:41,324 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=108&per=20
+2025-10-23 06:31:41,489 - INFO - 基金 001548 总页数: 126, 当前页: 106, 当前页行数: 20
+2025-10-23 06:31:41,638 - INFO - 基金 001530 数据已成功保存到本地文件: fund_data/001530.csv
+2025-10-23 06:31:41,639 - INFO - 成功合并并保存基金 001530 的数据，总行数: 100, 最新日期: 2025-10-22, 最新净值: 1.0765
+2025-10-23 06:31:41,640 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006160&page=1&per=20
+2025-10-23 06:31:41,791 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=88&per=20
+2025-10-23 06:31:42,001 - INFO - 基金 000189 总页数: 119, 当前页: 108, 当前页行数: 20
+2025-10-23 06:31:42,215 - INFO - 基金 006160 总页数: 86, 当前页: 1, 当前页行数: 20
+2025-10-23 06:31:42,604 - INFO - 基金 001801 总页数: 120, 当前页: 88, 当前页行数: 20
+2025-10-23 06:31:42,909 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=89&per=20
+2025-10-23 06:31:43,027 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=107&per=20
+2025-10-23 06:31:43,060 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=109&per=20
+2025-10-23 06:31:43,465 - INFO - 基金 003692 总页数: 107, 当前页: 89, 当前页行数: 20
+2025-10-23 06:31:43,691 - INFO - 基金 000189 总页数: 119, 当前页: 109, 当前页行数: 20
+2025-10-23 06:31:43,705 - INFO - 基金 001548 总页数: 126, 当前页: 107, 当前页行数: 20
+2025-10-23 06:31:43,814 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006160&page=2&per=20
+2025-10-23 06:31:44,415 - INFO - 基金 006160 总页数: 86, 当前页: 2, 当前页行数: 20
+2025-10-23 06:31:44,417 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=89&per=20
+2025-10-23 06:31:44,649 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=90&per=20
+2025-10-23 06:31:45,024 - INFO - 基金 001801 总页数: 120, 当前页: 89, 当前页行数: 20
+2025-10-23 06:31:45,367 - INFO - 基金 003692 总页数: 107, 当前页: 90, 当前页行数: 20
+2025-10-23 06:31:45,423 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006160&page=3&per=20
+2025-10-23 06:31:45,625 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=110&per=20
+2025-10-23 06:31:45,666 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=108&per=20
+2025-10-23 06:31:46,036 - INFO - 基金 006160 总页数: 86, 当前页: 3, 当前页行数: 20
+2025-10-23 06:31:46,287 - INFO - 基金 000189 总页数: 119, 当前页: 110, 当前页行数: 20
+2025-10-23 06:31:46,313 - INFO - 基金 001548 总页数: 126, 当前页: 108, 当前页行数: 20
+2025-10-23 06:31:47,003 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=90&per=20
+2025-10-23 06:31:47,195 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=91&per=20
+2025-10-23 06:31:47,285 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006160&page=4&per=20
+2025-10-23 06:31:47,336 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=109&per=20
+2025-10-23 06:31:47,567 - INFO - 基金 001801 总页数: 120, 当前页: 90, 当前页行数: 20
+2025-10-23 06:31:47,802 - INFO - 基金 003692 总页数: 107, 当前页: 91, 当前页行数: 20
+2025-10-23 06:31:47,867 - INFO - 基金 006160 总页数: 86, 当前页: 4, 当前页行数: 20
+2025-10-23 06:31:47,945 - INFO - 基金 001548 总页数: 126, 当前页: 109, 当前页行数: 20
+2025-10-23 06:31:48,271 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=111&per=20
+2025-10-23 06:31:48,834 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=91&per=20
+2025-10-23 06:31:48,898 - INFO - 基金 000189 总页数: 119, 当前页: 111, 当前页行数: 20
+2025-10-23 06:31:49,433 - INFO - 基金 001801 总页数: 120, 当前页: 91, 当前页行数: 20
+2025-10-23 06:31:49,448 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=92&per=20
+2025-10-23 06:31:49,483 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006160&page=5&per=20
+2025-10-23 06:31:49,898 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=110&per=20
+2025-10-23 06:31:50,028 - INFO - 基金 003692 总页数: 107, 当前页: 92, 当前页行数: 20
+2025-10-23 06:31:50,033 - INFO - 基金 006160 总页数: 86, 当前页: 5, 当前页行数: 20
+2025-10-23 06:31:50,456 - INFO - 基金 001548 总页数: 126, 当前页: 110, 当前页行数: 20
+2025-10-23 06:31:50,829 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=112&per=20
+2025-10-23 06:31:51,123 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=92&per=20
+2025-10-23 06:31:51,163 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006160&page=6&per=20
+2025-10-23 06:31:51,539 - INFO - 基金 000189 总页数: 119, 当前页: 112, 当前页行数: 20
+2025-10-23 06:31:51,740 - INFO - 基金 001801 总页数: 120, 当前页: 92, 当前页行数: 20
+2025-10-23 06:31:51,763 - INFO - 基金 006160 总页数: 86, 当前页: 6, 当前页行数: 20
+2025-10-23 06:31:51,858 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=93&per=20
+2025-10-23 06:31:52,289 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=111&per=20
+2025-10-23 06:31:52,505 - INFO - 基金 003692 总页数: 107, 当前页: 93, 当前页行数: 20
+2025-10-23 06:31:52,638 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=113&per=20
+2025-10-23 06:31:52,840 - INFO - 基金 001548 总页数: 126, 当前页: 111, 当前页行数: 20
+2025-10-23 06:31:53,260 - INFO - 基金 000189 总页数: 119, 当前页: 113, 当前页行数: 20
+2025-10-23 06:31:53,511 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=93&per=20
+2025-10-23 06:31:53,765 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006160&page=7&per=20
+2025-10-23 06:31:53,885 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=112&per=20
+2025-10-23 06:31:54,158 - INFO - 基金 001801 总页数: 120, 当前页: 93, 当前页行数: 20
+2025-10-23 06:31:54,178 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=94&per=20
+2025-10-23 06:31:54,428 - INFO - 基金 006160 总页数: 86, 当前页: 7, 当前页行数: 20
+2025-10-23 06:31:54,490 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=114&per=20
+2025-10-23 06:31:54,525 - INFO - 基金 001548 总页数: 126, 当前页: 112, 当前页行数: 20
+2025-10-23 06:31:55,091 - INFO - 基金 003692 总页数: 107, 当前页: 94, 当前页行数: 20
+2025-10-23 06:31:55,366 - INFO - 基金 000189 总页数: 119, 当前页: 114, 当前页行数: 20
+2025-10-23 06:31:55,789 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=113&per=20
+2025-10-23 06:31:56,146 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006160&page=8&per=20
+2025-10-23 06:31:56,154 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=94&per=20
+2025-10-23 06:31:56,384 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=115&per=20
+2025-10-23 06:31:56,410 - INFO - 基金 001548 总页数: 126, 当前页: 113, 当前页行数: 20
+2025-10-23 06:31:56,594 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=95&per=20
+2025-10-23 06:31:56,702 - INFO - 基金 006160 总页数: 86, 当前页: 8, 当前页行数: 20
+2025-10-23 06:31:56,746 - INFO - 基金 001801 总页数: 120, 当前页: 94, 当前页行数: 20
+2025-10-23 06:31:56,955 - INFO - 基金 000189 总页数: 119, 当前页: 115, 当前页行数: 20
+2025-10-23 06:31:57,273 - INFO - 基金 003692 总页数: 107, 当前页: 95, 当前页行数: 20
+2025-10-23 06:31:57,948 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006160&page=9&per=20
+2025-10-23 06:31:58,271 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=116&per=20
+2025-10-23 06:31:58,357 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=95&per=20
+2025-10-23 06:31:58,380 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=114&per=20
+2025-10-23 06:31:58,548 - INFO - 基金 006160 总页数: 86, 当前页: 9, 当前页行数: 20
+2025-10-23 06:31:58,727 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=96&per=20
+2025-10-23 06:31:58,863 - INFO - 基金 000189 总页数: 119, 当前页: 116, 当前页行数: 20
+2025-10-23 06:31:58,926 - INFO - 基金 001548 总页数: 126, 当前页: 114, 当前页行数: 20
+2025-10-23 06:31:58,934 - INFO - 基金 001801 总页数: 120, 当前页: 95, 当前页行数: 20
+2025-10-23 06:31:59,264 - INFO - 基金 003692 总页数: 107, 当前页: 96, 当前页行数: 20
+2025-10-23 06:32:00,276 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006160&page=10&per=20
+2025-10-23 06:32:00,364 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=115&per=20
+2025-10-23 06:32:00,603 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=96&per=20
+2025-10-23 06:32:00,817 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=117&per=20
+2025-10-23 06:32:00,859 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=97&per=20
+2025-10-23 06:32:00,923 - INFO - 基金 001548 总页数: 126, 当前页: 115, 当前页行数: 20
+2025-10-23 06:32:00,930 - INFO - 基金 006160 总页数: 86, 当前页: 10, 当前页行数: 20
+2025-10-23 06:32:01,195 - INFO - 基金 001801 总页数: 120, 当前页: 96, 当前页行数: 20
+2025-10-23 06:32:01,423 - INFO - 基金 000189 总页数: 119, 当前页: 117, 当前页行数: 20
+2025-10-23 06:32:01,446 - INFO - 基金 003692 总页数: 107, 当前页: 97, 当前页行数: 20
+2025-10-23 06:32:01,987 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006160&page=11&per=20
+2025-10-23 06:32:02,240 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=116&per=20
+2025-10-23 06:32:02,318 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=97&per=20
+2025-10-23 06:32:02,587 - INFO - 基金 006160 总页数: 86, 当前页: 11, 当前页行数: 20
+2025-10-23 06:32:02,788 - INFO - 基金 001548 总页数: 126, 当前页: 116, 当前页行数: 20
+2025-10-23 06:32:02,943 - INFO - 基金 001801 总页数: 120, 当前页: 97, 当前页行数: 20
+2025-10-23 06:32:03,102 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=98&per=20
+2025-10-23 06:32:03,258 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=118&per=20
+2025-10-23 06:32:03,711 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006160&page=12&per=20
+2025-10-23 06:32:03,738 - INFO - 基金 003692 总页数: 107, 当前页: 98, 当前页行数: 20
+2025-10-23 06:32:03,970 - INFO - 基金 000189 总页数: 119, 当前页: 118, 当前页行数: 20
+2025-10-23 06:32:04,231 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=98&per=20
+2025-10-23 06:32:04,414 - INFO - 基金 006160 总页数: 86, 当前页: 12, 当前页行数: 20
+2025-10-23 06:32:04,495 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=117&per=20
+2025-10-23 06:32:04,804 - INFO - 基金 001801 总页数: 120, 当前页: 98, 当前页行数: 20
+2025-10-23 06:32:04,915 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=99&per=20
+2025-10-23 06:32:05,099 - INFO - 基金 001548 总页数: 126, 当前页: 117, 当前页行数: 20
+2025-10-23 06:32:05,333 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=000189&page=119&per=20
+2025-10-23 06:32:05,484 - INFO - 基金 003692 总页数: 107, 当前页: 99, 当前页行数: 20
+2025-10-23 06:32:05,897 - INFO - 基金 000189 数据已成功保存到本地文件: fund_data/000189.csv
+2025-10-23 06:32:05,897 - INFO - 成功合并并保存基金 000189 的数据，总行数: 100, 最新日期: 2025-10-22, 最新净值: 1.3785
+2025-10-23 06:32:05,898 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006855&page=1&per=20
+2025-10-23 06:32:06,299 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=118&per=20
+2025-10-23 06:32:06,354 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006160&page=13&per=20
+2025-10-23 06:32:06,390 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=99&per=20
+2025-10-23 06:32:06,598 - INFO - 基金 006855 总页数: 79, 当前页: 1, 当前页行数: 20
+2025-10-23 06:32:06,883 - INFO - 基金 001548 总页数: 126, 当前页: 118, 当前页行数: 20
+2025-10-23 06:32:06,985 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=100&per=20
+2025-10-23 06:32:06,996 - INFO - 基金 006160 总页数: 86, 当前页: 13, 当前页行数: 20
+2025-10-23 06:32:07,031 - INFO - 基金 001801 总页数: 120, 当前页: 99, 当前页行数: 20
+2025-10-23 06:32:07,532 - INFO - 基金 003692 总页数: 107, 当前页: 100, 当前页行数: 20
+2025-10-23 06:32:08,067 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006855&page=2&per=20
+2025-10-23 06:32:08,196 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=119&per=20
+2025-10-23 06:32:08,362 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006160&page=14&per=20
+2025-10-23 06:32:08,672 - INFO - 基金 006855 总页数: 79, 当前页: 2, 当前页行数: 20
+2025-10-23 06:32:08,719 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=101&per=20
+2025-10-23 06:32:08,784 - INFO - 基金 001548 总页数: 126, 当前页: 119, 当前页行数: 20
+2025-10-23 06:32:08,956 - INFO - 基金 006160 总页数: 86, 当前页: 14, 当前页行数: 20
+2025-10-23 06:32:09,009 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=100&per=20
+2025-10-23 06:32:09,391 - INFO - 基金 003692 总页数: 107, 当前页: 101, 当前页行数: 20
+2025-10-23 06:32:09,681 - INFO - 基金 001801 总页数: 120, 当前页: 100, 当前页行数: 20
+2025-10-23 06:32:09,923 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=120&per=20
+2025-10-23 06:32:10,215 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006855&page=3&per=20
+2025-10-23 06:32:10,508 - INFO - 基金 001548 总页数: 126, 当前页: 120, 当前页行数: 20
+2025-10-23 06:32:10,509 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=102&per=20
+2025-10-23 06:32:10,854 - INFO - 基金 006855 总页数: 79, 当前页: 3, 当前页行数: 20
+2025-10-23 06:32:10,865 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006160&page=15&per=20
+2025-10-23 06:32:10,960 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=101&per=20
+2025-10-23 06:32:11,191 - INFO - 基金 003692 总页数: 107, 当前页: 102, 当前页行数: 20
+2025-10-23 06:32:11,529 - INFO - 基金 006160 总页数: 86, 当前页: 15, 当前页行数: 20
+2025-10-23 06:32:11,632 - INFO - 基金 001801 总页数: 120, 当前页: 101, 当前页行数: 20
+2025-10-23 06:32:12,089 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=121&per=20
+2025-10-23 06:32:12,296 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=103&per=20
+2025-10-23 06:32:12,503 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006855&page=4&per=20
+2025-10-23 06:32:12,680 - INFO - 基金 001548 总页数: 126, 当前页: 121, 当前页行数: 20
+2025-10-23 06:32:12,759 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006160&page=16&per=20
+2025-10-23 06:32:13,000 - INFO - 基金 003692 总页数: 107, 当前页: 103, 当前页行数: 20
+2025-10-23 06:32:13,056 - INFO - 基金 006855 总页数: 79, 当前页: 4, 当前页行数: 20
+2025-10-23 06:32:13,359 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=102&per=20
+2025-10-23 06:32:13,409 - INFO - 基金 006160 总页数: 86, 当前页: 16, 当前页行数: 20
+2025-10-23 06:32:13,975 - INFO - 基金 001801 总页数: 120, 当前页: 102, 当前页行数: 20
+2025-10-23 06:32:14,413 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=122&per=20
+2025-10-23 06:32:14,530 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006855&page=5&per=20
+2025-10-23 06:32:14,668 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=104&per=20
+2025-10-23 06:32:14,713 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006160&page=17&per=20
+2025-10-23 06:32:14,992 - INFO - 基金 001548 总页数: 126, 当前页: 122, 当前页行数: 20
+2025-10-23 06:32:15,083 - INFO - 基金 006855 总页数: 79, 当前页: 5, 当前页行数: 20
+2025-10-23 06:32:15,245 - INFO - 基金 003692 总页数: 107, 当前页: 104, 当前页行数: 20
+2025-10-23 06:32:15,657 - INFO - 基金 006160 总页数: 86, 当前页: 17, 当前页行数: 20
+2025-10-23 06:32:15,857 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=103&per=20
+2025-10-23 06:32:16,252 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=105&per=20
+2025-10-23 06:32:16,440 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006855&page=6&per=20
+2025-10-23 06:32:16,453 - INFO - 基金 001801 总页数: 120, 当前页: 103, 当前页行数: 20
+2025-10-23 06:32:16,800 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=123&per=20
+2025-10-23 06:32:16,821 - INFO - 基金 003692 总页数: 107, 当前页: 105, 当前页行数: 20
+2025-10-23 06:32:17,019 - INFO - 基金 006855 总页数: 79, 当前页: 6, 当前页行数: 20
+2025-10-23 06:32:17,410 - INFO - 基金 001548 总页数: 126, 当前页: 123, 当前页行数: 20
+2025-10-23 06:32:17,467 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=104&per=20
+2025-10-23 06:32:17,587 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006160&page=18&per=20
+2025-10-23 06:32:17,873 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=106&per=20
+2025-10-23 06:32:18,094 - INFO - 基金 001801 总页数: 120, 当前页: 104, 当前页行数: 20
+2025-10-23 06:32:18,192 - INFO - 基金 006160 总页数: 86, 当前页: 18, 当前页行数: 20
+2025-10-23 06:32:18,585 - INFO - 基金 003692 总页数: 107, 当前页: 106, 当前页行数: 20
+2025-10-23 06:32:18,786 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006855&page=7&per=20
+2025-10-23 06:32:19,229 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006160&page=19&per=20
+2025-10-23 06:32:19,287 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=124&per=20
+2025-10-23 06:32:19,445 - INFO - 基金 006855 总页数: 79, 当前页: 7, 当前页行数: 20
+2025-10-23 06:32:19,648 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=105&per=20
+2025-10-23 06:32:19,809 - INFO - 基金 001548 总页数: 126, 当前页: 124, 当前页行数: 20
+2025-10-23 06:32:19,841 - INFO - 基金 006160 总页数: 86, 当前页: 19, 当前页行数: 20
+2025-10-23 06:32:19,843 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=003692&page=107&per=20
+2025-10-23 06:32:20,261 - INFO - 基金 001801 总页数: 120, 当前页: 105, 当前页行数: 20
+2025-10-23 06:32:20,483 - INFO - 基金 003692 数据已成功保存到本地文件: fund_data/003692.csv
+2025-10-23 06:32:20,484 - INFO - 成功合并并保存基金 003692 的数据，总行数: 100, 最新日期: 2025-10-22, 最新净值: 1.2935
+2025-10-23 06:32:20,485 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006990&page=1&per=20
+2025-10-23 06:32:21,068 - INFO - 基金 006990 总页数: 81, 当前页: 1, 当前页行数: 20
+2025-10-23 06:32:21,152 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006855&page=8&per=20
+2025-10-23 06:32:21,354 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=125&per=20
+2025-10-23 06:32:21,525 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006160&page=20&per=20
+2025-10-23 06:32:21,589 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=106&per=20
+2025-10-23 06:32:21,776 - INFO - 基金 006855 总页数: 79, 当前页: 8, 当前页行数: 20
+2025-10-23 06:32:21,944 - INFO - 基金 001548 总页数: 126, 当前页: 125, 当前页行数: 20
+2025-10-23 06:32:22,062 - INFO - 基金 006160 总页数: 86, 当前页: 20, 当前页行数: 20
+2025-10-23 06:32:22,191 - INFO - 基金 001801 总页数: 120, 当前页: 106, 当前页行数: 20
+2025-10-23 06:32:22,576 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006990&page=2&per=20
+2025-10-23 06:32:22,848 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006855&page=9&per=20
+2025-10-23 06:32:22,948 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001548&page=126&per=20
+2025-10-23 06:32:23,243 - INFO - 基金 006990 总页数: 81, 当前页: 2, 当前页行数: 20
+2025-10-23 06:32:23,326 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006160&page=21&per=20
+2025-10-23 06:32:23,327 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=107&per=20
+2025-10-23 06:32:23,442 - INFO - 基金 006855 总页数: 79, 当前页: 9, 当前页行数: 20
+2025-10-23 06:32:23,515 - INFO - 基金 001548 数据已成功保存到本地文件: fund_data/001548.csv
+2025-10-23 06:32:23,515 - INFO - 成功合并并保存基金 001548 的数据，总行数: 100, 最新日期: 2025-10-22, 最新净值: 1.4886
+2025-10-23 06:32:23,517 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009688&page=1&per=20
+2025-10-23 06:32:23,867 - INFO - 基金 001801 总页数: 120, 当前页: 107, 当前页行数: 20
+2025-10-23 06:32:23,872 - INFO - 基金 006160 总页数: 86, 当前页: 21, 当前页行数: 20
+2025-10-23 06:32:24,179 - INFO - 基金 009688 总页数: 27, 当前页: 1, 当前页行数: 20
+2025-10-23 06:32:24,510 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006855&page=10&per=20
+2025-10-23 06:32:25,030 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006160&page=22&per=20
+2025-10-23 06:32:25,104 - INFO - 基金 006855 总页数: 79, 当前页: 10, 当前页行数: 20
+2025-10-23 06:32:25,243 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006990&page=3&per=20
+2025-10-23 06:32:25,596 - INFO - 基金 006160 总页数: 86, 当前页: 22, 当前页行数: 20
+2025-10-23 06:32:25,744 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=108&per=20
+2025-10-23 06:32:25,843 - INFO - 基金 006990 总页数: 81, 当前页: 3, 当前页行数: 20
+2025-10-23 06:32:26,032 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009688&page=2&per=20
+2025-10-23 06:32:26,345 - INFO - 基金 001801 总页数: 120, 当前页: 108, 当前页行数: 20
+2025-10-23 06:32:26,655 - INFO - 基金 009688 总页数: 27, 当前页: 2, 当前页行数: 20
+2025-10-23 06:32:27,015 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006855&page=11&per=20
+2025-10-23 06:32:27,516 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006160&page=23&per=20
+2025-10-23 06:32:27,588 - INFO - 基金 006855 总页数: 79, 当前页: 11, 当前页行数: 20
+2025-10-23 06:32:27,619 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006990&page=4&per=20
+2025-10-23 06:32:28,056 - INFO - 基金 006160 总页数: 86, 当前页: 23, 当前页行数: 20
+2025-10-23 06:32:28,156 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=109&per=20
+2025-10-23 06:32:28,196 - INFO - 基金 006990 总页数: 81, 当前页: 4, 当前页行数: 20
+2025-10-23 06:32:28,295 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009688&page=3&per=20
+2025-10-23 06:32:28,810 - INFO - 基金 001801 总页数: 120, 当前页: 109, 当前页行数: 20
+2025-10-23 06:32:28,904 - INFO - 基金 009688 总页数: 27, 当前页: 3, 当前页行数: 20
+2025-10-23 06:32:29,180 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006855&page=12&per=20
+2025-10-23 06:32:29,739 - INFO - 基金 006855 总页数: 79, 当前页: 12, 当前页行数: 20
+2025-10-23 06:32:29,924 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006160&page=24&per=20
+2025-10-23 06:32:29,966 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009688&page=4&per=20
+2025-10-23 06:32:29,985 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006990&page=5&per=20
+2025-10-23 06:32:30,499 - INFO - 基金 009688 总页数: 27, 当前页: 4, 当前页行数: 20
+2025-10-23 06:32:30,531 - INFO - 基金 006160 总页数: 86, 当前页: 24, 当前页行数: 20
+2025-10-23 06:32:30,593 - INFO - 基金 006990 总页数: 81, 当前页: 5, 当前页行数: 20
+2025-10-23 06:32:30,802 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=110&per=20
+2025-10-23 06:32:31,297 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006855&page=13&per=20
+2025-10-23 06:32:31,349 - INFO - 基金 001801 总页数: 120, 当前页: 110, 当前页行数: 20
+2025-10-23 06:32:31,622 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006160&page=25&per=20
+2025-10-23 06:32:31,864 - INFO - 基金 006855 总页数: 79, 当前页: 13, 当前页行数: 20
+2025-10-23 06:32:31,877 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006990&page=6&per=20
+2025-10-23 06:32:32,017 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009688&page=5&per=20
+2025-10-23 06:32:32,248 - INFO - 基金 006160 总页数: 86, 当前页: 25, 当前页行数: 20
+2025-10-23 06:32:32,436 - INFO - 基金 006990 总页数: 81, 当前页: 6, 当前页行数: 20
+2025-10-23 06:32:32,604 - INFO - 基金 009688 总页数: 27, 当前页: 5, 当前页行数: 20
+2025-10-23 06:32:33,195 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=111&per=20
+2025-10-23 06:32:33,527 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006160&page=26&per=20
+2025-10-23 06:32:33,567 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006990&page=7&per=20
+2025-10-23 06:32:33,624 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006855&page=14&per=20
+2025-10-23 06:32:33,775 - INFO - 基金 001801 总页数: 120, 当前页: 111, 当前页行数: 20
+2025-10-23 06:32:33,912 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009688&page=6&per=20
+2025-10-23 06:32:34,201 - INFO - 基金 006160 总页数: 86, 当前页: 26, 当前页行数: 20
+2025-10-23 06:32:34,235 - INFO - 基金 006990 总页数: 81, 当前页: 7, 当前页行数: 20
+2025-10-23 06:32:34,454 - INFO - 基金 009688 总页数: 27, 当前页: 6, 当前页行数: 20
+2025-10-23 06:32:34,467 - INFO - 基金 006855 总页数: 79, 当前页: 14, 当前页行数: 20
+2025-10-23 06:32:34,966 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=112&per=20
+2025-10-23 06:32:35,479 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006160&page=27&per=20
+2025-10-23 06:32:35,610 - INFO - 基金 001801 总页数: 120, 当前页: 112, 当前页行数: 20
+2025-10-23 06:32:35,803 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009688&page=7&per=20
+2025-10-23 06:32:35,991 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006855&page=15&per=20
+2025-10-23 06:32:36,038 - INFO - 基金 006160 总页数: 86, 当前页: 27, 当前页行数: 20
+2025-10-23 06:32:36,143 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006990&page=8&per=20
+2025-10-23 06:32:36,435 - INFO - 基金 009688 总页数: 27, 当前页: 7, 当前页行数: 20
+2025-10-23 06:32:36,614 - INFO - 基金 006855 总页数: 79, 当前页: 15, 当前页行数: 20
+2025-10-23 06:32:36,764 - INFO - 基金 006990 总页数: 81, 当前页: 8, 当前页行数: 20
+2025-10-23 06:32:36,840 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=113&per=20
+2025-10-23 06:32:37,398 - INFO - 基金 001801 总页数: 120, 当前页: 113, 当前页行数: 20
+2025-10-23 06:32:37,666 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009688&page=8&per=20
+2025-10-23 06:32:37,719 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006160&page=28&per=20
+2025-10-23 06:32:38,187 - INFO - 基金 009688 总页数: 27, 当前页: 8, 当前页行数: 20
+2025-10-23 06:32:38,190 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006855&page=16&per=20
+2025-10-23 06:32:38,288 - INFO - 基金 006160 总页数: 86, 当前页: 28, 当前页行数: 20
+2025-10-23 06:32:38,501 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006990&page=9&per=20
+2025-10-23 06:32:38,670 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=114&per=20
+2025-10-23 06:32:38,728 - INFO - 基金 006855 总页数: 79, 当前页: 16, 当前页行数: 20
+2025-10-23 06:32:39,103 - INFO - 基金 006990 总页数: 81, 当前页: 9, 当前页行数: 20
+2025-10-23 06:32:39,296 - INFO - 基金 001801 总页数: 120, 当前页: 114, 当前页行数: 20
+2025-10-23 06:32:39,354 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006160&page=29&per=20
+2025-10-23 06:32:39,377 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009688&page=9&per=20
+2025-10-23 06:32:39,944 - INFO - 基金 006160 总页数: 86, 当前页: 29, 当前页行数: 20
+2025-10-23 06:32:39,974 - INFO - 基金 009688 总页数: 27, 当前页: 9, 当前页行数: 20
+2025-10-23 06:32:40,346 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006855&page=17&per=20
+2025-10-23 06:32:40,539 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006990&page=10&per=20
+2025-10-23 06:32:40,947 - INFO - 基金 006855 总页数: 79, 当前页: 17, 当前页行数: 20
+2025-10-23 06:32:41,157 - INFO - 基金 006990 总页数: 81, 当前页: 10, 当前页行数: 20
+2025-10-23 06:32:41,170 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=115&per=20
+2025-10-23 06:32:41,338 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006160&page=30&per=20
+2025-10-23 06:32:41,405 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009688&page=10&per=20
+2025-10-23 06:32:41,852 - INFO - 基金 001801 总页数: 120, 当前页: 115, 当前页行数: 20
+2025-10-23 06:32:41,965 - INFO - 基金 006160 总页数: 86, 当前页: 30, 当前页行数: 20
+2025-10-23 06:32:42,041 - INFO - 基金 009688 总页数: 27, 当前页: 10, 当前页行数: 20
+2025-10-23 06:32:42,052 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006855&page=18&per=20
+2025-10-23 06:32:42,408 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006990&page=11&per=20
+2025-10-23 06:32:42,707 - INFO - 基金 006855 总页数: 79, 当前页: 18, 当前页行数: 20
+2025-10-23 06:32:43,045 - INFO - 基金 006990 总页数: 81, 当前页: 11, 当前页行数: 20
+2025-10-23 06:32:43,266 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=116&per=20
+2025-10-23 06:32:43,444 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009688&page=11&per=20
+2025-10-23 06:32:43,754 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006855&page=19&per=20
+2025-10-23 06:32:43,885 - INFO - 基金 001801 总页数: 120, 当前页: 116, 当前页行数: 20
+2025-10-23 06:32:43,917 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006160&page=31&per=20
+2025-10-23 06:32:44,045 - INFO - 基金 009688 总页数: 27, 当前页: 11, 当前页行数: 20
+2025-10-23 06:32:44,240 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006990&page=12&per=20
+2025-10-23 06:32:44,307 - INFO - 基金 006855 总页数: 79, 当前页: 19, 当前页行数: 20
+2025-10-23 06:32:44,525 - INFO - 基金 006160 总页数: 86, 当前页: 31, 当前页行数: 20
+2025-10-23 06:32:44,840 - INFO - 基金 006990 总页数: 81, 当前页: 12, 当前页行数: 20
+2025-10-23 06:32:45,288 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=117&per=20
+2025-10-23 06:32:45,570 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009688&page=12&per=20
+2025-10-23 06:32:45,920 - INFO - 基金 001801 总页数: 120, 当前页: 117, 当前页行数: 20
+2025-10-23 06:32:45,925 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006855&page=20&per=20
+2025-10-23 06:32:46,066 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006990&page=13&per=20
+2025-10-23 06:32:46,265 - INFO - 基金 009688 总页数: 27, 当前页: 12, 当前页行数: 20
+2025-10-23 06:32:46,468 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006160&page=32&per=20
+2025-10-23 06:32:46,601 - INFO - 基金 006855 总页数: 79, 当前页: 20, 当前页行数: 20
+2025-10-23 06:32:46,754 - INFO - 基金 006990 总页数: 81, 当前页: 13, 当前页行数: 20
+2025-10-23 06:32:47,039 - INFO - 基金 006160 总页数: 86, 当前页: 32, 当前页行数: 20
+2025-10-23 06:32:47,339 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=118&per=20
+2025-10-23 06:32:47,854 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009688&page=13&per=20
+2025-10-23 06:32:47,957 - INFO - 基金 001801 总页数: 120, 当前页: 118, 当前页行数: 20
+2025-10-23 06:32:48,022 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006990&page=14&per=20
+2025-10-23 06:32:48,301 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006855&page=21&per=20
+2025-10-23 06:32:48,479 - INFO - 基金 009688 总页数: 27, 当前页: 13, 当前页行数: 20
+2025-10-23 06:32:48,605 - INFO - 基金 006990 总页数: 81, 当前页: 14, 当前页行数: 20
+2025-10-23 06:32:48,805 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006160&page=33&per=20
+2025-10-23 06:32:49,039 - INFO - 基金 006855 总页数: 79, 当前页: 21, 当前页行数: 20
+2025-10-23 06:32:49,458 - INFO - 基金 006160 总页数: 86, 当前页: 33, 当前页行数: 20
+2025-10-23 06:32:49,621 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=119&per=20
+2025-10-23 06:32:49,847 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006990&page=15&per=20
+2025-10-23 06:32:50,190 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009688&page=14&per=20
+2025-10-23 06:32:50,223 - INFO - 基金 001801 总页数: 120, 当前页: 119, 当前页行数: 20
+2025-10-23 06:32:50,250 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006855&page=22&per=20
+2025-10-23 06:32:50,439 - INFO - 基金 006990 总页数: 81, 当前页: 15, 当前页行数: 20
+2025-10-23 06:32:50,850 - INFO - 基金 009688 总页数: 27, 当前页: 14, 当前页行数: 20
+2025-10-23 06:32:50,858 - INFO - 基金 006855 总页数: 79, 当前页: 22, 当前页行数: 20
+2025-10-23 06:32:51,296 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006160&page=34&per=20
+2025-10-23 06:32:51,845 - INFO - 基金 006160 总页数: 86, 当前页: 34, 当前页行数: 20
+2025-10-23 06:32:51,960 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006990&page=16&per=20
+2025-10-23 06:32:51,992 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=001801&page=120&per=20
+2025-10-23 06:32:52,020 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006855&page=23&per=20
+2025-10-23 06:32:52,184 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009688&page=15&per=20
+2025-10-23 06:32:52,485 - INFO - 基金 006990 总页数: 81, 当前页: 16, 当前页行数: 20
+2025-10-23 06:32:52,533 - INFO - 基金 001801 数据已成功保存到本地文件: fund_data/001801.csv
+2025-10-23 06:32:52,534 - INFO - 成功合并并保存基金 001801 的数据，总行数: 100, 最新日期: 2025-10-22, 最新净值: 2.5870
+2025-10-23 06:32:52,535 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009926&page=1&per=20
+2025-10-23 06:32:52,727 - INFO - 基金 006855 总页数: 79, 当前页: 23, 当前页行数: 20
+2025-10-23 06:32:52,749 - INFO - 基金 009688 总页数: 27, 当前页: 15, 当前页行数: 20
+2025-10-23 06:32:52,871 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006160&page=35&per=20
+2025-10-23 06:32:53,152 - INFO - 基金 009926 总页数: 34, 当前页: 1, 当前页行数: 20
+2025-10-23 06:32:53,486 - INFO - 基金 006160 总页数: 86, 当前页: 35, 当前页行数: 20
+2025-10-23 06:32:54,018 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006990&page=17&per=20
+2025-10-23 06:32:54,481 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009688&page=16&per=20
+2025-10-23 06:32:54,505 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006855&page=24&per=20
+2025-10-23 06:32:54,890 - INFO - 基金 006990 总页数: 81, 当前页: 17, 当前页行数: 20
+2025-10-23 06:32:55,015 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006160&page=36&per=20
+2025-10-23 06:32:55,095 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009926&page=2&per=20
+2025-10-23 06:32:55,123 - INFO - 基金 006855 总页数: 79, 当前页: 24, 当前页行数: 20
+2025-10-23 06:32:55,213 - INFO - 基金 009688 总页数: 27, 当前页: 16, 当前页行数: 20
+2025-10-23 06:32:56,055 - INFO - 基金 009926 总页数: 34, 当前页: 2, 当前页行数: 20
+2025-10-23 06:32:56,127 - INFO - 基金 006160 总页数: 86, 当前页: 36, 当前页行数: 20
+2025-10-23 06:32:56,290 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006990&page=18&per=20
+2025-10-23 06:32:56,866 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006855&page=25&per=20
+2025-10-23 06:32:56,891 - INFO - 基金 006990 总页数: 81, 当前页: 18, 当前页行数: 20
+2025-10-23 06:32:57,099 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009688&page=17&per=20
+2025-10-23 06:32:57,322 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006160&page=37&per=20
+2025-10-23 06:32:57,428 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009926&page=3&per=20
+2025-10-23 06:32:57,463 - INFO - 基金 006855 总页数: 79, 当前页: 25, 当前页行数: 20
+2025-10-23 06:32:57,642 - INFO - 基金 009688 总页数: 27, 当前页: 17, 当前页行数: 20
+2025-10-23 06:32:58,019 - INFO - 基金 006160 总页数: 86, 当前页: 37, 当前页行数: 20
+2025-10-23 06:32:58,035 - INFO - 基金 009926 总页数: 34, 当前页: 3, 当前页行数: 20
+2025-10-23 06:32:58,475 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006855&page=26&per=20
+2025-10-23 06:32:58,851 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006990&page=19&per=20
+2025-10-23 06:32:59,036 - INFO - 基金 006855 总页数: 79, 当前页: 26, 当前页行数: 20
+2025-10-23 06:32:59,122 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009926&page=4&per=20
+2025-10-23 06:32:59,350 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009688&page=18&per=20
+2025-10-23 06:32:59,424 - INFO - 基金 006990 总页数: 81, 当前页: 19, 当前页行数: 20
+2025-10-23 06:32:59,738 - INFO - 基金 009926 总页数: 34, 当前页: 4, 当前页行数: 20
+2025-10-23 06:32:59,767 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006160&page=38&per=20
+2025-10-23 06:32:59,925 - INFO - 基金 009688 总页数: 27, 当前页: 18, 当前页行数: 20
+2025-10-23 06:33:00,296 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006855&page=27&per=20
+2025-10-23 06:33:00,446 - INFO - 基金 006160 总页数: 86, 当前页: 38, 当前页行数: 20
+2025-10-23 06:33:00,573 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006990&page=20&per=20
+2025-10-23 06:33:00,880 - INFO - 基金 006855 总页数: 79, 当前页: 27, 当前页行数: 20
+2025-10-23 06:33:01,157 - INFO - 基金 006990 总页数: 81, 当前页: 20, 当前页行数: 20
+2025-10-23 06:33:01,327 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009926&page=5&per=20
+2025-10-23 06:33:01,543 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006160&page=39&per=20
+2025-10-23 06:33:01,584 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009688&page=19&per=20
+2025-10-23 06:33:01,940 - INFO - 基金 009926 总页数: 34, 当前页: 5, 当前页行数: 20
+2025-10-23 06:33:02,464 - INFO - 基金 006160 总页数: 86, 当前页: 39, 当前页行数: 20
+2025-10-23 06:33:02,534 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006855&page=28&per=20
+2025-10-23 06:33:02,670 - INFO - 基金 009688 总页数: 27, 当前页: 19, 当前页行数: 20
+2025-10-23 06:33:03,016 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006990&page=21&per=20
+2025-10-23 06:33:03,164 - INFO - 基金 006855 总页数: 79, 当前页: 28, 当前页行数: 20
+2025-10-23 06:33:03,383 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009926&page=6&per=20
+2025-10-23 06:33:03,716 - INFO - 基金 006990 总页数: 81, 当前页: 21, 当前页行数: 20
+2025-10-23 06:33:04,012 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009688&page=20&per=20
+2025-10-23 06:33:04,077 - INFO - 基金 009926 总页数: 34, 当前页: 6, 当前页行数: 20
+2025-10-23 06:33:04,116 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006160&page=40&per=20
+2025-10-23 06:33:04,669 - INFO - 基金 006160 总页数: 86, 当前页: 40, 当前页行数: 20
+2025-10-23 06:33:04,674 - INFO - 基金 009688 总页数: 27, 当前页: 20, 当前页行数: 20
+2025-10-23 06:33:04,853 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006855&page=29&per=20
+2025-10-23 06:33:05,301 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009926&page=7&per=20
+2025-10-23 06:33:05,450 - INFO - 基金 006855 总页数: 79, 当前页: 29, 当前页行数: 20
+2025-10-23 06:33:05,512 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006990&page=22&per=20
+2025-10-23 06:33:05,761 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009688&page=21&per=20
+2025-10-23 06:33:05,912 - INFO - 基金 009926 总页数: 34, 当前页: 7, 当前页行数: 20
+2025-10-23 06:33:05,939 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006160&page=41&per=20
+2025-10-23 06:33:06,134 - INFO - 基金 006990 总页数: 81, 当前页: 22, 当前页行数: 20
+2025-10-23 06:33:06,384 - INFO - 基金 009688 总页数: 27, 当前页: 21, 当前页行数: 20
+2025-10-23 06:33:06,590 - INFO - 基金 006160 总页数: 86, 当前页: 41, 当前页行数: 20
+2025-10-23 06:33:06,615 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006855&page=30&per=20
+2025-10-23 06:33:07,006 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009926&page=8&per=20
+2025-10-23 06:33:07,179 - INFO - 基金 006855 总页数: 79, 当前页: 30, 当前页行数: 20
+2025-10-23 06:33:07,635 - INFO - 基金 009926 总页数: 34, 当前页: 8, 当前页行数: 20
+2025-10-23 06:33:07,706 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009688&page=22&per=20
+2025-10-23 06:33:07,823 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006990&page=23&per=20
+2025-10-23 06:33:07,992 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006160&page=42&per=20
+2025-10-23 06:33:08,223 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006855&page=31&per=20
+2025-10-23 06:33:08,302 - INFO - 基金 009688 总页数: 27, 当前页: 22, 当前页行数: 20
+2025-10-23 06:33:08,502 - INFO - 基金 006990 总页数: 81, 当前页: 23, 当前页行数: 20
+2025-10-23 06:33:08,615 - INFO - 基金 006160 总页数: 86, 当前页: 42, 当前页行数: 20
+2025-10-23 06:33:08,826 - INFO - 基金 006855 总页数: 79, 当前页: 31, 当前页行数: 20
+2025-10-23 06:33:09,453 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009926&page=9&per=20
+2025-10-23 06:33:09,828 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006160&page=43&per=20
+2025-10-23 06:33:09,867 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006855&page=32&per=20
+2025-10-23 06:33:09,995 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009688&page=23&per=20
+2025-10-23 06:33:10,001 - INFO - 基金 009926 总页数: 34, 当前页: 9, 当前页行数: 20
+2025-10-23 06:33:10,084 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006990&page=24&per=20
+2025-10-23 06:33:10,473 - INFO - 基金 006160 总页数: 86, 当前页: 43, 当前页行数: 20
+2025-10-23 06:33:10,541 - INFO - 基金 006855 总页数: 79, 当前页: 32, 当前页行数: 20
+2025-10-23 06:33:10,631 - INFO - 基金 006990 总页数: 81, 当前页: 24, 当前页行数: 20
+2025-10-23 06:33:10,636 - INFO - 基金 009688 总页数: 27, 当前页: 23, 当前页行数: 20
+2025-10-23 06:33:11,012 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009926&page=10&per=20
+2025-10-23 06:33:11,582 - INFO - 基金 009926 总页数: 34, 当前页: 10, 当前页行数: 20
+2025-10-23 06:33:11,846 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006855&page=33&per=20
+2025-10-23 06:33:12,118 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006160&page=44&per=20
+2025-10-23 06:33:12,220 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006990&page=25&per=20
+2025-10-23 06:33:12,372 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009688&page=24&per=20
+2025-10-23 06:33:12,506 - INFO - 基金 006855 总页数: 79, 当前页: 33, 当前页行数: 20
+2025-10-23 06:33:12,668 - INFO - 基金 006160 总页数: 86, 当前页: 44, 当前页行数: 20
+2025-10-23 06:33:12,672 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009926&page=11&per=20
+2025-10-23 06:33:12,866 - INFO - 基金 006990 总页数: 81, 当前页: 25, 当前页行数: 20
+2025-10-23 06:33:12,995 - INFO - 基金 009688 总页数: 27, 当前页: 24, 当前页行数: 20
+2025-10-23 06:33:13,268 - INFO - 基金 009926 总页数: 34, 当前页: 11, 当前页行数: 20
+2025-10-23 06:33:13,775 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006160&page=45&per=20
+2025-10-23 06:33:14,325 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006990&page=26&per=20
+2025-10-23 06:33:14,424 - INFO - 基金 006160 总页数: 86, 当前页: 45, 当前页行数: 20
+2025-10-23 06:33:14,488 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006855&page=34&per=20
+2025-10-23 06:33:14,846 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009688&page=25&per=20
+2025-10-23 06:33:14,918 - INFO - 基金 006990 总页数: 81, 当前页: 26, 当前页行数: 20
+2025-10-23 06:33:15,079 - INFO - 基金 006855 总页数: 79, 当前页: 34, 当前页行数: 20
+2025-10-23 06:33:15,179 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009926&page=12&per=20
+2025-10-23 06:33:15,458 - INFO - 基金 009688 总页数: 27, 当前页: 25, 当前页行数: 20
+2025-10-23 06:33:15,802 - INFO - 基金 009926 总页数: 34, 当前页: 12, 当前页行数: 20
+2025-10-23 06:33:16,304 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006160&page=46&per=20
+2025-10-23 06:33:16,429 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006990&page=27&per=20
+2025-10-23 06:33:16,761 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009688&page=26&per=20
+2025-10-23 06:33:16,902 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006855&page=35&per=20
+2025-10-23 06:33:16,918 - INFO - 基金 006160 总页数: 86, 当前页: 46, 当前页行数: 20
+2025-10-23 06:33:16,948 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009926&page=13&per=20
+2025-10-23 06:33:17,008 - INFO - 基金 006990 总页数: 81, 当前页: 27, 当前页行数: 20
+2025-10-23 06:33:17,383 - INFO - 基金 009688 总页数: 27, 当前页: 26, 当前页行数: 20
+2025-10-23 06:33:17,505 - INFO - 基金 006855 总页数: 79, 当前页: 35, 当前页行数: 20
+2025-10-23 06:33:17,513 - INFO - 基金 009926 总页数: 34, 当前页: 13, 当前页行数: 20
+2025-10-23 06:33:18,564 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006160&page=47&per=20
+2025-10-23 06:33:18,687 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006990&page=28&per=20
+2025-10-23 06:33:18,726 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006855&page=36&per=20
+2025-10-23 06:33:18,897 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009926&page=14&per=20
+2025-10-23 06:33:19,249 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009688&page=27&per=20
+2025-10-23 06:33:19,290 - INFO - 基金 006990 总页数: 81, 当前页: 28, 当前页行数: 20
+2025-10-23 06:33:19,330 - INFO - 基金 006855 总页数: 79, 当前页: 36, 当前页行数: 20
+2025-10-23 06:33:19,543 - INFO - 基金 006160 总页数: 86, 当前页: 47, 当前页行数: 20
+2025-10-23 06:33:19,561 - INFO - 基金 009926 总页数: 34, 当前页: 14, 当前页行数: 20
+2025-10-23 06:33:19,815 - INFO - 基金 009688 数据已成功保存到本地文件: fund_data/009688.csv
+2025-10-23 06:33:19,816 - INFO - 成功合并并保存基金 009688 的数据，总行数: 100, 最新日期: 2025-10-17, 最新净值: 0.7810
+2025-10-23 06:33:19,823 - INFO - 本地已存在基金 009995 数据，共 1167 行，最新日期为: 2025-10-20
+2025-10-23 06:33:19,823 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009995&page=1&per=20
+2025-10-23 06:33:20,427 - INFO - 第 1 页: 发现 2 行新数据
+2025-10-23 06:33:20,427 - INFO - 基金 009995 总页数: 59, 当前页: 1, 当前页行数: 20
+2025-10-23 06:33:20,480 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006990&page=29&per=20
+2025-10-23 06:33:20,609 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009926&page=15&per=20
+2025-10-23 06:33:20,677 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006855&page=37&per=20
+2025-10-23 06:33:21,005 - INFO - 基金 006990 总页数: 81, 当前页: 29, 当前页行数: 20
+2025-10-23 06:33:21,157 - INFO - 基金 009926 总页数: 34, 当前页: 15, 当前页行数: 20
+2025-10-23 06:33:21,162 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006160&page=48&per=20
+2025-10-23 06:33:21,580 - INFO - 基金 006855 总页数: 79, 当前页: 37, 当前页行数: 20
+2025-10-23 06:33:21,747 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009995&page=2&per=20
+2025-10-23 06:33:21,755 - INFO - 基金 006160 总页数: 86, 当前页: 48, 当前页行数: 20
+2025-10-23 06:33:22,222 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009926&page=16&per=20
+2025-10-23 06:33:22,352 - INFO - 基金 009995 总页数: 59, 当前页: 2, 当前页行数: 20
+2025-10-23 06:33:22,354 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006990&page=30&per=20
+2025-10-23 06:33:22,712 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006855&page=38&per=20
+2025-10-23 06:33:22,849 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006160&page=49&per=20
+2025-10-23 06:33:22,971 - INFO - 基金 006990 总页数: 81, 当前页: 30, 当前页行数: 20
+2025-10-23 06:33:22,985 - INFO - 基金 009926 总页数: 34, 当前页: 16, 当前页行数: 20
+2025-10-23 06:33:23,403 - INFO - 基金 006855 总页数: 79, 当前页: 38, 当前页行数: 20
+2025-10-23 06:33:23,413 - INFO - 基金 006160 总页数: 86, 当前页: 49, 当前页行数: 20
+2025-10-23 06:33:24,167 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006990&page=31&per=20
+2025-10-23 06:33:24,245 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009995&page=3&per=20
+2025-10-23 06:33:24,687 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009926&page=17&per=20
+2025-10-23 06:33:24,751 - INFO - 基金 006990 总页数: 81, 当前页: 31, 当前页行数: 20
+2025-10-23 06:33:24,850 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006855&page=39&per=20
+2025-10-23 06:33:24,864 - INFO - 基金 009995 总页数: 59, 当前页: 3, 当前页行数: 20
+2025-10-23 06:33:25,367 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006160&page=50&per=20
+2025-10-23 06:33:25,379 - INFO - 基金 009926 总页数: 34, 当前页: 17, 当前页行数: 20
+2025-10-23 06:33:25,396 - INFO - 基金 006855 总页数: 79, 当前页: 39, 当前页行数: 20
+2025-10-23 06:33:25,999 - INFO - 基金 006160 总页数: 86, 当前页: 50, 当前页行数: 20
+2025-10-23 06:33:26,398 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009995&page=4&per=20
+2025-10-23 06:33:26,535 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006990&page=32&per=20
+2025-10-23 06:33:26,840 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009926&page=18&per=20
+2025-10-23 06:33:26,991 - INFO - 基金 009995 总页数: 59, 当前页: 4, 当前页行数: 20
+2025-10-23 06:33:27,088 - INFO - 基金 006990 总页数: 81, 当前页: 32, 当前页行数: 20
+2025-10-23 06:33:27,093 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006855&page=40&per=20
+2025-10-23 06:33:27,114 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006160&page=51&per=20
+2025-10-23 06:33:27,471 - INFO - 基金 009926 总页数: 34, 当前页: 18, 当前页行数: 20
+2025-10-23 06:33:27,718 - INFO - 基金 006160 总页数: 86, 当前页: 51, 当前页行数: 20
+2025-10-23 06:33:27,743 - INFO - 基金 006855 总页数: 79, 当前页: 40, 当前页行数: 20
+2025-10-23 06:33:28,313 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009995&page=5&per=20
+2025-10-23 06:33:28,386 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006990&page=33&per=20
+2025-10-23 06:33:28,853 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006855&page=41&per=20
+2025-10-23 06:33:28,895 - INFO - 基金 009995 总页数: 59, 当前页: 5, 当前页行数: 20
+2025-10-23 06:33:28,933 - INFO - 基金 006990 总页数: 81, 当前页: 33, 当前页行数: 20
+2025-10-23 06:33:28,938 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006160&page=52&per=20
+2025-10-23 06:33:29,136 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009926&page=19&per=20
+2025-10-23 06:33:29,497 - INFO - 基金 006160 总页数: 86, 当前页: 52, 当前页行数: 20
+2025-10-23 06:33:29,505 - INFO - 基金 006855 总页数: 79, 当前页: 41, 当前页行数: 20
+2025-10-23 06:33:29,790 - INFO - 基金 009926 总页数: 34, 当前页: 19, 当前页行数: 20
+2025-10-23 06:33:29,968 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009995&page=6&per=20
+2025-10-23 06:33:30,580 - INFO - 基金 009995 总页数: 59, 当前页: 6, 当前页行数: 20
+2025-10-23 06:33:30,744 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006990&page=34&per=20
+2025-10-23 06:33:31,262 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006160&page=53&per=20
+2025-10-23 06:33:31,288 - INFO - 基金 006990 总页数: 81, 当前页: 34, 当前页行数: 20
+2025-10-23 06:33:31,489 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006855&page=42&per=20
+2025-10-23 06:33:31,607 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009926&page=20&per=20
+2025-10-23 06:33:31,841 - INFO - 基金 006160 总页数: 86, 当前页: 53, 当前页行数: 20
+2025-10-23 06:33:32,137 - INFO - 基金 009926 总页数: 34, 当前页: 20, 当前页行数: 20
+2025-10-23 06:33:32,154 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009995&page=7&per=20
+2025-10-23 06:33:32,280 - INFO - 基金 006855 总页数: 79, 当前页: 42, 当前页行数: 20
+2025-10-23 06:33:32,300 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006990&page=35&per=20
+2025-10-23 06:33:32,839 - INFO - 基金 009995 总页数: 59, 当前页: 7, 当前页行数: 20
+2025-10-23 06:33:32,893 - INFO - 基金 006990 总页数: 81, 当前页: 35, 当前页行数: 20
+2025-10-23 06:33:33,531 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006160&page=54&per=20
+2025-10-23 06:33:33,658 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009926&page=21&per=20
+2025-10-23 06:33:33,951 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006855&page=43&per=20
+2025-10-23 06:33:34,157 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009995&page=8&per=20
+2025-10-23 06:33:34,174 - INFO - 基金 006160 总页数: 86, 当前页: 54, 当前页行数: 20
+2025-10-23 06:33:34,249 - INFO - 基金 009926 总页数: 34, 当前页: 21, 当前页行数: 20
+2025-10-23 06:33:34,519 - INFO - 基金 006855 总页数: 79, 当前页: 43, 当前页行数: 20
+2025-10-23 06:33:34,712 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006990&page=36&per=20
+2025-10-23 06:33:34,784 - INFO - 基金 009995 总页数: 59, 当前页: 8, 当前页行数: 20
+2025-10-23 06:33:35,328 - INFO - 基金 006990 总页数: 81, 当前页: 36, 当前页行数: 20
+2025-10-23 06:33:35,607 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006855&page=44&per=20
+2025-10-23 06:33:35,920 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009926&page=22&per=20
+2025-10-23 06:33:36,063 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006160&page=55&per=20
+2025-10-23 06:33:36,249 - INFO - 基金 006855 总页数: 79, 当前页: 44, 当前页行数: 20
+2025-10-23 06:33:36,565 - INFO - 基金 009926 总页数: 34, 当前页: 22, 当前页行数: 20
+2025-10-23 06:33:36,635 - INFO - 基金 006160 总页数: 86, 当前页: 55, 当前页行数: 20
+2025-10-23 06:33:36,636 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009995&page=9&per=20
+2025-10-23 06:33:36,641 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006990&page=37&per=20
+2025-10-23 06:33:37,194 - INFO - 基金 009995 总页数: 59, 当前页: 9, 当前页行数: 20
+2025-10-23 06:33:37,262 - INFO - 基金 006990 总页数: 81, 当前页: 37, 当前页行数: 20
+2025-10-23 06:33:37,372 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006855&page=45&per=20
+2025-10-23 06:33:37,603 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009926&page=23&per=20
+2025-10-23 06:33:37,971 - INFO - 基金 006855 总页数: 79, 当前页: 45, 当前页行数: 20
+2025-10-23 06:33:38,066 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006160&page=56&per=20
+2025-10-23 06:33:38,181 - INFO - 基金 009926 总页数: 34, 当前页: 23, 当前页行数: 20
+2025-10-23 06:33:38,365 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006990&page=38&per=20
+2025-10-23 06:33:38,601 - INFO - 基金 006160 总页数: 86, 当前页: 56, 当前页行数: 20
+2025-10-23 06:33:38,965 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009995&page=10&per=20
+2025-10-23 06:33:38,996 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006855&page=46&per=20
+2025-10-23 06:33:39,013 - INFO - 基金 006990 总页数: 81, 当前页: 38, 当前页行数: 20
+2025-10-23 06:33:39,640 - INFO - 基金 009995 总页数: 59, 当前页: 10, 当前页行数: 20
+2025-10-23 06:33:39,647 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009926&page=24&per=20
+2025-10-23 06:33:39,655 - INFO - 基金 006855 总页数: 79, 当前页: 46, 当前页行数: 20
+2025-10-23 06:33:39,747 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006160&page=57&per=20
+2025-10-23 06:33:40,295 - INFO - 基金 009926 总页数: 34, 当前页: 24, 当前页行数: 20
+2025-10-23 06:33:40,309 - INFO - 基金 006160 总页数: 86, 当前页: 57, 当前页行数: 20
+2025-10-23 06:33:40,775 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006990&page=39&per=20
+2025-10-23 06:33:41,174 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006855&page=47&per=20
+2025-10-23 06:33:41,338 - INFO - 基金 006990 总页数: 81, 当前页: 39, 当前页行数: 20
+2025-10-23 06:33:41,347 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009995&page=11&per=20
+2025-10-23 06:33:41,529 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009926&page=25&per=20
+2025-10-23 06:33:41,742 - INFO - 基金 006855 总页数: 79, 当前页: 47, 当前页行数: 20
+2025-10-23 06:33:41,808 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006160&page=58&per=20
+2025-10-23 06:33:41,976 - INFO - 基金 009995 总页数: 59, 当前页: 11, 当前页行数: 20
+2025-10-23 06:33:42,074 - INFO - 基金 009926 总页数: 34, 当前页: 25, 当前页行数: 20
+2025-10-23 06:33:42,427 - INFO - 基金 006160 总页数: 86, 当前页: 58, 当前页行数: 20
+2025-10-23 06:33:43,073 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006990&page=40&per=20
+2025-10-23 06:33:43,118 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009926&page=26&per=20
+2025-10-23 06:33:43,339 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006855&page=48&per=20
+2025-10-23 06:33:43,558 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009995&page=12&per=20
+2025-10-23 06:33:43,698 - INFO - 基金 006990 总页数: 81, 当前页: 40, 当前页行数: 20
+2025-10-23 06:33:43,702 - INFO - 基金 009926 总页数: 34, 当前页: 26, 当前页行数: 20
+2025-10-23 06:33:43,872 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006160&page=59&per=20
+2025-10-23 06:33:43,912 - INFO - 基金 006855 总页数: 79, 当前页: 48, 当前页行数: 20
+2025-10-23 06:33:44,177 - INFO - 基金 009995 总页数: 59, 当前页: 12, 当前页行数: 20
+2025-10-23 06:33:44,414 - INFO - 基金 006160 总页数: 86, 当前页: 59, 当前页行数: 20
+2025-10-23 06:33:45,062 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006855&page=49&per=20
+2025-10-23 06:33:45,216 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009926&page=27&per=20
+2025-10-23 06:33:45,417 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006990&page=41&per=20
+2025-10-23 06:33:45,697 - INFO - 基金 006855 总页数: 79, 当前页: 49, 当前页行数: 20
+2025-10-23 06:33:45,827 - INFO - 基金 009926 总页数: 34, 当前页: 27, 当前页行数: 20
+2025-10-23 06:33:45,980 - INFO - 基金 006990 总页数: 81, 当前页: 41, 当前页行数: 20
+2025-10-23 06:33:46,067 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006160&page=60&per=20
+2025-10-23 06:33:46,069 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009995&page=13&per=20
+2025-10-23 06:33:46,617 - INFO - 基金 009995 总页数: 59, 当前页: 13, 当前页行数: 20
+2025-10-23 06:33:46,626 - INFO - 基金 006160 总页数: 86, 当前页: 60, 当前页行数: 20
+2025-10-23 06:33:47,093 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006855&page=50&per=20
+2025-10-23 06:33:47,221 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009926&page=28&per=20
+2025-10-23 06:33:47,692 - INFO - 基金 006855 总页数: 79, 当前页: 50, 当前页行数: 20
+2025-10-23 06:33:47,742 - INFO - 基金 009926 总页数: 34, 当前页: 28, 当前页行数: 20
+2025-10-23 06:33:47,917 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009995&page=14&per=20
+2025-10-23 06:33:47,953 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006990&page=42&per=20
+2025-10-23 06:33:48,517 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006160&page=61&per=20
+2025-10-23 06:33:48,525 - INFO - 基金 006990 总页数: 81, 当前页: 42, 当前页行数: 20
+2025-10-23 06:33:48,588 - INFO - 基金 009995 总页数: 59, 当前页: 14, 当前页行数: 20
+2025-10-23 06:33:48,751 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006855&page=51&per=20
+2025-10-23 06:33:49,153 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009926&page=29&per=20
+2025-10-23 06:33:49,161 - INFO - 基金 006160 总页数: 86, 当前页: 61, 当前页行数: 20
+2025-10-23 06:33:49,354 - INFO - 基金 006855 总页数: 79, 当前页: 51, 当前页行数: 20
+2025-10-23 06:33:49,806 - INFO - 基金 009926 总页数: 34, 当前页: 29, 当前页行数: 20
+2025-10-23 06:33:50,282 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006990&page=43&per=20
+2025-10-23 06:33:50,535 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009995&page=15&per=20
+2025-10-23 06:33:50,666 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006160&page=62&per=20
+2025-10-23 06:33:50,873 - INFO - 基金 006990 总页数: 81, 当前页: 43, 当前页行数: 20
+2025-10-23 06:33:50,991 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006855&page=52&per=20
+2025-10-23 06:33:51,091 - INFO - 基金 009995 总页数: 59, 当前页: 15, 当前页行数: 20
+2025-10-23 06:33:51,335 - INFO - 基金 006160 总页数: 86, 当前页: 62, 当前页行数: 20
+2025-10-23 06:33:51,585 - INFO - 基金 006855 总页数: 79, 当前页: 52, 当前页行数: 20
+2025-10-23 06:33:51,787 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009926&page=30&per=20
+2025-10-23 06:33:52,208 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006990&page=44&per=20
+2025-10-23 06:33:52,279 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009995&page=16&per=20
+2025-10-23 06:33:52,378 - INFO - 基金 009926 总页数: 34, 当前页: 30, 当前页行数: 20
+2025-10-23 06:33:52,795 - INFO - 基金 006990 总页数: 81, 当前页: 44, 当前页行数: 20
+2025-10-23 06:33:52,806 - INFO - 基金 009995 总页数: 59, 当前页: 16, 当前页行数: 20
+2025-10-23 06:33:53,121 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006855&page=53&per=20
+2025-10-23 06:33:53,319 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006160&page=63&per=20
+2025-10-23 06:33:53,685 - INFO - 基金 006855 总页数: 79, 当前页: 53, 当前页行数: 20
+2025-10-23 06:33:53,937 - INFO - 基金 006160 总页数: 86, 当前页: 63, 当前页行数: 20
+2025-10-23 06:33:54,073 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009926&page=31&per=20
+2025-10-23 06:33:54,254 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006990&page=45&per=20
+2025-10-23 06:33:54,446 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009995&page=17&per=20
+2025-10-23 06:33:54,618 - INFO - 基金 009926 总页数: 34, 当前页: 31, 当前页行数: 20
+2025-10-23 06:33:54,700 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006855&page=54&per=20
+2025-10-23 06:33:54,856 - INFO - 基金 006990 总页数: 81, 当前页: 45, 当前页行数: 20
+2025-10-23 06:33:55,103 - INFO - 基金 009995 总页数: 59, 当前页: 17, 当前页行数: 20
+2025-10-23 06:33:55,126 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006160&page=64&per=20
+2025-10-23 06:33:55,591 - INFO - 基金 006855 总页数: 79, 当前页: 54, 当前页行数: 20
+2025-10-23 06:33:55,902 - INFO - 基金 006160 总页数: 86, 当前页: 64, 当前页行数: 20
+2025-10-23 06:33:56,093 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006990&page=46&per=20
+2025-10-23 06:33:56,587 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009926&page=32&per=20
+2025-10-23 06:33:56,657 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009995&page=18&per=20
+2025-10-23 06:33:56,670 - INFO - 基金 006990 总页数: 81, 当前页: 46, 当前页行数: 20
+2025-10-23 06:33:56,787 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006855&page=55&per=20
+2025-10-23 06:33:57,217 - INFO - 基金 009926 总页数: 34, 当前页: 32, 当前页行数: 20
+2025-10-23 06:33:57,255 - INFO - 基金 009995 总页数: 59, 当前页: 18, 当前页行数: 20
+2025-10-23 06:33:57,450 - INFO - 基金 006855 总页数: 79, 当前页: 55, 当前页行数: 20
+2025-10-23 06:33:57,607 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006160&page=65&per=20
+2025-10-23 06:33:58,183 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006990&page=47&per=20
+2025-10-23 06:33:58,235 - INFO - 基金 006160 总页数: 86, 当前页: 65, 当前页行数: 20
+2025-10-23 06:33:58,505 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009995&page=19&per=20
+2025-10-23 06:33:58,706 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006855&page=56&per=20
+2025-10-23 06:33:58,768 - INFO - 基金 006990 总页数: 81, 当前页: 47, 当前页行数: 20
+2025-10-23 06:33:59,139 - INFO - 基金 009995 总页数: 59, 当前页: 19, 当前页行数: 20
+2025-10-23 06:33:59,206 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009926&page=33&per=20
+2025-10-23 06:33:59,345 - INFO - 基金 006855 总页数: 79, 当前页: 56, 当前页行数: 20
+2025-10-23 06:33:59,590 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006160&page=66&per=20
+2025-10-23 06:33:59,884 - INFO - 基金 009926 总页数: 34, 当前页: 33, 当前页行数: 20
+2025-10-23 06:34:00,254 - INFO - 基金 006160 总页数: 86, 当前页: 66, 当前页行数: 20
+2025-10-23 06:34:00,437 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009995&page=20&per=20
+2025-10-23 06:34:00,603 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006990&page=48&per=20
+2025-10-23 06:34:01,042 - INFO - 基金 009995 总页数: 59, 当前页: 20, 当前页行数: 20
+2025-10-23 06:34:01,182 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006855&page=57&per=20
+2025-10-23 06:34:01,199 - INFO - 基金 006990 总页数: 81, 当前页: 48, 当前页行数: 20
+2025-10-23 06:34:01,741 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009926&page=34&per=20
+2025-10-23 06:34:01,950 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006160&page=67&per=20
+2025-10-23 06:34:02,210 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009995&page=21&per=20
+2025-10-23 06:34:02,388 - INFO - 基金 009926 数据已成功保存到本地文件: fund_data/009926.csv
+2025-10-23 06:34:02,388 - INFO - 成功合并并保存基金 009926 的数据，总行数: 100, 最新日期: 2023-07-19, 最新净值: 0.9832
+2025-10-23 06:34:02,594 - INFO - 基金 006855 总页数: 79, 当前页: 57, 当前页行数: 20
+2025-10-23 06:34:02,674 - INFO - 基金 006160 总页数: 86, 当前页: 67, 当前页行数: 20
+2025-10-23 06:34:02,905 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006990&page=49&per=20
+2025-10-23 06:34:02,958 - INFO - 基金 009995 总页数: 59, 当前页: 21, 当前页行数: 20
+2025-10-23 06:34:03,687 - INFO - 基金 006990 总页数: 81, 当前页: 49, 当前页行数: 20
+2025-10-23 06:34:04,194 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006160&page=68&per=20
+2025-10-23 06:34:04,407 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006855&page=58&per=20
+2025-10-23 06:34:04,741 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006990&page=50&per=20
+2025-10-23 06:34:04,760 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009995&page=22&per=20
+2025-10-23 06:34:04,781 - INFO - 基金 006160 总页数: 86, 当前页: 68, 当前页行数: 20
+2025-10-23 06:34:05,150 - INFO - 基金 006855 总页数: 79, 当前页: 58, 当前页行数: 20
+2025-10-23 06:34:05,341 - INFO - 基金 006990 总页数: 81, 当前页: 50, 当前页行数: 20
+2025-10-23 06:34:05,410 - INFO - 基金 009995 总页数: 59, 当前页: 22, 当前页行数: 20
+2025-10-23 06:34:06,651 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006160&page=69&per=20
+2025-10-23 06:34:07,095 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006855&page=59&per=20
+2025-10-23 06:34:07,194 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006990&page=51&per=20
+2025-10-23 06:34:07,387 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009995&page=23&per=20
+2025-10-23 06:34:07,409 - INFO - 基金 006160 总页数: 86, 当前页: 69, 当前页行数: 20
+2025-10-23 06:34:07,673 - INFO - 基金 006855 总页数: 79, 当前页: 59, 当前页行数: 20
+2025-10-23 06:34:07,756 - INFO - 基金 006990 总页数: 81, 当前页: 51, 当前页行数: 20
+2025-10-23 06:34:07,963 - INFO - 基金 009995 总页数: 59, 当前页: 23, 当前页行数: 20
+2025-10-23 06:34:08,582 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006160&page=70&per=20
+2025-10-23 06:34:08,770 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006855&page=60&per=20
+2025-10-23 06:34:08,932 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006990&page=52&per=20
+2025-10-23 06:34:09,187 - INFO - 基金 006160 总页数: 86, 当前页: 70, 当前页行数: 20
+2025-10-23 06:34:09,351 - INFO - 基金 006855 总页数: 79, 当前页: 60, 当前页行数: 20
+2025-10-23 06:34:09,465 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009995&page=24&per=20
+2025-10-23 06:34:09,567 - INFO - 基金 006990 总页数: 81, 当前页: 52, 当前页行数: 20
+2025-10-23 06:34:10,062 - INFO - 基金 009995 总页数: 59, 当前页: 24, 当前页行数: 20
+2025-10-23 06:34:10,608 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006160&page=71&per=20
+2025-10-23 06:34:10,642 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006855&page=61&per=20
+2025-10-23 06:34:11,178 - INFO - 基金 006160 总页数: 86, 当前页: 71, 当前页行数: 20
+2025-10-23 06:34:11,195 - INFO - 基金 006855 总页数: 79, 当前页: 61, 当前页行数: 20
+2025-10-23 06:34:11,217 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009995&page=25&per=20
+2025-10-23 06:34:11,369 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006990&page=53&per=20
+2025-10-23 06:34:11,808 - INFO - 基金 009995 总页数: 59, 当前页: 25, 当前页行数: 20
+2025-10-23 06:34:11,952 - INFO - 基金 006990 总页数: 81, 当前页: 53, 当前页行数: 20
+2025-10-23 06:34:12,218 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006160&page=72&per=20
+2025-10-23 06:34:12,577 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006855&page=62&per=20
+2025-10-23 06:34:12,803 - INFO - 基金 006160 总页数: 86, 当前页: 72, 当前页行数: 20
+2025-10-23 06:34:13,154 - INFO - 基金 006855 总页数: 79, 当前页: 62, 当前页行数: 20
+2025-10-23 06:34:13,163 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009995&page=26&per=20
+2025-10-23 06:34:13,363 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006990&page=54&per=20
+2025-10-23 06:34:13,711 - INFO - 基金 009995 总页数: 59, 当前页: 26, 当前页行数: 20
+2025-10-23 06:34:13,992 - INFO - 基金 006990 总页数: 81, 当前页: 54, 当前页行数: 20
+2025-10-23 06:34:14,132 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006160&page=73&per=20
+2025-10-23 06:34:14,744 - INFO - 基金 006160 总页数: 86, 当前页: 73, 当前页行数: 20
+2025-10-23 06:34:15,085 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006855&page=63&per=20
+2025-10-23 06:34:15,203 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006990&page=55&per=20
+2025-10-23 06:34:15,449 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009995&page=27&per=20
+2025-10-23 06:34:15,679 - INFO - 基金 006855 总页数: 79, 当前页: 63, 当前页行数: 20
+2025-10-23 06:34:15,744 - INFO - 基金 006990 总页数: 81, 当前页: 55, 当前页行数: 20
+2025-10-23 06:34:16,057 - INFO - 基金 009995 总页数: 59, 当前页: 27, 当前页行数: 20
+2025-10-23 06:34:16,437 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006160&page=74&per=20
+2025-10-23 06:34:16,996 - INFO - 基金 006160 总页数: 86, 当前页: 74, 当前页行数: 20
+2025-10-23 06:34:17,344 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006855&page=64&per=20
+2025-10-23 06:34:17,353 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009995&page=28&per=20
+2025-10-23 06:34:17,357 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006990&page=56&per=20
+2025-10-23 06:34:17,909 - INFO - 基金 006855 总页数: 79, 当前页: 64, 当前页行数: 20
+2025-10-23 06:34:17,929 - INFO - 基金 006990 总页数: 81, 当前页: 56, 当前页行数: 20
+2025-10-23 06:34:18,012 - INFO - 基金 009995 总页数: 59, 当前页: 28, 当前页行数: 20
+2025-10-23 06:34:18,435 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006160&page=75&per=20
+2025-10-23 06:34:19,072 - INFO - 基金 006160 总页数: 86, 当前页: 75, 当前页行数: 20
+2025-10-23 06:34:19,124 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009995&page=29&per=20
+2025-10-23 06:34:19,459 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006855&page=65&per=20
+2025-10-23 06:34:19,739 - INFO - 基金 009995 总页数: 59, 当前页: 29, 当前页行数: 20
+2025-10-23 06:34:19,784 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006990&page=57&per=20
+2025-10-23 06:34:20,146 - INFO - 基金 006855 总页数: 79, 当前页: 65, 当前页行数: 20
+2025-10-23 06:34:20,168 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006160&page=76&per=20
+2025-10-23 06:34:20,403 - INFO - 基金 006990 总页数: 81, 当前页: 57, 当前页行数: 20
+2025-10-23 06:34:20,743 - INFO - 基金 006160 总页数: 86, 当前页: 76, 当前页行数: 20
+2025-10-23 06:34:20,743 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009995&page=30&per=20
+2025-10-23 06:34:21,423 - INFO - 基金 009995 总页数: 59, 当前页: 30, 当前页行数: 20
+2025-10-23 06:34:21,895 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006990&page=58&per=20
+2025-10-23 06:34:22,119 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006160&page=77&per=20
+2025-10-23 06:34:22,146 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006855&page=66&per=20
+2025-10-23 06:34:22,471 - INFO - 基金 006990 总页数: 81, 当前页: 58, 当前页行数: 20
+2025-10-23 06:34:22,694 - INFO - 基金 006160 总页数: 86, 当前页: 77, 当前页行数: 20
+2025-10-23 06:34:22,809 - INFO - 基金 006855 总页数: 79, 当前页: 66, 当前页行数: 20
+2025-10-23 06:34:23,396 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009995&page=31&per=20
+2025-10-23 06:34:23,774 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006160&page=78&per=20
+2025-10-23 06:34:23,859 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006990&page=59&per=20
+2025-10-23 06:34:23,940 - INFO - 基金 009995 总页数: 59, 当前页: 31, 当前页行数: 20
+2025-10-23 06:34:24,260 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006855&page=67&per=20
+2025-10-23 06:34:24,524 - INFO - 基金 006990 总页数: 81, 当前页: 59, 当前页行数: 20
+2025-10-23 06:34:24,545 - INFO - 基金 006160 总页数: 86, 当前页: 78, 当前页行数: 20
+2025-10-23 06:34:24,929 - INFO - 基金 006855 总页数: 79, 当前页: 67, 当前页行数: 20
+2025-10-23 06:34:25,481 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009995&page=32&per=20
+2025-10-23 06:34:25,935 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006160&page=79&per=20
+2025-10-23 06:34:26,008 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006990&page=60&per=20
+2025-10-23 06:34:26,033 - INFO - 基金 009995 总页数: 59, 当前页: 32, 当前页行数: 20
+2025-10-23 06:34:26,471 - INFO - 基金 006160 总页数: 86, 当前页: 79, 当前页行数: 20
+2025-10-23 06:34:26,560 - INFO - 基金 006990 总页数: 81, 当前页: 60, 当前页行数: 20
+2025-10-23 06:34:26,652 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006855&page=68&per=20
+2025-10-23 06:34:27,218 - INFO - 基金 006855 总页数: 79, 当前页: 68, 当前页行数: 20
+2025-10-23 06:34:27,783 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009995&page=33&per=20
+2025-10-23 06:34:27,998 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006160&page=80&per=20
+2025-10-23 06:34:28,338 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006990&page=61&per=20
+2025-10-23 06:34:28,435 - INFO - 基金 009995 总页数: 59, 当前页: 33, 当前页行数: 20
+2025-10-23 06:34:28,599 - INFO - 基金 006160 总页数: 86, 当前页: 80, 当前页行数: 20
+2025-10-23 06:34:28,939 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006855&page=69&per=20
+2025-10-23 06:34:28,959 - INFO - 基金 006990 总页数: 81, 当前页: 61, 当前页行数: 20
+2025-10-23 06:34:29,637 - INFO - 基金 006855 总页数: 79, 当前页: 69, 当前页行数: 20
+2025-10-23 06:34:29,797 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009995&page=34&per=20
+2025-10-23 06:34:30,139 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006160&page=81&per=20
+2025-10-23 06:34:30,406 - INFO - 基金 009995 总页数: 59, 当前页: 34, 当前页行数: 20
+2025-10-23 06:34:30,653 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006990&page=62&per=20
+2025-10-23 06:34:30,734 - INFO - 基金 006160 总页数: 86, 当前页: 81, 当前页行数: 20
+2025-10-23 06:34:31,101 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006855&page=70&per=20
+2025-10-23 06:34:31,195 - INFO - 基金 006990 总页数: 81, 当前页: 62, 当前页行数: 20
+2025-10-23 06:34:31,677 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009995&page=35&per=20
+2025-10-23 06:34:31,753 - INFO - 基金 006855 总页数: 79, 当前页: 70, 当前页行数: 20
+2025-10-23 06:34:32,187 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006160&page=82&per=20
+2025-10-23 06:34:32,299 - INFO - 基金 009995 总页数: 59, 当前页: 35, 当前页行数: 20
+2025-10-23 06:34:32,804 - INFO - 基金 006160 总页数: 86, 当前页: 82, 当前页行数: 20
+2025-10-23 06:34:32,896 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006990&page=63&per=20
+2025-10-23 06:34:33,421 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006855&page=71&per=20
+2025-10-23 06:34:33,505 - INFO - 基金 006990 总页数: 81, 当前页: 63, 当前页行数: 20
+2025-10-23 06:34:33,817 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009995&page=36&per=20
+2025-10-23 06:34:34,139 - INFO - 基金 006855 总页数: 79, 当前页: 71, 当前页行数: 20
+2025-10-23 06:34:34,397 - INFO - 基金 009995 总页数: 59, 当前页: 36, 当前页行数: 20
+2025-10-23 06:34:34,511 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006160&page=83&per=20
+2025-10-23 06:34:35,134 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006990&page=64&per=20
+2025-10-23 06:34:35,354 - INFO - 基金 006160 总页数: 86, 当前页: 83, 当前页行数: 20
+2025-10-23 06:34:35,792 - INFO - 基金 006990 总页数: 81, 当前页: 64, 当前页行数: 20
+2025-10-23 06:34:35,980 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009995&page=37&per=20
+2025-10-23 06:34:36,000 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006855&page=72&per=20
+2025-10-23 06:34:36,411 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006160&page=84&per=20
+2025-10-23 06:34:36,612 - INFO - 基金 009995 总页数: 59, 当前页: 37, 当前页行数: 20
+2025-10-23 06:34:36,794 - INFO - 基金 006855 总页数: 79, 当前页: 72, 当前页行数: 20
+2025-10-23 06:34:37,012 - INFO - 基金 006160 总页数: 86, 当前页: 84, 当前页行数: 20
+2025-10-23 06:34:37,376 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006990&page=65&per=20
+2025-10-23 06:34:37,905 - INFO - 基金 006990 总页数: 81, 当前页: 65, 当前页行数: 20
+2025-10-23 06:34:38,137 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009995&page=38&per=20
+2025-10-23 06:34:38,234 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006160&page=85&per=20
+2025-10-23 06:34:38,361 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006855&page=73&per=20
+2025-10-23 06:34:38,828 - INFO - 基金 009995 总页数: 59, 当前页: 38, 当前页行数: 20
+2025-10-23 06:34:38,863 - INFO - 基金 006160 总页数: 86, 当前页: 85, 当前页行数: 20
+2025-10-23 06:34:38,909 - INFO - 基金 006855 总页数: 79, 当前页: 73, 当前页行数: 20
+2025-10-23 06:34:39,373 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006990&page=66&per=20
+2025-10-23 06:34:39,953 - INFO - 基金 006990 总页数: 81, 当前页: 66, 当前页行数: 20
+2025-10-23 06:34:40,188 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009995&page=39&per=20
+2025-10-23 06:34:40,274 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006160&page=86&per=20
+2025-10-23 06:34:40,294 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006855&page=74&per=20
+2025-10-23 06:34:40,792 - INFO - 基金 009995 总页数: 59, 当前页: 39, 当前页行数: 20
+2025-10-23 06:34:40,870 - INFO - 基金 006160 数据已成功保存到本地文件: fund_data/006160.csv
+2025-10-23 06:34:40,870 - INFO - 成功合并并保存基金 006160 的数据，总行数: 100, 最新日期: 2025-10-22, 最新净值: 2.1594
+2025-10-23 06:34:40,984 - INFO - 基金 006855 总页数: 79, 当前页: 74, 当前页行数: 20
+2025-10-23 06:34:41,485 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006990&page=67&per=20
+2025-10-23 06:34:42,088 - INFO - 基金 006990 总页数: 81, 当前页: 67, 当前页行数: 20
+2025-10-23 06:34:42,093 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006855&page=75&per=20
+2025-10-23 06:34:42,469 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009995&page=40&per=20
+2025-10-23 06:34:42,726 - INFO - 基金 006855 总页数: 79, 当前页: 75, 当前页行数: 20
+2025-10-23 06:34:43,074 - INFO - 基金 009995 总页数: 59, 当前页: 40, 当前页行数: 20
+2025-10-23 06:34:43,735 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006990&page=68&per=20
+2025-10-23 06:34:44,245 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006855&page=76&per=20
+2025-10-23 06:34:44,375 - INFO - 基金 006990 总页数: 81, 当前页: 68, 当前页行数: 20
+2025-10-23 06:34:44,504 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009995&page=41&per=20
+2025-10-23 06:34:44,824 - INFO - 基金 006855 总页数: 79, 当前页: 76, 当前页行数: 20
+2025-10-23 06:34:45,049 - INFO - 基金 009995 总页数: 59, 当前页: 41, 当前页行数: 20
+2025-10-23 06:34:46,075 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006855&page=77&per=20
+2025-10-23 06:34:46,237 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006990&page=69&per=20
+2025-10-23 06:34:46,553 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009995&page=42&per=20
+2025-10-23 06:34:46,624 - INFO - 基金 006855 总页数: 79, 当前页: 77, 当前页行数: 20
+2025-10-23 06:34:46,835 - INFO - 基金 006990 总页数: 81, 当前页: 69, 当前页行数: 20
+2025-10-23 06:34:47,101 - INFO - 基金 009995 总页数: 59, 当前页: 42, 当前页行数: 20
+2025-10-23 06:34:48,312 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006855&page=78&per=20
+2025-10-23 06:34:48,403 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009995&page=43&per=20
+2025-10-23 06:34:48,459 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006990&page=70&per=20
+2025-10-23 06:34:48,895 - INFO - 基金 006855 总页数: 79, 当前页: 78, 当前页行数: 20
+2025-10-23 06:34:48,976 - INFO - 基金 009995 总页数: 59, 当前页: 43, 当前页行数: 20
+2025-10-23 06:34:49,040 - INFO - 基金 006990 总页数: 81, 当前页: 70, 当前页行数: 20
+2025-10-23 06:34:50,129 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009995&page=44&per=20
+2025-10-23 06:34:50,609 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006855&page=79&per=20
+2025-10-23 06:34:50,740 - INFO - 基金 009995 总页数: 59, 当前页: 44, 当前页行数: 20
+2025-10-23 06:34:51,007 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006990&page=71&per=20
+2025-10-23 06:34:51,462 - INFO - 基金 006855 总页数: 79, 当前页: 79, 当前页行数: 20
+2025-10-23 06:34:51,462 - INFO - 基金 006855 已获取所有历史数据，共 79 页，爬取结束
+2025-10-23 06:34:51,469 - INFO - 基金 006855 数据已成功保存到本地文件: fund_data/006855.csv
+2025-10-23 06:34:51,470 - INFO - 成功合并并保存基金 006855 的数据，总行数: 100, 最新日期: 2025-10-22, 最新净值: 1.1003
+2025-10-23 06:34:51,581 - INFO - 基金 006990 总页数: 81, 当前页: 71, 当前页行数: 20
+2025-10-23 06:34:52,087 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009995&page=45&per=20
+2025-10-23 06:34:52,645 - INFO - 基金 009995 总页数: 59, 当前页: 45, 当前页行数: 20
+2025-10-23 06:34:52,850 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006990&page=72&per=20
+2025-10-23 06:34:53,456 - INFO - 基金 006990 总页数: 81, 当前页: 72, 当前页行数: 20
+2025-10-23 06:34:53,841 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009995&page=46&per=20
+2025-10-23 06:34:54,486 - INFO - 基金 009995 总页数: 59, 当前页: 46, 当前页行数: 20
+2025-10-23 06:34:55,431 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006990&page=73&per=20
+2025-10-23 06:34:55,817 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009995&page=47&per=20
+2025-10-23 06:34:56,472 - INFO - 基金 009995 总页数: 59, 当前页: 47, 当前页行数: 20
+2025-10-23 06:34:56,550 - INFO - 基金 006990 总页数: 81, 当前页: 73, 当前页行数: 20
+2025-10-23 06:34:58,031 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006990&page=74&per=20
+2025-10-23 06:34:58,335 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009995&page=48&per=20
+2025-10-23 06:34:58,700 - INFO - 基金 006990 总页数: 81, 当前页: 74, 当前页行数: 20
+2025-10-23 06:34:58,932 - INFO - 基金 009995 总页数: 59, 当前页: 48, 当前页行数: 20
+2025-10-23 06:34:59,793 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006990&page=75&per=20
+2025-10-23 06:35:00,398 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009995&page=49&per=20
+2025-10-23 06:35:00,555 - INFO - 基金 006990 总页数: 81, 当前页: 75, 当前页行数: 20
+2025-10-23 06:35:00,941 - INFO - 基金 009995 总页数: 59, 当前页: 49, 当前页行数: 20
+2025-10-23 06:35:01,757 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006990&page=76&per=20
+2025-10-23 06:35:02,324 - INFO - 基金 006990 总页数: 81, 当前页: 76, 当前页行数: 20
+2025-10-23 06:35:02,592 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009995&page=50&per=20
+2025-10-23 06:35:03,130 - INFO - 基金 009995 总页数: 59, 当前页: 50, 当前页行数: 20
+2025-10-23 06:35:04,036 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006990&page=77&per=20
+2025-10-23 06:35:04,585 - INFO - 基金 006990 总页数: 81, 当前页: 77, 当前页行数: 20
+2025-10-23 06:35:05,109 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009995&page=51&per=20
+2025-10-23 06:35:05,739 - INFO - 基金 009995 总页数: 59, 当前页: 51, 当前页行数: 20
+2025-10-23 06:35:06,190 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006990&page=78&per=20
+2025-10-23 06:35:06,736 - INFO - 基金 006990 总页数: 81, 当前页: 78, 当前页行数: 20
+2025-10-23 06:35:07,524 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009995&page=52&per=20
+2025-10-23 06:35:08,055 - INFO - 基金 009995 总页数: 59, 当前页: 52, 当前页行数: 20
+2025-10-23 06:35:08,374 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006990&page=79&per=20
+2025-10-23 06:35:08,975 - INFO - 基金 006990 总页数: 81, 当前页: 79, 当前页行数: 20
+2025-10-23 06:35:09,869 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009995&page=53&per=20
+2025-10-23 06:35:10,462 - INFO - 基金 009995 总页数: 59, 当前页: 53, 当前页行数: 20
+2025-10-23 06:35:10,943 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006990&page=80&per=20
+2025-10-23 06:35:11,553 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009995&page=54&per=20
+2025-10-23 06:35:11,564 - INFO - 基金 006990 总页数: 81, 当前页: 80, 当前页行数: 20
+2025-10-23 06:35:12,108 - INFO - 基金 009995 总页数: 59, 当前页: 54, 当前页行数: 20
+2025-10-23 06:35:12,981 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=006990&page=81&per=20
+2025-10-23 06:35:13,567 - INFO - 基金 006990 数据已成功保存到本地文件: fund_data/006990.csv
+2025-10-23 06:35:13,567 - INFO - 成功合并并保存基金 006990 的数据，总行数: 100, 最新日期: 2025-10-22, 最新净值: 1.0466
+2025-10-23 06:35:13,994 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009995&page=55&per=20
+2025-10-23 06:35:14,551 - INFO - 基金 009995 总页数: 59, 当前页: 55, 当前页行数: 20
+2025-10-23 06:35:16,399 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009995&page=56&per=20
+2025-10-23 06:35:16,941 - INFO - 基金 009995 总页数: 59, 当前页: 56, 当前页行数: 20
+2025-10-23 06:35:18,495 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009995&page=57&per=20
+2025-10-23 06:35:19,117 - INFO - 基金 009995 总页数: 59, 当前页: 57, 当前页行数: 20
+2025-10-23 06:35:20,633 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009995&page=58&per=20
+2025-10-23 06:35:21,232 - INFO - 基金 009995 总页数: 59, 当前页: 58, 当前页行数: 20
+2025-10-23 06:35:22,930 - INFO - 访问URL: http://fundf10.eastmoney.com/F10DataApi.aspx?type=lsjz&code=009995&page=59&per=20
+2025-10-23 06:35:23,430 - INFO - 基金 009995 总页数: 59, 当前页: 59, 当前页行数: 9
+2025-10-23 06:35:23,430 - INFO - 基金 009995 已获取所有历史数据，共 59 页，爬取结束
+2025-10-23 06:35:23,435 - INFO - 基金 009995 数据已成功保存到本地文件: fund_data/009995.csv
+2025-10-23 06:35:23,436 - INFO - 成功合并并保存基金 009995 的数据，总行数: 100, 最新日期: 2025-10-22, 最新净值: 1.4701
+2025-10-23 06:35:23,441 - INFO - 所有基金数据处理完成。
+2025-10-23 06:35:23,441 - INFO - 正在生成市场监控报告...
+2025-10-23 06:35:23,450 - INFO - 报告生成完成: market_monitor_report.md
+2025-10-23 06:35:23,450 - INFO - 脚本执行完成
