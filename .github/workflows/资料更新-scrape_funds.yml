@@ -1,0 +1,75 @@
+name: 资料更新-Fund Data Scraper and Push
+
+# --- 触发条件 ---
+on:
+  # 1. 手动触发
+  workflow_dispatch:
+    
+  # 2. 定时运行 (上海时间 01:00 运行)
+  # UTC 17:00 对应 上海时间 (UTC+8) 01:00
+  schedule:
+    - cron: '0 17 * * *'
+    
+  # 3. 文件变动触发
+  push:
+    branches:
+      - main
+    paths:
+      - 'fund_scraper.py'
+      - 'recommended_cn_funds.csv'
+      - '.github/workflows/scrape_funds.yml'
+
+jobs:
+  scrape_and_push:
+    runs-on: ubuntu-latest
+    
+    # 设置时区为上海时间 (用于日志和时间戳)
+    env:
+      TZ: Asia/Shanghai
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          # 需要获取完整历史记录才能正确推送到分支
+          fetch-depth: 0 
+        
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          # 安装所需的 Python 库
+          python -m pip install --upgrade pip
+          pip install aiohttp pandas json5 jsbeautifier pyyaml
+
+      - name: Run Fund Scraper
+        run: |
+          # 运行 Python 脚本，数据将保存在 fund_metrics/ 目录下
+          echo "Starting fund scraping at $(date +%Y-%m-%d\ %H:%M:%S)"
+          python fund_scraper.py
+          echo "Fund scraping finished."
+          
+      - name: Check for changes and Configure Git
+        id: git_check
+        run: |
+          # 检查是否有文件变动 (新抓取的数据)
+          if git status --porcelain fund_metrics | grep -q .; then
+            echo "Changes detected in fund_metrics directory. Preparing to commit."
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+          else
+            echo "No changes detected. Skipping commit."
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Commit and Push changes
+        if: steps.git_check.outputs.has_changes == 'true'
+        run: |
+          TIMESTAMP=$(date +%Y%m%d-%H%M%S)
+          git add fund_metrics
+          git commit -m "Auto: Update fund metrics data for ${TIMESTAMP} [skip ci]"
+          git push
