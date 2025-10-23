@@ -1,0 +1,79 @@
+name: 净值更新 Fetch Fund Net Value Data
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/fund_spider.yml'
+      - 'fund_spider.py'
+      - 'C类.txt'
+  schedule:
+    - cron: '0 */10 * * *'
+
+jobs:
+  update-data:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          persist-credentials: true
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Cache pip dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pandas requests beautifulsoup4 aiohttp lxml tenacity json5 jsbeautifier
+
+      - name: Configure Git identity
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Run fund spider script
+        run: python fund_spider.py
+        continue-on-error: true
+
+      - name: Commit and push new data
+        if: always()
+        run: |
+          echo "Checking for new/updated files (CSV and fund_info.csv)..."
+          
+          # 检查是否有 CSV 文件或 fund_info.csv 文件
+          if [ -d "fund_data" ] && [ "$(ls -A fund_data/*.csv 2>/dev/null | wc -l)" -gt 0 ] || [ -f "fund_info.csv" ]; then
+              git add fund_data/*.csv fund_info.csv || true
+              
+              if ! git diff --staged --quiet; then
+                  echo "Found changes, attempting to commit..."
+                  git commit -m "🤖 chore: Update fund data and info at $(date -u +'%Y-%m-%d %H:%M:%S UTC')"
+                  
+                  # 确保推送前拉取最新更改并处理潜在冲突
+                  git fetch origin
+                  git rebase origin/main || {
+                      echo "Rebase failed, attempting to resolve conflicts..."
+                      git rebase --abort
+                      git pull --no-rebase origin main
+                  }
+                  
+                  git push
+                  echo "Successfully committed and pushed changes."
+              else
+                  echo "No changes found to commit."
+              fi
+          else
+              echo "No fund_data directory or fund_info.csv found. Skipping commit."
+          fi
