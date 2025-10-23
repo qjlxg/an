@@ -26,15 +26,14 @@ REQUEST_DELAY = 0.5
 MAX_CONCURRENT = 5
 # --- 结束配置常量 ---
 
-# 从 CSV 读取基金代码并补零 (已修改，增加过滤逻辑)
+# 从 CSV 读取基金代码并补零 (已修复编码问题)
 def get_fund_codes_from_csv(file_path):
     """从 CSV 文件读取基金代码，并根据关键字过滤，将其填充为 6 位数字。"""
-    # 定义需要排除的关键字
     EXCLUDE_KEYWORDS = ['币', '债', '持有', 'A', 'B']
     
     try:
-        # 读取 CSV 文件
-        df = pd.read_csv(file_path)
+        # 关键修复：显式指定编码为 'gb18030' 以兼容中文 CSV 文件
+        df = pd.read_csv(file_path, encoding='gb18030')
         
         if 'code' not in df.columns or 'name' not in df.columns:
             logger.error(f"CSV file '{file_path}' 必须包含 'code' 和 'name' 列。")
@@ -42,13 +41,11 @@ def get_fund_codes_from_csv(file_path):
 
         # 1. 过滤掉包含排除关键字的基金
         initial_count = len(df)
-        
-        # 创建一个布尔 Series，初始为 True (全部保留)
         mask = pd.Series([True] * initial_count)
         
-        # 对每个排除关键字，检查 'name' 列是否包含该关键字，并更新 mask (使用 ~ 进行取反操作)
+        # 对每个排除关键字进行过滤
         for keyword in EXCLUDE_KEYWORDS:
-            mask &= ~df['name'].astype(str).str.contains(keyword, case=False, na=False) # case=False 忽略大小写
+            mask &= ~df['name'].astype(str).str.contains(keyword, case=False, na=False)
             
         filtered_df = df[mask].copy()
         
@@ -65,6 +62,7 @@ def get_fund_codes_from_csv(file_path):
         return fund_codes
         
     except Exception as e:
+        # 如果 gb18030 失败，会捕获到错误并打印，以便进一步排查
         logger.error(f"读取和过滤基金代码出错: {e}")
         return []
 
@@ -195,6 +193,7 @@ def save_to_csv(fund_code, data):
             net_worth_df = net_worth_df[['date', 'y', 'equityReturn', 'unitMoney']]
             net_worth_df.columns = ['date', 'net_value', 'equity_return', 'unit_money']
             
+            # 保存到 CSV
             net_worth_path = os.path.join(fund_output_dir, f"{fund_code}_net_worth.csv")
             net_worth_df.to_csv(net_worth_path, index=False, encoding='utf-8')
             logger.info(f"Saved net worth trend for fund {fund_code} to {net_worth_path}")
@@ -210,6 +209,7 @@ def save_to_csv(fund_code, data):
                 'description': performance_data.get('dsc', [])
             })
             
+            # 保存到 CSV
             performance_path = os.path.join(fund_output_dir, f"{fund_code}_performance.csv")
             performance_df.to_csv(performance_path, index=False, encoding='utf-8')
             logger.info(f"Saved performance evaluation for fund {fund_code} to {performance_path}")
