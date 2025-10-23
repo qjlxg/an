@@ -2,16 +2,20 @@ import pandas as pd
 import glob
 import os
 import numpy as np
+import shutil # 新增：用于文件复制
 
 # --- 配置参数 (双重筛选条件) ---
 FUND_DATA_DIR = 'fund_data'
 MIN_CONSECUTIVE_DROP_DAYS = 5 # 连续下跌天数的阈值 (用于30日)
-MIN_MONTH_DRAWDOWN = 0.10     # 1个月回撤的阈值 (10%)
+MIN_MONTH_DRAWDOWN = 0.10      # 1个月回撤的阈值 (10%)
 # 新增：高弹性筛选的最低回撤阈值 (例如 15%)
 HIGH_ELASTICITY_MIN_DRAWDOWN = 0.15 
 REPORT_BASE_NAME = 'fund_warning_report' 
+# 新增：固定报告文件名，用于外部引用
+LATEST_REPORT_NAME = 'analysis_report.md' 
 
-# --- 新增函数：计算技术指标 ---
+
+# --- 新增函数：计算技术指标 (保持不变) ---
 def calculate_technical_indicators(df):
     """
     计算基金净值的RSI(14)、MACD、MA50，并判断布林带位置。
@@ -87,7 +91,7 @@ def calculate_technical_indicators(df):
         '最新净值': round(value_latest, 4)
     }
 
-# --- 原有函数：解析 Markdown 报告并提取基金代码 ---
+# --- 原有函数：解析 Markdown 报告并提取基金代码 (保持不变) ---
 def extract_fund_codes(report_content):
     codes = set()
     lines = report_content.split('\n')
@@ -114,7 +118,7 @@ def extract_fund_codes(report_content):
                         
     return list(codes)
 
-# --- 原有函数：计算连续下跌天数 ---
+# --- 原有函数：计算连续下跌天数 (保持不变) ---
 def calculate_consecutive_drops(series):
     if series.empty or len(series) < 2:
         return 0
@@ -134,7 +138,7 @@ def calculate_consecutive_drops(series):
 
     return max_drop_days
 
-# --- 原有函数：计算最大回撤 ---
+# --- 原有函数：计算最大回撤 (保持不变) ---
 def calculate_max_drawdown(series):
     if series.empty:
         return 0.0
@@ -143,7 +147,7 @@ def calculate_max_drawdown(series):
     mdd = drawdown.max()
     return mdd
 
-# --- 关键修改：生成报告，增加技术指标列和行动提示 ---
+# --- 关键修改：生成报告，增加技术指标列和行动提示 (保持不变) ---
 def generate_report(results, timestamp_str):
     now_str = timestamp_str
 
@@ -175,6 +179,7 @@ def generate_report(results, timestamp_str):
     
     # 2. 【新增】高弹性精选列表筛选
     # 条件：最大回撤 >= 15% 且 近一周连跌天数 == 1
+    # 备注：根据建议，此处您可能需要调整近一周连跌天数的逻辑。
     df_elastic = df_results[
         (df_results['最大回撤'] >= HIGH_ELASTICITY_MIN_DRAWDOWN) & 
         (df_results['近一周连跌'] == 1)
@@ -224,15 +229,15 @@ def generate_report(results, timestamp_str):
     # 4. 新增行动策略总结
     report += f"\n## **高弹性策略执行纪律**\n\n"
     report += f"**1. 正式加仓/最大买入的确认信号：**\n"
-    report += f"   * 无论'行动提示'为何，只有当目标基金的 **MACD 信号从'观察/死叉'变为'金叉'**时，才能进行最大一笔的正式加仓。\n"
-    report += f"   * 在'金叉'出现前，买入资金应视为'观察仓'或'试探仓'，总仓位应保持在较低水平（例如总计划资金的 1/5）。\n"
+    report += f"   * 无论'行动提示'为何，只有当目标基金的 **MACD 信号从'观察/死叉'变为'金叉'**时，才能进行最大一笔的正式加仓。\n"
+    report += f"   * 在'金叉'出现前，买入资金应视为'观察仓'或'试探仓'，总仓位应保持在较低水平（例如总计划资金的 1/5）。\n"
     report += f"**2. 风险控制（严格止损）：**\n"
-    report += f"   * 为所有买入的基金设置严格的止损线。建议从买入平均成本价开始计算，一旦跌幅达到 **8%-10%**，应**立即**卖出清仓，避免深度套牢。\n"
+    report += f"   * 为所有买入的基金设置严格的止损线。建议从买入平均成本价开始计算，一旦跌幅达到 **8%-10%**，应**立即**卖出清仓，避免深度套牢。\n"
     
     return report
 
 
-# --- 关键修改：在分析时计算技术指标和行动提示 ---
+# --- 关键修改：在分析时计算技术指标和行动提示 (保持不变) ---
 def analyze_all_funds(target_codes=None): 
     """
     遍历基金数据目录，分析每个基金，并返回符合条件的基金列表。
@@ -265,7 +270,7 @@ def analyze_all_funds(target_codes=None):
             df = df.sort_values(by='date', ascending=False).reset_index(drop=True) 
             df = df.rename(columns={'net_value': 'value'})
             
-            if len(df) < 30:
+            if len(df) < 50: # 修改：如果数据不足50天，MACD和MA50可能不准确，直接跳过。
                 continue
             
             df_recent_month = df.head(30)
@@ -355,8 +360,17 @@ if __name__ == '__main__':
     # 5. 生成 Markdown 报告
     report_content = generate_report(results, timestamp_for_report)
     
-    # 6. 写入报告文件
+    # 6. 写入报告文件（带时间戳和目录）
     with open(REPORT_FILE, 'w', encoding='utf-8') as f:
         f.write(report_content)
     
     print(f"分析完成，报告已保存到 {REPORT_FILE}")
+
+    # ==========================================================
+    # 7. 【关键优化】将最新报告复制到固定文件名（用于外部系统引用）
+    # ==========================================================
+    try:
+        shutil.copy(REPORT_FILE, LATEST_REPORT_NAME)
+        print(f"最新报告已复制到根目录: {LATEST_REPORT_NAME}")
+    except Exception as e:
+        print(f"错误：复制报告文件失败: {e}")
