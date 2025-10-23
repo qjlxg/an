@@ -1,0 +1,64 @@
+name: 净值更新 Fetch Fund Net Value Data
+
+# 定义触发条件
+on:
+  # 触发 1: 手动触发，允许在 GitHub Actions 页面点击“Run workflow”运行
+  workflow_dispatch:
+  
+  # 触发 2: 文件变更时自动运行
+  push:
+    paths:
+      - '.github/workflows/fetch_fund_data.yml'
+      - 'fund_spider.py'
+      - 'C类.txt'
+
+  # 触发 3: 定时运行（每 3 小时）
+  schedule:
+       - cron: 0 */3 * * *
+
+jobs:
+  update-data:
+    runs-on: ubuntu-latest
+    
+
+    steps:
+      # 步骤 1: 检出仓库代码
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 步骤 2: 设置 Python 环境
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      # 步骤 3: 缓存 Python 依赖
+      - name: Cache pip dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      # 步骤 4: 安装依赖库
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pandas requests beautifulsoup4 aiohttp lxml tenacity
+
+      # 步骤 5: 执行 Python 爬虫脚本
+      - name: Run fund spider script
+        env:
+          # 如果脚本需要 API 密钥，可通过 GitHub Secrets 配置
+          API_KEY: ${{ secrets.FUND_API_KEY }}
+        run: |
+          python fund_spider.py || { echo "Script failed, check logs for details"; exit 1; }
+
+      # 步骤 6: 检查是否有新的或更新的数据文件并提交
+      - name: Commit and Push new data
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          file_pattern: 'fund_data/*.csv fund_data/*.json'
+          commit_message: "🤖 chore: Update fund net value data at ${{ github.event.schedule || github.event.head_commit.timestamp || 'manual run' }}"
+          skip_dirty_check: false

@@ -1,0 +1,117 @@
+name: Run Market Monitor
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  push:
+    paths:
+      - 'analysis_report.md'
+      - 'market_monitor.py'
+      - '.github/workflows/run_market_monitor.yml'
+  workflow_dispatch:
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+    timeout-minutes: 359
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Cache fund data
+        uses: actions/cache@v4
+        with:
+          path: fund_data
+          key: ${{ runner.os }}-fund-data
+          restore-keys: |
+            ${{ runner.os }}-fund-data
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install Chrome and dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wget unzip fontconfig locales libatk1.0-0 libc6 libcairo2 libcups2 libdbus-1-3 libexpat1 libfontconfig1 libgcc-s1 libgdk-pixbuf2.0-0 libglib2.0-0 libgtk-3-0 libnspr4 libpango-1.0-0 libpangocairo-1.0-0 libstdc++6 libx11-6 libx11-xcb1 libxcb1 libxcomposite1 libxcursor1 libxdamage1 libxext6 libxfixes3 libxi6 libxrandr2 libxrender1 libxss1 libxtst6 ca-certificates fonts-liberation libnss3 lsb-release xdg-utils
+          wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+          sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
+          sudo apt-get update
+          sudo apt-get install -y google-chrome-stable
+          echo "Chrome installed successfully"
+          google-chrome --version
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install --upgrade pandas numpy requests beautifulsoup4 lxml html5lib tenacity selenium webdriver-manager
+          python -c "import pandas, numpy, requests, bs4, lxml, html5lib, tenacity, selenium, webdriver_manager; import pkg_resources; print(f'Pandas: {pkg_resources.get_distribution(\"pandas\").version}, Selenium: {pkg_resources.get_distribution(\"selenium\").version}, html5lib: {pkg_resources.get_distribution(\"html5lib\").version}, tenacity: {pkg_resources.get_distribution(\"tenacity\").version}')"
+
+      - name: Run Market Monitor script
+        run: |
+          rm -f market_monitor.log
+          timeout 840 python market_monitor.py || { echo "Script timed out or failed, check market_monitor.log"; cat market_monitor.log 2>/dev/null || echo "No log file generated"; exit 1; }
+
+      - name: Check generated files
+        run: |
+          echo "Checking generated files:"
+          ls -l market_monitor_report.md market_monitor.log debug_page_*.html error_page_*.html fund_data 2>/dev/null || echo "Some files may not exist"
+          if [ -f market_monitor_report.md ]; then
+            echo "Contents of market_monitor_report.md:"
+            cat market_monitor_report.md
+          fi
+          if [ -f market_monitor.log ]; then
+            echo "Contents of market_monitor.log:"
+            cat market_monitor.log
+          fi
+          if ls debug_page_*.html 2>/dev/null; then
+            echo "Sample debug page content (first 1000 chars of first file):"
+            head -c 1000 debug_page_*.html | head -n 1
+          fi
+          if ls error_page_*.html 2>/dev/null; then
+            echo "Sample error page content (first 1000 chars of first file):"
+            head -c 1000 error_page_*.html | head -n 1
+          fi
+          if [ -d fund_data ]; then
+            echo "Fund data directory contents:"
+            ls -l fund_data
+          fi
+
+      - name: Commit and push results
+        run: |
+          git config --global user.name 'GitHub Action'
+          git config --global user.email 'action@github.com'
+          git add market_monitor_report.md
+          git add market_monitor.log
+          git add fund_data
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Update market monitor report and fund data - $(date)"
+            git push
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        continue-on-error: true
+
+      - name: Check for errors in log
+        if: always()
+        run: |
+          if [ -f market_monitor.log ]; then
+            echo "Full log content:"
+            cat market_monitor.log
+            if grep -i "ERROR" market_monitor.log; then
+              echo "Errors found in log:"
+              grep -i "ERROR" market_monitor.log
+              exit 1
+            else
+              echo "No errors found in log. Success!"
+            fi
+          else
+            echo "market_monitor.log not found. Workflow may have failed at an earlier step."
+            exit 1
+          fi

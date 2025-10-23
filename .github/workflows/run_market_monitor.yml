@@ -1,33 +1,27 @@
 name: Run Market Monitor
 
 on:
-  # 在以下情况触发工作流
   schedule:
-   - cron: '0 */3 * * *'
-  # 当以下文件被推送时触发
+    - cron: '0 */3 * * *'
   push:
     paths:
       - 'analysis_report.md'
       - 'market_monitor.py'
       - '.github/workflows/run_market_monitor.yml'
-  # 允许手动触发工作流
   workflow_dispatch:
 
 jobs:
   monitor:
     runs-on: ubuntu-latest
-    # 设置超时时间为6小时，以防数据量过大导致超时
-    timeout-minutes: 360
+    timeout-minutes: 359
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          # 获取完整的提交历史，以便进行文件差异比较
           fetch-depth: 0
 
       - name: Cache fund data
-        # 使用缓存来加速后续运行，避免重复下载历史数据
         uses: actions/cache@v4
         with:
           path: fund_data
@@ -43,53 +37,43 @@ jobs:
       - name: Install Python dependencies
         run: |
           python -m pip install --upgrade pip
-          # 安装新脚本所需的库，包括 pandas, numpy, requests, tenacity, lxml 和 tabulate
-          pip install --upgrade pandas numpy requests tenacity lxml tabulate html5lib beautifulsoup4 openpyxl
-      
+          pip install --upgrade pandas numpy requests tenacity lxml tabulate
+        
       - name: Run Market Monitor script
         run: |
-          # 运行Python脚本，并将日志输出到文件
           rm -f market_monitor.log
           python market_monitor.py || { echo "Script failed, check market_monitor.log"; cat market_monitor.log 2>/dev/null || echo "No log file generated"; exit 1; }
 
       - name: Check generated files
-        # 检查并打印新生成的文件，便于调试
         run: |
           echo "Checking generated files:"
-          ls -l market_monitor_report.md backtest_report.md backtest_results.csv market_monitor.log fund_data 2>/dev/null || echo "Some files may not exist"
+          ls -l market_monitor_report.md market_monitor.log fund_data 2>/dev/null || echo "Some files may not exist"
           if [ -f market_monitor_report.md ]; then
-            echo "--- Contents of market_monitor_report.md:"
+            echo "Contents of market_monitor_report.md:"
             cat market_monitor_report.md
           fi
-          if [ -f backtest_report.md ]; then
-            echo "--- Contents of backtest_report.md:"
-            cat backtest_report.md
-          fi
           if [ -f market_monitor.log ]; then
-            echo "--- Contents of market_monitor.log:"
+            echo "Contents of market_monitor.log:"
             cat market_monitor.log
+          fi
+          if [ -d fund_data ]; then
+            echo "Fund data directory contents:"
+            ls -l fund_data
           fi
 
       - name: Commit and push results
-        # 提交并推送新生成的文件
         run: |
           git config --global user.name 'GitHub Action'
           git config --global user.email 'action@github.com'
-          # 将所有新生成的文件添加到暂存区
           git add market_monitor_report.md
-          git add backtest_report.md
-          git add backtest_results.csv
           git add market_monitor.log
-          git add portfolio_recommendation.md
           git add fund_data
-          # 如果有文件更改，则提交
           if git diff --staged --quiet; then
             echo "No changes to commit"
           else
-            git commit -m "Update market monitor report, backtest results, and fund data - $(date)"
+            git commit -m "Update market monitor report and fund data - $(date)"
             git push
           fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        # 即使此步骤失败也继续，以防因权限问题导致后续步骤被跳过
         continue-on-error: true

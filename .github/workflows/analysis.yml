@@ -1,0 +1,49 @@
+name: 基金投资分析与报告生成
+
+on:
+  # 手动触发：允许您随时在 GitHub Actions 页面手动运行此工作流
+  workflow_dispatch:
+  # 定时触发：例如，设置在每周一 01:00 UTC (北京时间周一上午 9:00) 自动运行
+  schedule:
+    - cron: '0 1 * * 1' 
+  # 也可以在向 fund_data/ 目录推送新数据时运行 (可选)
+  push:
+    paths:
+      - 'fund_data/*.csv'
+      - 'fund_analysis.py'
+
+jobs:
+  analyze_and_commit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 检出代码 (Checkout repository)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 
+
+      - name: 设置 Python 环境
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: 安装所需依赖
+        run: |
+          pip install pandas numpy
+
+      - name: 运行基金分析脚本
+        run: |
+          python fund_analysis.py
+
+      - name: 设置 Git 提交用户信息
+        run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          
+      - name: 提交生成的报告文件
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+        
+          file_pattern: '**'
+          commit_message: '🤖 自动分析：更新基金投资建议报告'
+          commit_options: '--no-verify --allow-empty'
+          force_push: true

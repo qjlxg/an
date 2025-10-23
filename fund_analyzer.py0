@@ -1,0 +1,275 @@
+import pandas as pd
+import glob
+import os
+
+# --- 配置参数 (双重筛选条件) ---
+FUND_DATA_DIR = 'fund_data'
+MIN_CONSECUTIVE_DROP_DAYS = 5 # 连续下跌天数的阈值 (用于30日)
+MIN_MONTH_DRAWDOWN = 0.10     # 1个月回撤的阈值 (10%)
+# 新增：高弹性筛选的最低回撤阈值 (例如 15%)
+HIGH_ELASTICITY_MIN_DRAWDOWN = 0.15 
+# REPORT_FILE 不再是固定的文件名，但我们保留它作为一个基名
+REPORT_BASE_NAME = 'fund_warning_report' 
+
+# --- 新增函数：解析 Markdown 报告并提取基金代码 ---
+def extract_fund_codes(report_content):
+    """
+    解析 Markdown 报告内容，提取 '强买入' 和 '弱买入' 信号的基金代码。
+    【修正】: 增强了对表格分隔符的识别，以兼容不同格式的 Markdown 表格。
+    """
+    codes = set()
+    lines = report_content.split('\n')
+    
+    # 查找表格的起始行
+    in_table = False
+    for line in lines:
+        # 【关键修正】: 识别包含 |、--- 和 : 的行作为分隔符，更通用
+        if line.strip().startswith('|') and '---' in line and ':' in line: 
+            in_table = True
+            continue
+        
+        # 确保在表格内、行不为空且至少有8个数据列（9个分隔符）
+        if in_table and line.strip() and line.count('|') >= 8: 
+            # 剥离并清除每个单元格的空格
+            parts = [p.strip() for p in line.split('|')]
+            
+            # parts 结构: ['','基金代码',...,'投资建议','行动信号','']
+            # 行动信号在倒数第二列 (索引 -2)
+            if len(parts) > 7:
+                action_signal = parts[-2]
+                fund_code = parts[1]
+                
+                if action_signal == '强买入' or action_signal == '弱买入':
+                    try:
+                        # 基金代码通常是数字，去除可能的空格
+                        if fund_code.isdigit():
+                            codes.add(fund_code)
+                    except ValueError:
+                        continue # 忽略非数字的基金代码
+                        
+    return list(codes)
+
+# --- 原有函数：计算连续下跌天数 ---
+def calculate_consecutive_drops(series):
+    """
+    计算系列中最大连续下跌天数。
+    下跌定义为：当日净值 < 前一日净值。
+    """
+    if series.empty or len(series) < 2:
+        return 0
+
+    drops = (series < series.shift(1)).iloc[1:] 
+    drops_int = drops.astype(int)
+    
+    max_drop_days = 0
+    current_drop_days = 0
+    for val in drops_int:
+        if val == 1:
+            current_drop_days += 1
+        else:
+            max_drop_days = max(max_drop_days, current_drop_days)
+            current_drop_days = 0
+    max_drop_days = max(max_drop_days, current_drop_days)
+
+    return max_drop_days
+
+# --- 原有函数：计算最大回撤 ---
+def calculate_max_drawdown(series):
+    """
+    计算净值系列的最大回撤 (MDD)。
+    """
+    if series.empty:
+        return 0.0
+    rolling_max = series.cummax()
+    drawdown = (rolling_max - series) / rolling_max
+    mdd = drawdown.max()
+    return mdd
+
+# --- 关键修改：生成报告，增加高弹性筛选 ---
+def generate_report(results, timestamp_str):
+    """
+    将分析结果生成 Markdown 格式报告。
+    """
+    now_str = timestamp_str
+
+    if not results:
+        return (
+            f"# 基金预警报告 ({now_str} UTC+8)\n\n"
+            f"## 分析总结\n\n"
+            f"**恭喜，在过去一个月内，没有发现同时满足 '连续下跌{MIN_CONSECUTIVE_DROP_DAYS}天以上' 和 '1个月回撤{MIN_MONTH_DRAWDOWN*100:.0f}%以上' 的基金。**\n\n"
+            f"---\n"
+            f"分析数据时间范围: 最近30个交易日 (通常约为1个月)。"
+        )
+
+    # 1. 主列表处理 (所有预警基金)
+    df_results = pd.DataFrame(results)
+    df_results = df_results.sort_values(by='最大回撤', ascending=False).reset_index(drop=True)
+    df_results.index = df_results.index + 1 
+    
+    total_count = len(df_results)
+    
+    report = f"# 基金预警报告 ({now_str} UTC+8)\n\n"
+    
+    # --- 增加总结部分 ---
+    report += f"## 分析总结\n\n"
+    report += f"本次分析共发现 **{total_count}** 只基金同时满足以下两个预警条件（基于最近30个交易日）：\n"
+    report += f"1. **连续下跌**：净值连续下跌 **{MIN_CONSECUTIVE_DROP_DAYS}** 天以上。\n"
+    report += f"2. **高回撤**：近 1 个月内最大回撤达到 **{MIN_MONTH_DRAWDOWN*100:.0f}%** 以上。\n\n"
+    report += f"**新增分析维度：近一周（5日）连跌天数，详见下方列表。**\n"
+    report += f"---"
+    
+    # 2. 【新增】高弹性精选列表筛选
+    # 条件：最大回撤 >= 15% 且 近一周连跌天数 == 1
+    df_elastic = df_results[
+        (df_results['最大回撤'] >= HIGH_ELASTICITY_MIN_DRAWDOWN) & 
+        (df_results['近一周连跌'] == 1)
+    ].copy() 
+    
+    # 重设索引作为精选排名
+    if not df_elastic.empty:
+        df_elastic = df_elastic.sort_values(by='最大回撤', ascending=False).reset_index(drop=True)
+        df_elastic.index = df_elastic.index + 1
+        
+        elastic_count = len(df_elastic)
+        
+        report += f"\n## **高弹性精选列表** ({elastic_count}只)\n\n"
+        
+        # --- 错误修复：将 $\mathbf{= 1}$ 中的 = 号移到 f-string 表达式花括号外 ---
+        report += f"此列表已从预警列表中筛选：**最大回撤 $\ge$ {HIGH_ELASTICITY_MIN_DRAWDOWN*100:.0f}%** 且 **近一周连跌天数 = 1** 的基金。\n"
+        # --------------------------------------------------------------------------
+        
+        report += f"这些基金理论上具备较高的超跌反弹潜力（高风险）。\n\n"
+        
+        report += f"| 排名 | 基金代码 | 最大回撤 (1个月) | 最大连续下跌天数 (1个月) | 近一周连跌天数 (5日) |\n"
+        report += f"| :---: | :---: | ---: | ---: | ---: |\n"  
+
+        for index, row in df_elastic.iterrows():
+            report += f"| {index} | `{row['基金代码']}` | **{row['最大回撤']:.2%}** | {row['最大连续下跌']} | {row['近一周连跌']} |\n"
+        
+        report += "\n---\n"
+    else:
+        report += f"\n## **高弹性精选列表**\n\n"
+        report += f"没有基金同时满足：最大回撤 $\ge$ {HIGH_ELASTICITY_MIN_DRAWDOWN*100:.0f}% 且 近一周连跌天数 = 1 的筛选条件。\n\n"
+        report += "\n---\n"
+
+
+    # 3. 原有预警基金列表 (所有符合条件的基金)
+    report += f"\n## 所有预警基金列表 (共 {total_count} 只，按最大回撤降序排列)\n\n"
+    
+    report += f"| 排名 | 基金代码 | 最大回撤 (1个月) | 最大连续下跌天数 (1个月) | 近一周连跌天数 (5日) |\n"
+    report += f"| :---: | :---: | ---: | ---: | ---: |\n"  
+
+    for index, row in df_results.iterrows():
+        report += f"| {index} | `{row['基金代码']}` | **{row['最大回撤']:.2%}** | {row['最大连续下跌']} | {row['近一周连跌']} |\n"
+    
+    report += "\n---\n"
+    report += f"分析数据时间范围: 最近30个交易日 (通常约为1个月)。\n"
+
+    return report
+
+
+def analyze_all_funds(target_codes=None): 
+    """
+    遍历基金数据目录，分析每个基金，并返回符合条件的基金列表。
+    """
+    if target_codes:
+        csv_files = [os.path.join(FUND_DATA_DIR, f'{code}.csv') for code in target_codes]
+        csv_files = [f for f in csv_files if os.path.exists(f)]
+        
+        if not csv_files:
+            print(f"警告：在目录 '{FUND_DATA_DIR}' 中未找到目标基金对应的 CSV 文件。")
+            return []
+    else:
+        csv_files = glob.glob(os.path.join(FUND_DATA_DIR, '*.csv'))
+        if not csv_files:
+            print(f"警告：在目录 '{FUND_DATA_DIR}' 中未找到任何 CSV 文件。")
+            return []
+
+
+    print(f"找到 {len(csv_files)} 个基金数据文件，开始分析...")
+    
+    qualifying_funds = []
+    
+    for filepath in csv_files:
+        try:
+            fund_code = os.path.splitext(os.path.basename(filepath))[0]
+            
+            df = pd.read_csv(filepath)
+            df['date'] = pd.to_datetime(df['date'])
+            df = df.sort_values(by='date', ascending=False).reset_index(drop=True) 
+            df = df.rename(columns={'net_value': 'value'})
+            
+            if len(df) < 30:
+                continue
+            
+            df_recent_month = df.head(30)
+            df_recent_week = df.head(5)
+            
+            max_drop_days_month = calculate_consecutive_drops(df_recent_month['value'])
+            mdd_recent_month = calculate_max_drawdown(df_recent_month['value'])
+            max_drop_days_week = calculate_consecutive_drops(df_recent_week['value'])
+
+
+            if max_drop_days_month >= MIN_CONSECUTIVE_DROP_DAYS and mdd_recent_month >= MIN_MONTH_DRAWDOWN:
+                qualifying_funds.append({
+                    '基金代码': fund_code,
+                    '最大回撤': mdd_recent_month,  
+                    '最大连续下跌': max_drop_days_month,
+                    '近一周连跌': max_drop_days_week
+                })
+
+        except Exception as e:
+            print(f"处理文件 {filepath} 时发生错误: {e}")
+            continue
+
+    return qualifying_funds
+
+
+if __name__ == '__main__':
+    
+    # 0. 获取当前时间戳和目录名
+    try:
+        now = pd.Timestamp.now(tz='Asia/Shanghai')
+        # 用于报告内容的时间戳
+        timestamp_for_report = now.strftime('%Y-%m-%d %H:%M:%S')
+        # 用于文件名的格式化时间戳
+        timestamp_for_filename = now.strftime('%Y%m%d_%H%M%S')
+        # 用于目录名的年-月
+        DIR_NAME = now.strftime('%Y%m') 
+    except Exception:
+        # 异常处理，确保程序继续运行
+        timestamp_for_report = pd.Timestamp.now().strftime('%Y-%m-%d %H:%M:%S')
+        timestamp_for_filename = pd.Timestamp.now().strftime('%Y%m%d_%H%M%S')
+        DIR_NAME = pd.Timestamp.now().strftime('%Y%m')
+        
+    # --- 关键修改 1：创建目标目录 ---
+    os.makedirs(DIR_NAME, exist_ok=True)
+        
+    # --- 关键修改 2：生成带目录和时间戳的文件名 ---
+    REPORT_FILE = os.path.join(DIR_NAME, f"{REPORT_BASE_NAME}_{timestamp_for_filename}.md")
+
+    # 3. 读取并解析 market_monitor_report.md 文件
+    try:
+        # 假设 market_monitor_report.md 是当前目录下的文件
+        with open('market_monitor_report.md', 'r', encoding='utf-8') as f:
+            report_content = f.read()
+        
+        target_funds = extract_fund_codes(report_content)
+        # 修正后，这里应该会显示提取到的基金代码数量
+        print(f"已从报告中提取 {len(target_funds)} 个 '强买入' 或 '弱买入' 信号的基金代码。")
+        
+    except FileNotFoundError:
+        print("警告：未找到 market_monitor_report.md 文件，将分析 FUND_DATA_DIR 目录下的所有文件。")
+        target_funds = None
+
+    # 4. 执行分析，只针对目标基金
+    results = analyze_all_funds(target_codes=target_funds)
+    
+    # 5. 生成 Markdown 报告 (传入用于报告内的时间戳)
+    report_content = generate_report(results, timestamp_for_report)
+    
+    # 6. 写入报告文件
+    with open(REPORT_FILE, 'w', encoding='utf-8') as f:
+        f.write(report_content)
+    
+    print(f"分析完成，报告已保存到 {REPORT_FILE}")

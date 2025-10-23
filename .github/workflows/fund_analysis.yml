@@ -1,0 +1,58 @@
+name: Fund Drawdown Analysis
+
+on:
+  # 1. 自动触发条件：当以下文件被修改并推送到仓库时，工作流自动运行
+  push:
+    paths:
+      - 'fund_analyzer.py'
+      - '.github/workflows/fund_analysis.yml'
+      - 'fund_data/**.csv'
+      
+  # 2. 定时运行：每天北京时间 08:30 运行
+  schedule:
+    - cron: '30 0 * * *'
+    
+  # 3. 允许手动触发
+  workflow_dispatch:
+
+jobs:
+  analyze_funds:
+    # 设置时区为北京时间
+    env:
+      TZ: Asia/Shanghai
+      
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        # --- 错误修正：将 'actions:setup-python@v5' 改为 'actions/setup-python@v5' ---
+        uses: actions/setup-python@v5 
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pandas
+
+      - name: Run fund analysis script
+        id: analysis
+        run: python fund_analyzer.py
+
+      - name: Commit and push report
+        # 仅在脚本成功运行后提交文件
+        if: success()
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          # 匹配所有子目录下的报告文件
+          file_pattern: '**/fund_warning_report_*.md'
+          # CI/CD 修复：在提交前拉取最新代码并 rebase，解决非快进错误
+          pull_options: '--rebase'  
+          # ---------------------------------------------------------------------
+          commit_message: 'Automated fund analysis report update'
+          commit_user_name: GitHub Actions Bot
+          commit_user_email: actions@github.com
+          commit_author: GitHub Actions Bot <actions@github.com>
