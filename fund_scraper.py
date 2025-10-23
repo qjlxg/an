@@ -26,13 +26,13 @@ REQUEST_DELAY = 0.5
 MAX_CONCURRENT = 5
 # --- 结束配置常量 ---
 
-# 从 CSV 读取基金代码并补零 (已修复编码问题)
+# 从 CSV 读取基金代码并补零 
 def get_fund_codes_from_csv(file_path):
     """从 CSV 文件读取基金代码，并根据关键字过滤，将其填充为 6 位数字。"""
     EXCLUDE_KEYWORDS = ['币', '债', '持有', 'A', 'B']
     
     try:
-        # 关键修复：显式指定编码为 'gb18030' 以兼容中文 CSV 文件
+        # 修复：显式指定编码为 'gb18030' 以兼容中文 CSV 文件
         df = pd.read_csv(file_path, encoding='gb18030')
         
         if 'code' not in df.columns or 'name' not in df.columns:
@@ -43,7 +43,6 @@ def get_fund_codes_from_csv(file_path):
         initial_count = len(df)
         mask = pd.Series([True] * initial_count)
         
-        # 对每个排除关键字进行过滤
         for keyword in EXCLUDE_KEYWORDS:
             mask &= ~df['name'].astype(str).str.contains(keyword, case=False, na=False)
             
@@ -62,7 +61,6 @@ def get_fund_codes_from_csv(file_path):
         return fund_codes
         
     except Exception as e:
-        # 如果 gb18030 失败，会捕获到错误并打印，以便进一步排查
         logger.error(f"读取和过滤基金代码出错: {e}")
         return []
 
@@ -101,8 +99,9 @@ def extract_js_variable_content(text, var_name):
             
     if content_end_index != -1:
         data_str = text[content_start_index : content_end_index + 1].strip()
-        data_str = re.sub(r'\s*/\*.*$', '', data_str, re.DOTALL).strip()
-        data_str = re.sub(r'\s*//.*$', '', data_str, re.MULTILINE).strip()
+        # 修复：显式指定 flags 参数，消除 DeprecationWarning
+        data_str = re.sub(r'\s*/\*.*$', '', data_str, flags=re.DOTALL).strip()
+        data_str = re.sub(r'\s*//.*$', '', data_str, flags=re.MULTILINE).strip()
         logger.debug(f"Successfully extracted variable {var_name}")
         return data_str
         
@@ -127,7 +126,9 @@ def clean_and_parse_js_object(js_text):
     
     def replace_unquoted_keys(match):
         return match.group(1) + '"' + match.group(2) + '":'
-    cleaned_js = re.sub(r'([\{\,]\s*)([a-zA-Z_]\w*)\s*:', replace_unquoted_keys)
+    
+    # 关键修复：添加 'cleaned_js' 作为 'string' 参数
+    cleaned_js = re.sub(r'([\{\,]\s*)([a-zA-Z_]\w*)\s*:', replace_unquoted_keys, cleaned_js)
     
     cleaned_js = cleaned_js.replace('True', 'true').replace('False', 'false').replace('Null', 'null').replace('NaN', 'null')
     
@@ -193,7 +194,6 @@ def save_to_csv(fund_code, data):
             net_worth_df = net_worth_df[['date', 'y', 'equityReturn', 'unitMoney']]
             net_worth_df.columns = ['date', 'net_value', 'equity_return', 'unit_money']
             
-            # 保存到 CSV
             net_worth_path = os.path.join(fund_output_dir, f"{fund_code}_net_worth.csv")
             net_worth_df.to_csv(net_worth_path, index=False, encoding='utf-8')
             logger.info(f"Saved net worth trend for fund {fund_code} to {net_worth_path}")
@@ -209,7 +209,6 @@ def save_to_csv(fund_code, data):
                 'description': performance_data.get('dsc', [])
             })
             
-            # 保存到 CSV
             performance_path = os.path.join(fund_output_dir, f"{fund_code}_performance.csv")
             performance_df.to_csv(performance_path, index=False, encoding='utf-8')
             logger.info(f"Saved performance evaluation for fund {fund_code} to {performance_path}")
@@ -239,14 +238,12 @@ async def fetch_all_funds(fund_codes):
 def main():
     os.makedirs(OUTPUT_DIR, exist_ok=True)
     
-    # 读取和格式化基金代码 (包含过滤逻辑)
     fund_codes = get_fund_codes_from_csv(FUND_LIST_FILE)
     
     if not fund_codes:
         logger.error(f"No fund codes found in {FUND_LIST_FILE}. Exiting.")
         return
     
-    # 运行异步主函数
     try:
         loop = asyncio.get_event_loop()
     except RuntimeError:
