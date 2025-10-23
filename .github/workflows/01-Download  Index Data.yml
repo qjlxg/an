@@ -1,4 +1,4 @@
-name: Download and Update Index Data
+name: 01-Download and Update Index Data
 
 on:
   # 定时任务：每天早上 9:00 (北京时间) 运行

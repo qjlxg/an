@@ -1,5 +1,4 @@
-name: Run Market Monitor
-
+name: 04-market_monitor_report.md
 on:
   schedule:
     - cron: '0 */3 * * *'

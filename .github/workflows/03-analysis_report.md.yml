@@ -1,5 +1,5 @@
-# 工作流名称，将显示在 GitHub Actions 页面
-name: Run Fund Analysis Script with Concurrency
+
+name: 03-analysis_report.md
 
 # 触发工作流的事件
 on:

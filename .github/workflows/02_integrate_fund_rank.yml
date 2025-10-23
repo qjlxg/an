@@ -1,4 +1,4 @@
-name: Integrated Fund Analysis Workflow
+name: 02-recommended_cn_funds.csv fund
 
 on:
   schedule:
