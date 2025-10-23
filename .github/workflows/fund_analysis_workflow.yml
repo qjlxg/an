@@ -1,0 +1,41 @@
+name: Fund Holdings Analysis
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'analyze_holdings.py'
+      - '.github/workflows/fund_analysis_workflow.yml'
+  workflow_dispatch:
+  schedule:
+     - cron: '0 */3 * * *'
+jobs:
+  analyze-and-report:
+    runs-on: ubuntu-latest
+    
+    env:
+      TZ: Asia/Shanghai
+      
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pandas tabulate requests openpyxl 
+
+      - name: Run analysis script
+        run: python analyze_holdings.py
+
+      - name: Commit and push changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "自动更新：基金持仓分析报告"
+          file_pattern: analysis_report.md

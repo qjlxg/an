@@ -1,0 +1,86 @@
+# 工作流名称，将显示在 GitHub Actions 页面
+name: Run Fund Analysis Script with Concurrency
+
+# 触发工作流的事件
+on:
+  # 允许手动在 GitHub 界面上运行工作流
+  workflow_dispatch:
+  # 定时任务，例如每 3 小时运行一次 (cron: '0 */3 * * *')
+  schedule:
+    - cron: '0 */3 * * *'
+  # 当 fund_analyzer.py 或工作流文件本身被修改并推送时，自动运行
+  push:
+    paths:
+      - 'fund_analyzer.py' # 假设您的新脚本名为 fund_analyzer.py
+      - '.github/workflows/run_fund_analysis.yml'
+
+# 为整个工作流提供权限
+permissions:
+  contents: write
+
+# 定义工作任务
+jobs:
+  run-script-and-commit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 359 # 增加超时时间，以防并发请求过多导致的长尾延迟
+
+    # 设置环境变量，包括时区。由于您在新脚本中使用了 os.getenv，这些路径设置是合理的。
+    env:
+      TZ: Asia/Shanghai
+      # 显式设置路径，确保 Selenium 找到驱动
+      CHROME_BINARY_PATH: /usr/bin/chromium-browser
+      CHROMEDRIVER_PATH: /usr/bin/chromedriver
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10' # 保持与您的环境兼容的 Python 版本
+
+      - name: Install dependencies and setup Selenium
+        run: |
+          # 更新 pip
+          python -m pip install --upgrade pip
+          # 安装 Python 库。lxml 是 BeautifulSoup 的高性能解析器
+          pip install pandas numpy requests beautifulsoup4 lxml akshare selenium --upgrade
+
+          # 安装 Chromium 浏览器和 ChromeDriver
+          sudo apt-get update
+          sudo apt-get install -y chromium-browser chromium-chromedriver
+          
+          # 检查版本和路径（用于调试）
+          chromium-browser --version
+          which chromedriver
+          
+      - name: Run Python script
+        # 运行脚本，现在由于并发执行，速度会更快
+        run: |
+          python fund_analyzer.py
+          
+      - name: Commit new analysis report and data
+        run: |
+          # 配置 Git
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          
+          # 重要的更改：添加缓存文件和日志文件
+          # analysis_report.md 是新生成的报告文件
+          # fund_cache.json 是加速用的缓存文件
+          # fund_analyzer.log 是脚本运行日志
+          git add analysis_report.md fund_cache.json fund_analyzer.log
+          
+          # 检查是否有更改，如果有则提交。这解决了您最初遇到的“没有新文件提交”的问题。
+          if git diff --staged --quiet; then
+            echo "No changes detected. Skipping commit."
+          else
+            git commit -m "Auto-generated analysis report for $(date +'%Y-%m-%d')"
+            echo "Successfully committed changes."
+          fi
+          
+      - name: Push changes
+        run: |
+          # 推送更改到仓库
+          git push || echo "No changes to push (already handled by the commit check)."

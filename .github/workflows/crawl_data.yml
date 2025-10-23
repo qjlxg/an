@@ -1,0 +1,34 @@
+name: Crawl Fund Holdings
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'fund_crawler.py'
+      - 'requirements.txt'
+  schedule:
+    - cron: '0 */3 * * *' 
+  workflow_dispatch:
+
+jobs:
+  crawl:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+      
+      - run: pip install requests pandas beautifulsoup4 lxml
+      
+      - run: mkdir -p data
+      
+      - run: python fund_crawler.py
+      
+      - name: Commit changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "Update fund data"
+          file_pattern: data/
