@@ -1,11 +1,10 @@
-
 name: 03-analysis_report.md
 
 # 触发工作流的事件
 on:
   # 允许手动在 GitHub 界面上运行工作流
   workflow_dispatch:
-  # 定时任务，例如每 3 小时运行一次 (cron: '0 */3 * * *')
+  # 定时任务，例如每 3 小时运行一次
   schedule:
     - cron: '0 */3 * * *'
   # 当 fund_analyzer.py 或工作流文件本身被修改并推送时，自动运行
@@ -22,9 +21,10 @@ permissions:
 jobs:
   run-script-and-commit:
     runs-on: ubuntu-latest
-    timeout-minutes: 359 # 增加超时时间，以防并发请求过多导致的长尾延迟
+    # 增加超时时间，以防并发请求过多导致的长尾延迟
+    timeout-minutes: 360 
 
-    # 设置环境变量，包括时区。由于您在新脚本中使用了 os.getenv，这些路径设置是合理的。
+    # 设置环境变量
     env:
       TZ: Asia/Shanghai
       # 显式设置路径，确保 Selenium 找到驱动
@@ -38,13 +38,13 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.10' # 保持与您的环境兼容的 Python 版本
+          python-version: '3.10' 
 
       - name: Install dependencies and setup Selenium
         run: |
-          # 更新 pip
+          # 更新 pip 和安装 Python 库
           python -m pip install --upgrade pip
-          # 安装 Python 库。lxml 是 BeautifulSoup 的高性能解析器
+          # 注意：requests beautifulsoup4 lxml akshare selenium 都是您脚本可能需要的依赖
           pip install pandas numpy requests beautifulsoup4 lxml akshare selenium --upgrade
 
           # 安装 Chromium 浏览器和 ChromeDriver
@@ -56,7 +56,7 @@ jobs:
           which chromedriver
           
       - name: Run Python script
-        # 运行脚本，现在由于并发执行，速度会更快
+        # 运行基金分析脚本。假设脚本在结束时会生成 analysis_report.md
         run: |
           python fund_analyzer.py
           
@@ -66,21 +66,33 @@ jobs:
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           
-          # 重要的更改：添加缓存文件和日志文件
-          # analysis_report.md 是新生成的报告文件
-          # fund_cache.json 是加速用的缓存文件
-          # fund_analyzer.log 是脚本运行日志
-          git add analysis_report.md fund_cache.json fund_analyzer.log
+          # =========================================================
+          # 【更健壮的改进】: 使用多个 git add，并对非核心文件使用 '|| true'
+          # 这确保了即使缓存文件或日志文件不存在，工作流也不会失败。
+          # =========================================================
           
-          # 检查是否有更改，如果有则提交。这解决了您最初遇到的“没有新文件提交”的问题。
+          # 1. 添加主报告文件 (核心文件，必须存在)
+          git add analysis_report.md
+          
+          # 2. 添加缓存和日志文件 (非核心文件，如果不存在则忽略错误)
+          git add fund_cache.json || true
+          git add fund_analyzer.log || true
+          
+          # 3. 添加动态生成的月度目录下的文件（如果需要归档历史文件）
+          # 这里的目录名需要与Python脚本中的 DIR_NAME 保持一致（格式：YYYYMM）
+          # 注意：为了健壮性，这里假设目录存在。
+          MONTH_DIR=$(date +%Y%m)
+          git add $MONTH_DIR/* || true
+          
+          # 检查是否有更改，如果有则提交。
           if git diff --staged --quiet; then
             echo "No changes detected. Skipping commit."
           else
-            git commit -m "Auto-generated analysis report for $(date +'%Y-%m-%d')"
+            git commit -m "Auto-generated analysis report for $(date +'%Y-%m-%d %H:%M:%S' -d "$TZ")"
             echo "Successfully committed changes."
           fi
           
       - name: Push changes
         run: |
           # 推送更改到仓库
-          git push || echo "No changes to push (already handled by the commit check)."
+          git push
