@@ -87,30 +87,43 @@ def calculate_technical_indicators(df):
         '最新净值': round(value_latest, 4)
     }
 
-# --- 原有函数：解析 Markdown 报告并提取基金代码 ---
+# --- 修改后的函数：解析 Markdown 报告并提取基金代码 (核心修改) ---
 def extract_fund_codes(report_content):
     codes = set()
     lines = report_content.split('\n')
     
     in_table = False
     for line in lines:
+        # 寻找表格分隔行，它通常包含 '---' 和 ':'
         if line.strip().startswith('|') and '---' in line and ':' in line: 
             in_table = True
             continue
         
+        # 确保在表格内，且行格式正确（至少有8个分隔符，即9列）
         if in_table and line.strip() and line.count('|') >= 8: 
             parts = [p.strip() for p in line.split('|')]
             
+            # 行动信号通常在倒数第二列 (parts[-2])，基金代码在第二列 (parts[1])
             if len(parts) > 7:
-                action_signal = parts[-2]
-                fund_code = parts[1]
+                action_signal = parts[-3]  # 根据提供的 report.md 片段，行动信号似乎在倒数第三列
+                # 假设表格列为：| 基金代码 | ... | 投资建议 | 行动信号 | ... |
+                # 索引: [0], [1], ..., [-4], [-3], [-2], [-1]
+                # 重新检查发现报告片段：| 基金代码 | ... | 投资建议 | 行动信号 | MACD差值 | 布林上轨 | 布林下轨 |
+                # parts[1] is 基金代码, parts[6] is 行动信号 (从0开始计)
                 
-                if action_signal == '强买入' or action_signal == '弱买入':
-                    try:
-                        if fund_code.isdigit():
-                            codes.add(fund_code)
-                    except ValueError:
-                        continue 
+                # 尝试根据 parts[1] (基金代码) 和 parts[6] (行动信号) 进行解析
+                if len(parts) >= 8: # 确保至少有 8 个非空部分，即 9 列
+                    fund_code = parts[1]
+                    action_signal = parts[6]
+
+                    # 核心修改：筛选 '买入' 或 '关注买入'
+                    if action_signal == '买入' or action_signal == '关注买入':
+                        try:
+                            # 确保基金代码是数字
+                            if fund_code.isdigit():
+                                codes.add(fund_code)
+                        except ValueError:
+                            continue 
                         
     return list(codes)
 
@@ -143,7 +156,7 @@ def calculate_max_drawdown(series):
     mdd = drawdown.max()
     return mdd
 
-# --- 关键修改：生成报告，增加技术指标列和行动提示 ---
+# --- 原有函数：生成报告，增加技术指标列和行动提示 ---
 def generate_report(results, timestamp_str):
     now_str = timestamp_str
 
@@ -232,7 +245,7 @@ def generate_report(results, timestamp_str):
     return report
 
 
-# --- 关键修改：在分析时计算技术指标和行动提示 ---
+# --- 原有函数：在分析时计算技术指标和行动提示 ---
 def analyze_all_funds(target_codes=None): 
     """
     遍历基金数据目录，分析每个基金，并返回符合条件的基金列表。
@@ -343,7 +356,8 @@ if __name__ == '__main__':
             report_content = f.read()
         
         target_funds = extract_fund_codes(report_content)
-        print(f"已从报告中提取 {len(target_funds)} 个 '强买入' 或 '弱买入' 信号的基金代码。")
+        # 打印信息修改为新的筛选条件
+        print(f"已从报告中提取 {len(target_funds)} 个 '买入' 或 '关注买入' 信号的基金代码。")
         
     except FileNotFoundError:
         print("警告：未找到 market_monitor_report.md 文件，将分析 FUND_DATA_DIR 目录下的所有文件。")
