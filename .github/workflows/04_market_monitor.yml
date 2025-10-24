@@ -53,6 +53,9 @@ jobs:
         run: |
           echo "开始增量更新..."
           python market_monitor.py
+        env:
+          # --- 步骤 1/2: 设置 Python 运行时的时区 ---
+          TZ: Asia/Shanghai
 
       - name: Show Summary
         run: |
@@ -77,10 +80,10 @@ jobs:
           if git diff --staged --quiet; then
             echo "无数据更新，跳过提交"
           else
-            # 设置时区为亚洲/上海 (UTC+8)，并获取时间
+            # --- 步骤 2/2: 设置 Git 提交信息的时区 ---
+            # 使用 TZ='Asia/Shanghai' 来获取上海时间 (UTC+8)
             SHANGHAI_TIME=$(TZ='Asia/Shanghai' date '+%Y-%m-%d %H:%M')
             
-            # 使用上海时间作为提交信息
             git commit -m "Auto: Update fund data & report [${SHANGHAI_TIME}]"
             
             git pull --rebase
