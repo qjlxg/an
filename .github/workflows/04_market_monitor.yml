@@ -7,7 +7,7 @@ on:
     paths:
       - 'C类.txt'
       - 'market_monitor.py'
-      - '.github/workflows/run_market_monitor.yml'
+      - '.github/workflows/04_market_monitor.yml'
   workflow_dispatch:
 
 jobs:
@@ -78,6 +78,7 @@ jobs:
             echo "无数据更新，跳过提交"
           else
             git commit -m "Auto: Update fund data & report [$(date '+%Y-%m-%d %H:%M')]"
+            git pull --rebase
             git push
             echo "已推送更新"
           fi
