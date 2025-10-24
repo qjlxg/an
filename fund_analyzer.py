@@ -45,6 +45,7 @@ class SeleniumFetcher:
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument('user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36')
         # 从环境变量获取路径
+        # 注意: 这部分路径设置依赖于运行环境，保持原样
         chrome_options.binary_location = os.getenv('CHROME_BINARY_PATH', '/usr/bin/chromium-browser')
         service = ChromeService(executable_path=os.getenv('CHROMEDRIVER_PATH', '/usr/bin/chromedriver'))
         try:
@@ -157,6 +158,10 @@ class FundAnalyzer:
                     'sharpe_ratio': float(sharpe_ratio),
                     'max_drawdown': float(max_drawdown)
                 }
+                # 保存到缓存
+                if self.cache_data:
+                    self.cache.setdefault('fund', {})[fund_code] = result
+                    self._save_cache()
                 return fund_code, result
             except Exception as e:
                 self._log(f"获取基金 {fund_code} 数据失败 (尝试 {attempt+1}/3): {e}")
@@ -365,7 +370,10 @@ class FundAnalyzer:
         
         # 构建报告 DataFrame
         report_data = []
-        for code in self.fund_data.keys():
+        # 确保只遍历已成功抓取数据的基金代码
+        processed_codes = set(self.fund_data.keys()) | set(self.manager_data.keys()) 
+        
+        for code in processed_codes:
             fund_name = fund_info_dict.get(code, 'N/A')
             
             fund_stats = self.fund_data.get(code, {})
@@ -386,6 +394,7 @@ class FundAnalyzer:
         df_report = pd.DataFrame(report_data)
         
         # 数据清洗和格式化
+        # 修正：将回撤格式化为负百分比字符串
         df_report['最大回撤'] = df_report['最大回撤'].apply(lambda x: f"{-x*100:.2f}%" if pd.notna(x) else 'N/A')
         df_report['夏普比率'] = df_report['夏普比率'].round(4)
         df_report['夏普(基准000300)'] = df_report['夏普(基准000300)'].round(4)
@@ -407,7 +416,7 @@ class FundAnalyzer:
 # --- 主执行逻辑 ---
 if __name__ == '__main__':
     # **********************************************
-    # * 用户的修改点：从 C类.txt 读取基金代码
+    # * 修改点：从 C类.txt 读取基金代码
     # **********************************************
     funds_list_file = 'C类.txt' 
 
@@ -421,7 +430,7 @@ if __name__ == '__main__':
         with open(funds_list_file, 'r', encoding='utf-8') as f:
             lines = f.readlines()
         
-        # 过滤掉空行和首行的 'code' 标识 (如果存在)
+        # 过滤掉空行和首行的 'code' 标识 (如果存在，不区分大小写)
         raw_codes = [line.strip() for line in lines if line.strip() and line.strip().lower() != 'code']
         
         # 格式化基金代码 (补零到六位)
@@ -445,7 +454,8 @@ if __name__ == '__main__':
         sys.exit(1)
         
     # 初始化分析器
-    analyzer = FundAnalyzer(cache_data=True, max_workers=10) # 启用缓存，设置并发线程
+    # 保持原有的初始化参数
+    analyzer = FundAnalyzer(cache_data=True, max_workers=10) 
     
     # 提前获取市场数据，供报告使用 (如果未缓存)
     analyzer.get_market_data('000300')
@@ -484,8 +494,13 @@ if __name__ == '__main__':
                 
         # 处理持仓数据结果
         for future in as_completed(holdings_futures):
-             # 仅等待任务完成
-             pass 
+             # 仅等待任务完成，实际数据已在 get_fund_holdings_data 中写入 analyzer.holdings_data
+             try:
+                 future.result()
+             except Exception as e:
+                 # get_fund_holdings_data 内部有日志记录，此处仅捕获异常防止中断
+                 logger.debug(f"处理基金持仓任务意外失败: {e}")
+
 
     logger.info("所有基金数据抓取和计算完成。")
     
