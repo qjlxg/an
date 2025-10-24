@@ -3,7 +3,7 @@ name: 03-analysis_report.md
 on:
   # 允许手动在 GitHub 界面上运行工作流
   workflow_dispatch:
-  # 定时任务，例如每 3 小时运行一次 (cron: '0 */3 * * *')
+  # 定时任务，例如每 3 小时运行一次
   schedule:
     - cron: '0 */3 * * *'
   # 当 fund_analyzer.py 或工作流文件本身被修改并推送时，自动运行
@@ -64,6 +64,7 @@ jobs:
           python fund_analyzer.py
           
       - name: Commit new analysis report and data
+        # 新增 id: commit_step 用于后续步骤引用
         id: commit_step
         run: |
           # 配置 Git
@@ -87,11 +88,14 @@ jobs:
           
           # 检查是否有更改，如果有则提交。
           if git diff --staged --quiet; then
-            echo "::set-output name=has_changes::false"
+            # 💡 修复：使用新的 $GITHUB_OUTPUT 语法替代 ::set-output
+            echo "has_changes=false" >> $GITHUB_OUTPUT
             echo "No changes detected. Skipping commit."
           else
-            git commit -m "Auto-generated analysis report: $(date +'%Y-%m-%d %H:%M:%S' -d "$TZ")"
-            echo "::set-output name=has_changes::true"
+            # 💡 修复：移除 git commit 中的 '-d "$TZ"' 避免 'invalid date' 错误
+            git commit -m "Auto-generated analysis report: $(date +'%Y-%m-%d %H:%M:%S')"
+            # 💡 修复：使用新的 $GITHUB_OUTPUT 语法替代 ::set-output
+            echo "has_changes=true" >> $GITHUB_OUTPUT
             echo "Successfully committed changes."
           fi
           
@@ -101,11 +105,12 @@ jobs:
         run: |
           MAIN_BRANCH=${GITHUB_REF##*/} # 自动检测当前分支名（通常是 main 或 master）
           
-          # 尝试直接推送
-          git push
+          # 尝试直接推送。
+          # ⚠️ 关键修复：添加 '|| true'，确保即使推送失败，脚本也能继续执行后续的 if 判断和 rebase 逻辑。
+          git push || true
           
           # =========================================================
-          # 【推送冲突处理】: 如果直接推送失败 (exit code 1)，执行拉取变基后再次推送
+          # 【推送冲突处理】: 如果直接推送失败 (上一个命令 $? 非零)，执行拉取变基后再次推送
           # =========================================================
           if [ $? -ne 0 ]; then
             echo "尝试直接推送失败，远程仓库有新提交。正在执行 git pull --rebase..."
