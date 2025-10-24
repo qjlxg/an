@@ -9,7 +9,7 @@ import re
 import json
 import os
 import logging
-import sys # 确保引入 sys
+import sys
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.common.by import By
@@ -26,7 +26,7 @@ logging.basicConfig(
     format='%(asctime)s - %(levelname)s - %(message)s',
     handlers=[
         # 使用 utf-8-sig 编码写入日志文件
-        logging.FileHandler('fund_analyzer.log', encoding='utf-8-sig'), 
+        logging.FileHandler('fund_analyzer.log', encoding='utf-8-sig'),
         logging.StreamHandler()
     ]
 )
@@ -87,7 +87,7 @@ class FundAnalyzer:
         self.cache_data = cache_data
         self.cache = self._load_cache()
         self.risk_free_rate = risk_free_rate
-        self._selenium_fetcher = None 
+        self._selenium_fetcher = None
         # 新增最大工作线程数 (用于并发)
         self.max_workers = max_workers
 
@@ -114,8 +114,8 @@ class FundAnalyzer:
                 with open(self.cache_file, 'r', encoding='utf-8') as f:
                     return json.load(f)
             except json.JSONDecodeError:
-                 self._log("缓存文件 fund_cache.json 损坏，正在重新创建。", level='warning')
-                 return {}
+                   self._log("缓存文件 fund_cache.json 损坏，正在重新创建。", level='warning')
+                   return {}
         return {}
 
     def _save_cache(self):
@@ -276,6 +276,11 @@ class FundAnalyzer:
         try:
             holdings_df = ak.fund_portfolio_hold_em(symbol=fund_code)
             if not holdings_df.empty:
+                # 确保只保留需要的字段，并处理NaN
+                holdings_df = holdings_df[['股票代码', '股票名称', '占净值比例', '持仓市值(万元)']].rename(
+                    columns={'持仓市值(万元)': '持仓市值（万元）'} # 统一列名
+                ).fillna(np.nan)
+
                 self.holdings_data[fund_code] = holdings_df.to_dict('records')
                 self._log(f"基金 {fund_code} 持仓数据已通过akshare获取。")
                 if self.cache_data:
@@ -310,11 +315,19 @@ class FundAnalyzer:
             for row in rows:
                 cols = row.find_all('td')
                 if len(cols) >= 7: # 确保列数正确
+                    # 注意：这里假设网页抓取的列索引是固定的
+                    ratio_text = cols[4].text.strip().replace('%', '')
+                    market_value_text = cols[6].text.strip().replace(',', '')
+                    
+                    # 尝试转换，失败则为 NaN
+                    ratio = float(ratio_text) if re.match(r'^-?\d+(\.\d+)?$', ratio_text) else np.nan
+                    market_value = float(market_value_text) if re.match(r'^-?\d+(\.\d+)?$', market_value_text) else np.nan
+
                     holdings.append({
                         '股票代码': cols[1].text.strip(),
                         '股票名称': cols[2].text.strip(),
-                        '占净值比例': float(cols[4].text.strip().replace('%', '')),
-                        '持仓市值（万元）': float(cols[6].text.strip().replace(',', '')),
+                        '占净值比例': ratio,
+                        '持仓市值（万元）': market_value,
                     })
             self.holdings_data[fund_code] = holdings
             self._log(f"基金 {fund_code} 持仓数据已通过网页抓取获取。")
@@ -338,8 +351,17 @@ class FundAnalyzer:
             index_data['date'] = pd.to_datetime(index_data['date'])
             last_week_data = index_data.iloc[-7:]
             
+            if last_week_data.empty or len(last_week_data) < 2:
+                raise ValueError("指数数据不足")
+            
             price_change = last_week_data['close'].iloc[-1] / last_week_data['close'].iloc[0] - 1
-            volume_change = last_week_data['volume'].mean() / last_week_data['volume'].iloc[:-1].mean() - 1
+            
+            # 计算前6天的平均成交量，以确保有足够的历史数据
+            if len(last_week_data) >= 7:
+                 volume_change = last_week_data['volume'].iloc[-1] / last_week_data['volume'].iloc[:-1].mean() - 1
+            else:
+                 volume_change = 0 # 无法计算，设为中性
+            
             if price_change > 0.01 and volume_change > 0:
                 sentiment, trend = 'optimistic', 'bullish'
             elif price_change < -0.01:
@@ -363,83 +385,101 @@ class FundAnalyzer:
         
         # 检查并发获取的数据是否有效
         if fund_code not in self.fund_data or pd.isna(self.fund_data[fund_code].get('sharpe_ratio')):
-            self._log(f"基金 {fund_code} 基本信息获取失败，跳过分析。")
+            self._log(f"基金 {fund_code} 基本信息获取失败或数据不足，跳过分析。")
             self.report_data.append({'fund_code': fund_code, 'fund_name': fund_name, 'decision': 'Skip', 'score': np.nan})
             return
             
-        # 获取持仓数据 (串行获取)
+        # 获取持仓数据 (串行获取，因为它只影响最终评分，且是 IO 密集型)
         self.get_fund_holdings_data(fund_code)
 
         # 评分体系
         scores = {}
         values = {}
         
-        # 1. 夏普比率评分
+        # 1. 夏普比率评分 (最高 10 分)
         sharpe_ratio = self.fund_data[fund_code].get('sharpe_ratio')
         if pd.notna(sharpe_ratio):
+            # 夏普率 1.0 满分，每 0.1 分得 1 分
             scores['sharpe_ratio_score'] = min(10, max(0, int(sharpe_ratio * 10))) 
             values['sharpe_ratio_value'] = sharpe_ratio
         else:
             scores['sharpe_ratio_score'] = 0
             values['sharpe_ratio_value'] = np.nan
 
-        # 2. 最大回撤评分
+        # 2. 最大回撤评分 (最高 10 分)
         max_drawdown = self.fund_data[fund_code].get('max_drawdown')
         if pd.notna(max_drawdown):
-            scores['max_drawdown_score'] = min(10, max(0, 10 - int(max_drawdown * 10))) 
+            # 回撤 10% 以下满分 (10 - 回撤*100)
+            scores['max_drawdown_score'] = min(10, max(0, 10 - int(max_drawdown * 100 / 10))) 
             values['max_drawdown_value'] = max_drawdown
         else:
             scores['max_drawdown_score'] = 0
             values['max_drawdown_value'] = np.nan
             
-        # 3. 基金经理任职年限评分
+        # 3. 基金经理任职年限评分 (最高 10 分)
         manager_years = self.manager_data[fund_code].get('tenure_years')
-        if pd.notna(manager_years) and manager_years >= 3:
-            scores['manager_years_score'] = 10
+        if pd.notna(manager_years):
+            scores['manager_years_score'] = min(10, int(manager_years * 2.5)) # 4年满分
         else:
             scores['manager_years_score'] = 0
         values['manager_years_value'] = manager_years
         
-        # 4. 基金经理任职回报评分
+        # 4. 基金经理任职回报评分 (最高 10 分)
         manager_return = self.manager_data[fund_code].get('cumulative_return')
-        if pd.notna(manager_return) and manager_return > 0:
-            scores['manager_return_score'] = 10
+        if pd.notna(manager_return):
+            # 每 10% 回报得 1 分，最高 10 分
+            scores['manager_return_score'] = min(10, max(0, int(manager_return / 10)))
         else:
             scores['manager_return_score'] = 0
         values['manager_return_value'] = manager_return
             
-        # 5. 持仓集中度评分
+        # 5. 持仓集中度评分 (最高 10 分)
         if self.holdings_data.get(fund_code):
             holdings_df = pd.DataFrame(self.holdings_data[fund_code])
-            top_10_holdings_ratio = holdings_df['占净值比例'].iloc[:10].sum()
-            if top_10_holdings_ratio < 60:
-                scores['holding_concentration_score'] = 10
+            # 确保 '占净值比例' 字段存在且有效
+            if '占净值比例' in holdings_df.columns and not holdings_df['占净值比例'].empty:
+                 # 清除 NaN 值后再求和
+                top_10_holdings_ratio = holdings_df['占净值比例'].iloc[:10].sum(skipna=True)
             else:
-                scores['holding_concentration_score'] = 5
-            values['holding_concentration_value'] = top_10_holdings_ratio
+                top_10_holdings_ratio = np.nan
+
+            if pd.notna(top_10_holdings_ratio):
+                # 集中度 50% 以下给高分，集中度越低分数越高 (10 - (比例 - 30)/3)
+                scores['holding_concentration_score'] = min(10, max(0, int(10 - (top_10_holdings_ratio - 30) / 5)))
+                values['holding_concentration_value'] = top_10_holdings_ratio
+            else:
+                scores['holding_concentration_score'] = 0
+                values['holding_concentration_value'] = np.nan
         else:
             scores['holding_concentration_score'] = 0
             values['holding_concentration_value'] = np.nan
         
-        # 其他评分项
-        scores['fund_type_score'] = 10 if '股票型' in fund_type or '混合型' in fund_type else 5
-        scores['market_sentiment_adj_score'] = 5 if self.market_data.get('trend') == 'bullish' and scores.get('sharpe_ratio_score', 0) > 5 else 0
+        # 6. 基金类型/市场情绪调整 (最高 10 分)
+        # 假设我们只分析股票/混合型，故基础分高
+        scores['fund_type_score'] = 5 if '股票型' in fund_type or '混合型' in fund_type else 0 
+        
+        # 市场情绪：牛市气氛且基金表现优秀，额外加分 (最高 5 分)
+        market_adj = 0
+        if self.market_data.get('trend') == 'bullish' and scores.get('sharpe_ratio_score', 0) > 5:
+             market_adj = 5
+        scores['market_sentiment_adj_score'] = market_adj
         
         total_score = sum(scores.values())
         
         # 决策逻辑
-        decision = '推荐' if total_score > 30 else '观望'
+        decision = '推荐' if total_score > 35 else '观望' # 调整推荐阈值
         
         self.report_data.append({
             'fund_code': fund_code,
             'fund_name': fund_name,
+            'fund_type': fund_type, # 增加基金类型
             'decision': decision,
             'score': total_score,
             'scores_details': scores,
             'values_details': values
         })
         self._log(f"评分详情: {scores}")
-        self._log(f"基金 {fund_code} 评估完成，总分: {total_score}，决策: {decision}")
+        self._log(f"基金 {fund_code} 评估完成，总分: {total_score:.2f}，决策: {decision}")
 
     def _save_report_to_markdown(self):
         """将分析报告保存为 Markdown 文件"""
@@ -449,40 +489,67 @@ class FundAnalyzer:
         report_path = "analysis_report.md"
         with open(report_path, 'w', encoding='utf-8') as f:
             f.write("--- 批量基金分析报告 ---\n\n")
-            f.write(f"生成日期: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n")
+            f.write(f"生成日期: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
+            f.write(f"市场情绪: **{self.market_data.get('sentiment', 'N/A').upper()}** ({self.market_data.get('trend', 'N/A')})\n\n")
             f.write("--- 汇总结果 ---\n\n")
             
             results_df = pd.DataFrame(self.report_data)
             valid_results = results_df[results_df['decision'] != 'Skip']
             
             if not valid_results.empty:
-                f.write("### 推荐基金\n\n")
+                f.write("### 推荐基金 (分数 > 35)\n\n")
                 recommended = valid_results[valid_results['decision'] == '推荐'].sort_values(by='score', ascending=False)
                 if not recommended.empty:
-                    f.write(recommended[['fund_code', 'fund_name', 'score']].to_markdown(index=False) + "\n\n")
+                    # 格式化输出的 DataFrame
+                    recommended_output = recommended[['fund_code', 'fund_name', 'score', 'fund_type']].copy()
+                    recommended_output['score'] = recommended_output['score'].round(2)
+                    f.write(recommended_output.to_markdown(index=False) + "\n\n")
                 else:
                     f.write("无\n\n")
                     
                 f.write("### 观望基金\n\n")
                 watchlist = valid_results[valid_results['decision'] == '观望'].sort_values(by='score', ascending=False)
                 if not watchlist.empty:
-                    f.write(watchlist[['fund_code', 'fund_name', 'score']].to_markdown(index=False) + "\n\n")
+                    watchlist_output = watchlist[['fund_code', 'fund_name', 'score', 'fund_type']].copy()
+                    watchlist_output['score'] = watchlist_output['score'].round(2)
+                    f.write(watchlist_output.to_markdown(index=False) + "\n\n")
                 else:
                     f.write("无\n\n")
             
             f.write("--- 详细分析 ---\n\n")
             for item in self.report_data:
                 f.write(f"### 基金 {item['fund_code']} - {item.get('fund_name', 'N/A')}\n")
+                f.write(f"- 类型: {item.get('fund_type', 'N/A')}\n")
                 f.write(f"- 最终决策: **{item['decision']}**\n")
                 f.write(f"- 综合分数: **{item['score']:.2f}**\n")
                 
                 if item['decision'] != 'Skip':
-                    f.write("- **评分细项**:\n")
+                    f.write("- **关键指标值**:\n")
+                    # 使用格式化后的值
+                    values_formatted = {
+                        '最新净值': f"{item['values_details'].get('latest_nav', np.nan):.4f}" if pd.notna(item['values_details'].get('latest_nav')) else 'N/A',
+                        '夏普比率': f"{item['values_details'].get('sharpe_ratio_value', np.nan):.2f}" if pd.notna(item['values_details'].get('sharpe_ratio_value')) else 'N/A',
+                        '最大回撤': f"{item['values_details'].get('max_drawdown_value', np.nan) * 100:.2f}%" if pd.notna(item['values_details'].get('max_drawdown_value')) else 'N/A',
+                        '经理年限': f"{item['values_details'].get('manager_years_value', np.nan):.1f}年" if pd.notna(item['values_details'].get('manager_years_value')) else 'N/A',
+                        '经理回报': f"{item['values_details'].get('cumulative_return_value', np.nan):.2f}%" if pd.notna(item['values_details'].get('cumulative_return_value')) else 'N/A',
+                        '前十集中度': f"{item['values_details'].get('holding_concentration_value', np.nan):.2f}%" if pd.notna(item['values_details'].get('holding_concentration_value')) else 'N/A'
+                    }
+                    for k, v in values_formatted.items():
+                         f.write(f"  - {k}: {v}\n")
+                         
+                    f.write("- **细项得分**:\n")
+                    score_mapping = {
+                        'sharpe_ratio_score': '夏普比率',
+                        'max_drawdown_score': '最大回撤',
+                        'manager_years_score': '经理年限',
+                        'manager_return_score': '经理回报',
+                        'holding_concentration_score': '持仓集中度',
+                        'fund_type_score': '基金类型',
+                        'market_sentiment_adj_score': '市场情绪调整'
+                    }
                     for k, v in item.get('scores_details', {}).items():
-                        f.write(f"  - {k}: {v}\n")
-                    f.write("- **数据值**:\n")
-                    for k, v in item.get('values_details', {}).items():
-                        f.write(f"  - {k}: {v}\n")
+                        f.write(f"  - {score_mapping.get(k, k)}: {v}\n")
+                        
                 f.write("\n---\n\n")
 
 
@@ -531,11 +598,13 @@ class FundAnalyzer:
         self._save_cache()
         self._log(f"并发数据获取完成，耗时: {time.time() - start_time:.2f} 秒")
         
-        # 2. 串行评估（评估只涉及本地计算和持仓数据，耗时短）
+        # 2. 串行评估（评估只涉及本地计算和持仓数据，持仓数据是 IO 密集型，串行可以减轻对 IO 的瞬间压力）
         self._log("开始串行评估和评分...")
         for code in fund_codes:
-            # 使用字典中存储的基金名称和类型
-            self._evaluate_fund(code, fund_info.get(code, 'N/A'), '混合型') 
+            # 假设 fund_info 字典包含了名称和类型，如果类型缺失，默认使用 '混合型'
+            fund_name = fund_info.get(code, {}).get('name', 'N/A')
+            fund_type = fund_info.get(code, {}).get('type', '混合型')
+            self._evaluate_fund(code, fund_name, fund_type)
         
         end_time = time.time()
         self._log(f"全部评估完成，总耗时: {end_time - start_time:.2f} 秒")
@@ -554,44 +623,70 @@ class FundAnalyzer:
 
 # --- 脚本主入口 ---
 if __name__ == '__main__':
-    # 从您的 GitHub 仓库 raw URL 获取基金列表
-    funds_list_url = 'https://raw.githubusercontent.com/qjlxg/choose/main/recommended_cn_funds.csv'
+    # *** 核心修改点：直接从本地文件读取 ***
+    funds_list_path = 'recommended_cn_funds.csv'
     
     df_funds = None
     
-    # *** 核心修复点：使用容错读取，解决 BOM 编码问题 ***
-    # 优先尝试 utf-8-sig，其次 gbk，最后 utf-8
+    # 核心修复点：使用容错读取，解决 BOM 编码问题
+    # 尝试多种编码读取本地文件
     possible_encodings = ['utf-8-sig', 'gbk', 'utf-8']
     
+    if not os.path.exists(funds_list_path):
+        logger.error(f"错误：本地文件 '{funds_list_path}' 不存在。请确保文件与脚本在同一目录下。")
+        sys.exit(1)
+        
     for encoding in possible_encodings:
         try:
-            logger.info(f"正在从 CSV 导入基金代码列表，尝试编码: {encoding}...")
-            # 使用容错编码读取 CSV
-            df_funds = pd.read_csv(funds_list_url, encoding=encoding)
+            logger.info(f"正在从本地 CSV 文件 '{funds_list_path}' 导入基金代码列表，尝试编码: {encoding}...")
+            # 读取本地 CSV 文件
+            df_funds = pd.read_csv(funds_list_path, encoding=encoding)
             logger.info(f"导入成功，使用的编码是: {encoding}")
             break # 成功读取后跳出循环
         except Exception as e:
             # 将错误级别改为 warning，以便继续尝试其他编码
-            logger.warning(f"使用 {encoding} 导入失败: {e}") 
+            logger.warning(f"使用 {encoding} 导入失败: {e}")
     
     # 检查是否成功读取以及列名是否正确
     if df_funds is not None and not df_funds.empty:
-        # 统一处理列名，以防上游脚本使用 'name'
-        if '名称' not in df_funds.columns and 'name' in df_funds.columns:
-            df_funds = df_funds.rename(columns={'name': '名称'})
+        # 规范化列名，确保存在 '代码' 和 '名称'
+        df_funds.columns = [str(col).strip() for col in df_funds.columns]
         
-        if '代码' not in df_funds.columns or '名称' not in df_funds.columns:
-             logger.error("CSV 文件中未找到 '代码' 或 '名称' 列！请检查文件结构。")
-             sys.exit(1)
+        if '代码' not in df_funds.columns:
+            # 尝试识别其他可能的代码列名
+            if 'code' in df_funds.columns:
+                df_funds = df_funds.rename(columns={'code': '代码'})
+            else:
+                 logger.error("CSV 文件中未找到 '代码' 或 'code' 列！请检查文件结构。")
+                 sys.exit(1)
+                 
+        if '名称' not in df_funds.columns:
+             # 尝试识别其他可能的名称列名
+             if 'name' in df_funds.columns:
+                 df_funds = df_funds.rename(columns={'name': '名称'})
+             else:
+                 logger.warning("CSV 文件中未找到 '名称' 或 'name' 列，将使用代码作为名称。")
+                 df_funds['名称'] = df_funds['代码'] # 容错处理
+
+        # 同样容错处理 '类型' 列
+        if '类型' not in df_funds.columns and 'type' in df_funds.columns:
+            df_funds = df_funds.rename(columns={'type': '类型'})
+        elif '类型' not in df_funds.columns:
+             df_funds['类型'] = '混合型' # 默认设置为混合型，以便评分逻辑能够运行
 
         fund_codes_to_analyze = [str(code).zfill(6) for code in df_funds['代码'].unique().tolist()]
-        fund_info_dict = dict(zip(fund_codes_to_analyze, df_funds['名称'].tolist()))
+        
+        # 构建包含名称和类型的字典
+        fund_info_dict = {}
+        for code, name, f_type in zip(df_funds['代码'], df_funds['名称'], df_funds['类型']):
+             fund_info_dict[str(code).zfill(6)] = {'name': name, 'type': f_type}
         
         logger.info(f"导入成功，共 {len(fund_codes_to_analyze)} 个基金代码")
         
-        # 使用前 100 个基金进行分析 (可根据 GitHub Action 的运行时间预算调整)
-        test_fund_codes = fund_codes_to_analyze[:700] 
-        logger.info(f"分析前 {len(test_fund_codes)} 个基金：{test_fund_codes}...")
+        # 使用前 X 个基金进行分析 (可根据运行时间预算调整)
+        max_funds = 700 
+        test_fund_codes = fund_codes_to_analyze[:max_funds] 
+        logger.info(f"分析前 {len(test_fund_codes)} 个基金...")
         
         # 实例化分析器，设置最大并发线程数
         analyzer = FundAnalyzer(max_workers=32)
