@@ -1,4 +1,3 @@
-
 # !/usr/bin/python
 # -*- coding: utf-8 -*-
 import time
@@ -156,14 +155,24 @@ def main(argv):
     all_funds_txt = all_funds_txt[all_funds_txt.find('=')+2:all_funds_txt.rfind(';')]
     all_funds_list = json.loads(all_funds_txt)
     
-    print('筛选中，只处理场外C类基金...')
+    # 定义要排除的关键字
+    exclude_keywords = ['币', '债', 'AC', '持有']
+    
+    print('筛选中，只处理场外C类基金，并排除名称中包含', exclude_keywords, '的基金...')
     c_funds_list = []
     for fund in all_funds_list:
-        if fund[0].endswith('C') or 'C' in fund[2] or ('C' in fund[3] and '场外' in fund[3]):
+        fund_name = fund[2] # 基金名称在列表的第3个元素
+        # 1. 筛选场外 C 类基金
+        is_c_fund = fund[0].endswith('C') or 'C' in fund[2] or ('C' in fund[3] and '场外' in fund[3])
+        
+        # 2. 检查是否包含排除关键字
+        has_excluded_keyword = any(keyword in fund_name for keyword in exclude_keywords)
+        
+        if is_c_fund and not has_excluded_keyword:
             c_funds_list.append(fund)
     
     all_funds_list = c_funds_list
-    print('筛选后，场外C类基金数量：' + str(len(all_funds_list)))
+    print('筛选后，符合条件的场外C类基金数量：' + str(len(all_funds_list)))
      
     print('start:')
     print(datetime.datetime.now())
@@ -194,7 +203,7 @@ def main(argv):
         all_funds_list.append(result_queue.get())
     # --- 并行处理部分结束 ---
 
-    fileobject = open('result_' + strsdate + '_' + stredate + '_C类.txt', 'w')
+    fileobject = open('result_' + strsdate + '_' + stredate + '_C类_filtered.txt', 'w')
     
     all_funds_list.sort(key=lambda fund: fund[8], reverse=True)
     strhead = '排序\t' + '编码\t\t' + '名称\t\t' + '类型\t\t' + \
