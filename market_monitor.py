@@ -186,7 +186,8 @@ class MarketMonitor:
                 logger.error("基金 %s API数据解析失败: %s", fund_code, str(e))
                 raise
 
-        if all new_data:
+        # 修复 SyntaxError: if all new_data: -> if all_new_data:
+        if all_new_data:
             new_combined_df = pd.concat(all_new_data, ignore_index=True)
             df_final = pd.concat([local_df, new_combined_df]).drop_duplicates(subset=['date'], keep='last').sort_values(by='date', ascending=True)
             self._save_to_local_file(fund_code, df_final)
@@ -322,7 +323,8 @@ class MarketMonitor:
                     fund_code = future_to_code[future]
                     try:
                         df = future.result()
-                        results.append(self._calculate_indigators(fund_code, df))
+                        # 修复 AttributeError: self._calculate_indigators -> self._calculate_indicators
+                        results.append(self._calculate_indicators(fund_code, df))
                     except Exception as e:
                         logger.error("基金 %s 处理失败: %s", fund_code, e)
                         results.append({
