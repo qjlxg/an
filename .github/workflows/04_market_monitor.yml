@@ -77,7 +77,12 @@ jobs:
           if git diff --staged --quiet; then
             echo "无数据更新，跳过提交"
           else
-            git commit -m "Auto: Update fund data & report [$(date '+%Y-%m-%d %H:%M')]"
+            # 设置时区为亚洲/上海 (UTC+8)，并获取时间
+            SHANGHAI_TIME=$(TZ='Asia/Shanghai' date '+%Y-%m-%d %H:%M')
+            
+            # 使用上海时间作为提交信息
+            git commit -m "Auto: Update fund data & report [${SHANGHAI_TIME}]"
+            
             git pull --rebase
             git push
             echo "已推送更新"
