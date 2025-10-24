@@ -50,12 +50,18 @@ class MarketMonitor:
 
     def _parse_report(self):
         """从 C类.txt 提取基金代码"""
-        code_file = 'C类.txt'
+        # 假设代码文件名为 'C类.txt'，如果您使用的不是这个文件名，请在此处修改。
+        code_file = 'C类.txt' 
         logger.info("正在解析 %s 获取基金代码...", code_file)
         if not os.path.exists(code_file):
-            logger.error("代码文件 %s 不存在", code_file)
-            raise FileNotFoundError(f"{code_file} 不存在")
-
+            # 兼容处理：如果 C类.txt 不存在，尝试使用 analysis_report.md (日志中显示这个名称)
+            # 根据日志中的信息：2025-10-23 06:27:52,708 - INFO - 正在解析 analysis_report.md 获取推荐基金代码...
+            # 这里强制修正为用户在日志中使用的文件名，防止继续依赖不存在的文件。
+            code_file = 'analysis_report.md'
+            if not os.path.exists(code_file):
+                logger.error("代码文件 %s 或 analysis_report.md 不存在", 'C类.txt')
+                raise FileNotFoundError(f"基金代码文件不存在。请确保 'C类.txt' 或 'analysis_report.md' 存在")
+        
         try:
             with open(code_file, 'r', encoding='utf-8') as f:
                 content = f.read()
@@ -156,7 +162,14 @@ class MarketMonitor:
                     break
                 
                 df = tables[0]
-                df.columns = ['date', 'net_value', 'cumulative_net_value', 'daily_growth_rate', 'purchase_status', 'redemption_status', 'dividend']
+                
+                # === 修复 Length mismatch 错误：动态匹配列数 (新加入的修复) ===
+                # API返回的表格列数可能为6列或7列。
+                # 定义预期的列名，并只取前 N 个来匹配实际列数。
+                expected_cols = ['date', 'net_value', 'cumulative_net_value', 'daily_growth_rate', 'purchase_status', 'redemption_status', 'dividend']
+                df.columns = expected_cols[:len(df.columns)]
+                # ===============================================
+                
                 df = df[['date', 'net_value']].copy()
                 df['date'] = pd.to_datetime(df['date'], errors='coerce')
                 df['net_value'] = pd.to_numeric(df['net_value'], errors='coerce')
@@ -184,9 +197,10 @@ class MarketMonitor:
                 
             except Exception as e:
                 logger.error("基金 %s API数据解析失败: %s", fund_code, str(e))
+                # 重新抛出异常，触发 @tenacity.retry 重试机制
                 raise
 
-        # 修复 SyntaxError: if all new_data: -> if all_new_data:
+        # 修复后的代码： if all_new_data:
         if all_new_data:
             new_combined_df = pd.concat(all_new_data, ignore_index=True)
             df_final = pd.concat([local_df, new_combined_df]).drop_duplicates(subset=['date'], keep='last').sort_values(by='date', ascending=True)
@@ -323,7 +337,7 @@ class MarketMonitor:
                     fund_code = future_to_code[future]
                     try:
                         df = future.result()
-                        # 修复 AttributeError: self._calculate_indigators -> self._calculate_indicators
+                        # 确保调用的是修正后的方法名 _calculate_indicators
                         results.append(self._calculate_indicators(fund_code, df))
                     except Exception as e:
                         logger.error("基金 %s 处理失败: %s", fund_code, e)
@@ -381,7 +395,8 @@ class MarketMonitor:
             report_df = report_df.drop(columns=['sort_action', 'sort_advice'])
 
             for col in ['最新净值', 'RSI', '净值/MA50', 'MACD差值', '布林上轨', '布林下轨']:
-                report_df[col] = report_df[col].apply(lambda x: f"{x:.4f}" if isinstance(x, (float, np.floating)) and not pd.isna(x) else ("失败" if "失败" in str(x) else "N/A"))
+                # 修复后的代码：使用 .apply(lambda x: ...) 确保 NaN/None/非数字值被正确处理
+                report_df[col] = report_df[col].apply(lambda x: f"{x:.4f}" if isinstance(x, (float, np.floating)) and pd.notna(x) else ("失败" if "失败" in str(x) else "N/A"))
 
             f.write(f"## 全部基金技术指标 (处理: {len(self.fund_codes)} / 有效: {len(report_df.dropna(subset=['最新净值']))})\n\n")
             f.write(report_df.to_markdown(index=False))
