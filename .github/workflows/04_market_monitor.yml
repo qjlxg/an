@@ -1,22 +1,19 @@
-name: Market Monitor - Generate Report
+name: Market Monitor - Incremental Update & Commit
 
 on:
   schedule:
-    # 每 3 小时运行一次（可根据净值更新时间调整）
-    - cron: '0 */3 * * *'
-  
+    - cron: '0 */3 * * *'        # 每3小时
   push:
     paths:
-      - 'C类.txt'                  # 代码列表变更触发
-      - 'market_monitor.py'        # 脚本变更触发
+      - 'C类.txt'
+      - 'market_monitor.py'
       - '.github/workflows/run_market_monitor.yml'
-
-  workflow_dispatch: # 手动触发
+  workflow_dispatch:
 
 jobs:
   monitor:
     runs-on: ubuntu-latest
-    timeout-minutes: 180  # 3小时足够，防超时
+    timeout-minutes: 180
 
     steps:
       - name: Checkout repository
@@ -24,68 +21,65 @@ jobs:
         with:
           fetch-depth: 0
 
-      # 缓存 fund_data 目录（带时间戳，防止缓存污染）
-      - name: Cache fund data
+      # 缓存：加速，但不依赖（即使失效也从仓库恢复）
+      - name: Cache fund data (optional speedup)
         uses: actions/cache@v4
         with:
           path: fund_data
-          key: ${{ runner.os }}-fund-data-${{ github.run_id }}-${{ github.run_attempt }}
+          key: ${{ runner.os }}-fund-data-${{ github.run_id }}
           restore-keys: |
             ${{ runner.os }}-fund-data-
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'  # 推荐更稳定版本
+          python-version: '3.11'
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install pandas numpy requests tenacity beautifulsoup4 lxml html5lib tabulate
+          pip install pandas numpy requests tenacity beautifulsoup4 lxml html5lib
 
-      # 确保 C类.txt 存在
       - name: Validate C类.txt
         run: |
           if [ ! -f "C类.txt" ]; then
-            echo "C类.txt 不存在！请上传基金代码文件。"
+            echo "C类.txt 不存在！"
             exit 1
           fi
-          echo "发现 $(wc -l < C类.txt) 行基金代码"
+          codes=$(wc -l < C类.txt)
+          echo "加载 $codes 个基金代码"
 
-      # 运行脚本
-      - name: Run Market Monitor
+      - name: Run Market Monitor (Incremental Update)
         run: |
-          echo "开始执行市场监控脚本..."
+          echo "开始增量更新..."
           python market_monitor.py
 
-      # 检查输出
-      - name: Display Results
+      - name: Show Summary
         run: |
-          echo "=== market_monitor_report.md ==="
-          cat market_monitor_report.md || echo "报告未生成"
+          echo "=== 报告预览 ==="
+          head -20 market_monitor_report.md
 
-          echo "=== 日志摘要 ==="
-          tail -50 market_monitor.log || echo "日志未生成"
+          echo "=== 更新文件 ==="
+          git status --porcelain | grep -E "(fund_data|report|log)" || echo "无变更"
 
-          echo "=== fund_data 缓存情况 ==="
-          ls -l fund_data | wc -l | xargs -I {} echo "共 {} 个缓存文件"
+          echo "=== fund_data 文件数 ==="
+          find fund_data -name "*.csv" | wc -l
 
-      # 提交结果（仅提交报告和日志，fund_data 靠缓存）
-      - name: Commit & Push Results
+      - name: Commit & Push All Updates
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
 
-          git add market_monitor_report.md market_monitor.log
+          git add market_monitor_report.md
+          git add market_monitor.log
+          git add fund_data/*.csv  # 只提交 CSV，防意外文件
 
-          # 只提交有变化的文件
           if git diff --staged --quiet; then
-            echo "无变更，跳过提交"
+            echo "无数据更新，跳过提交"
           else
-            git commit -m "Auto: Update market monitor report [$(date '+%Y-%m-%d %H:%M')]"
+            git commit -m "Auto: Update fund data & report [$(date '+%Y-%m-%d %H:%M')]"
             git push
+            echo "已推送更新"
           fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-     
