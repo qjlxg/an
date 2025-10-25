@@ -3,8 +3,8 @@ name: Fund Scraper Workflow
 on:
   push:
     paths:
-      - 'script.py'  # 当脚本变动时运行
-      - '.github/workflows/fund-scraper.yml'  # 当YML变动时运行
+      - 'scrape_all_funds.py'  # 当脚本变动时运行
+      - '.github/workflows/scrape_funds.yml'  # 当YML变动时运行
   workflow_dispatch:  # 支持手动触发
 
 jobs:
