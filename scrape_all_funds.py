@@ -254,16 +254,8 @@ if low_fee_funds:
 else:
     print(f"[{datetime.datetime.now(shanghai_tz).strftime('%H:%M:%S')}] 没有找到完全符合低费率条件的基金。")
 
-# --- 3. Git推送结果到仓库 (保留在 Python 脚本中) ---
+# --- 3. Git推送结果到仓库 (已移除，将移动到 YML 文件中) ---
 
-print(f"[{datetime.datetime.now(shanghai_tz).strftime('%H:%M:%S')}] 开始 Git 提交和推送...")
+print(f"[{datetime.datetime.now(shanghai_tz).strftime('%H:%M:%S')}] Python 脚本完成文件生成。")
 
-# git add YYYYMM 目录，确保该目录下的新文件都被追踪
-subprocess.run(['git', 'add', output_base_dir]) 
-commit_result = subprocess.run(['git', 'commit', '-m', f"Update combined data and low-fee report in {month_dir} for date {date_only_str}"], capture_output=True, text=True)
-if "nothing to commit" in commit_result.stdout or "nothing to commit" in commit_result.stderr:
-    print(f"[{datetime.datetime.now(shanghai_tz).strftime('%H:%M:%S')}] 没有文件变动需要提交。")
-else:
-    print(commit_result.stdout)
-    subprocess.run(['git', 'push'])
-    print(f"[{datetime.datetime.now(shanghai_tz).strftime('%H:%M:%S')}] Git 推送完成。")
+# 脚本结束，工作流将接管 Git 提交
