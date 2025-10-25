@@ -107,7 +107,7 @@ def extract_fund_codes(report_content):
                 fund_code = parts[2]
                 action_signal = parts[10]
 
-                # 核心修改：筛选具有明确买入信号的基金
+                # 核心修改：筛选具有明确买入信号的基金 (RSI < 35)
                 if action_signal == '立即建立观察仓 (RSI极度超卖)' or action_signal == '考虑试水建仓 (RSI超卖)':
                     try:
                         # 确保基金代码是数字
@@ -147,7 +147,7 @@ def calculate_max_drawdown(series):
     mdd = drawdown.max()
     return mdd
 
-# --- 修正后的生成报告函数（修复了 f-string 中的转义问题） ---
+# --- 修正后的生成报告函数（新增极度超卖精选列表并置于首位） ---
 def generate_report(results, timestamp_str):
     now_str = timestamp_str
 
@@ -177,64 +177,90 @@ def generate_report(results, timestamp_str):
     report += f"**新增分析维度：近一周（5日）连跌天数、关键技术指标（RSI, MACD等）和基于RSI的行动提示。**\n"
     report += f"---"
     
-    # 2. 【新增】高弹性精选列表筛选
-    # 条件：最大回撤 >= 10% 且 近一周连跌天数 == 1
+    # 2. 【新增】极度超卖精选列表筛选 (最严格的条件)
+    # 条件：最大回撤 >= 10% 且 近一周连跌天数 == 1 且 RSI < 35
     df_elastic = df_results[
         (df_results['最大回撤'] >= HIGH_ELASTICITY_MIN_DRAWDOWN) & 
         (df_results['近一周连跌'] == 1)
     ].copy() 
+
+    df_strict_elastic = df_elastic[
+        (df_elastic['行动提示'] == '立即建立观察仓 (RSI极度超卖)') | 
+        (df_elastic['行动提示'] == '考虑试水建仓 (RSI超卖)')
+    ].copy()
     
-    # 重设索引作为精选排名
+    # 3. 生成【极度超卖精选列表】报告部分 (置于最前)
+    if not df_strict_elastic.empty:
+        df_strict_elastic = df_strict_elastic.sort_values(by=['RSI', '最大回撤'], ascending=[True, False]).reset_index(drop=True)
+        df_strict_elastic.index = df_strict_elastic.index + 1
+        
+        strict_count = len(df_strict_elastic)
+        
+        report += f"\n## **🥇【技术共振】极度超卖精选列表** ({strict_count}只)\n\n"
+        
+        report += f"此列表已在基础预警上，叠加 **最大回撤 $\ge$ {HIGH_ELASTICITY_MIN_DRAWDOWN*100:.0f}%**、**近一周连跌天数 = 1** 和 **RSI(14) < 35** 的技术共振信号。\n"
+        report += f"这是最具行动价值的超跌标的，**请立即根据行动提示，执行逆向分批建仓纪律。**\n\n"
+        
+        report += f"| 排名 | 基金代码 | 最大回撤 (1M) | 连跌 (1M) | 连跌 (1W) | RSI(14) | MACD信号 | 净值/MA50 | 布林带位置 | 试水买价 (跌3%) | 行动提示 |\n"
+        report += f"| :---: | :---: | ---: | ---: | ---: | ---: | :---: | ---: | :---: | :---: | :---: |\n"  
+
+        for index, row in df_strict_elastic.iterrows():
+            latest_value = row.get('最新净值', 1.0)
+            trial_price = latest_value * 0.97
+            
+            report += f"| {index} | `{row['基金代码']}` | **{row['最大回撤']:.2%}** | {row['最大连续下跌']} | {row['近一周连跌']} | {row['RSI']:.2f} | {row['MACD信号']} | {row['净值/MA50']:.2f} | {row['布林带位置']} | {trial_price:.4f} | **{row['行动提示']}** |\n"
+        
+        report += "\n---\n"
+    else:
+        report += f"\n## **🥇【技术共振】极度超卖精选列表**\n\n"
+        report += f"**恭喜，没有发现同时满足所有严格筛选条件（高回撤、低位企稳和 RSI < 35）的基金。** 市场未达到极度恐慌和超卖状态。\n\n"
+        report += "\n---\n"
+
+    # 4. 生成【高弹性精选列表】报告部分 (原列表，作为观察池)
     if not df_elastic.empty:
         df_elastic = df_elastic.sort_values(by='最大回撤', ascending=False).reset_index(drop=True)
         df_elastic.index = df_elastic.index + 1
         
         elastic_count = len(df_elastic)
         
-        report += f"\n## **高弹性精选列表** ({elastic_count}只)\n\n"
+        report += f"\n## **🥈【扩展列表】高弹性精选列表** ({elastic_count}只)\n\n"
         
-        # 修正: 移除转义字符，使用标准的 Markdown 格式
-        report += f"此列表已从预警列表中筛选：**最大回撤 >= {HIGH_ELASTICITY_MIN_DRAWDOWN*100:.0f}%** 且 **近一周连跌天数 = 1** 的基金。\n"
-        report += f"这些基金理论上具备较高的超跌反弹潜力（高风险），**请严格按照行动提示分批建仓。**\n\n"
+        # 修正 f-string 转义错误
+        report += f"此列表包含：**最大回撤 >= {HIGH_ELASTICITY_MIN_DRAWDOWN*100:.0f}%** 且 **近一周连跌天数 = 1** 的所有基金（包括 RSI 未超卖的）。可作为后备观察池。\n\n"
         
-        # --- 增加技术指标列和行动提示 + 新增试水买价 ---
         report += f"| 排名 | 基金代码 | 最大回撤 (1M) | 连跌 (1M) | 连跌 (1W) | RSI(14) | MACD信号 | 净值/MA50 | 布林带位置 | 试水买价 (跌3%) | 行动提示 |\n"
         report += f"| :---: | :---: | ---: | ---: | ---: | ---: | :---: | ---: | :---: | :---: | :---: |\n"  
 
         for index, row in df_elastic.iterrows():
             latest_value = row.get('最新净值', 1.0)
-            trial_price = latest_value * 0.97    # 跌3%试水
+            trial_price = latest_value * 0.97
             
-            report += f"| {index} | `{row['基金代码']}` | **{row['最大回撤']:.2%}** | {row['最大连续下跌']} | {row['近一周连跌']} | {row['RSI']:.2f} | {row['MACD信号']} | {row['净值/MA50']:.2f} | {row['布林带位置']} | {trial_price:.4f} | **{row['行动提示']}** |\n"
+            report += f"| {index} | `{row['基金代码']}` | **{row['最大回撤']:.2%}** | {row['最大连续下跌']} | {row['近一周连跌']} | {row['RSI']:.2f} | {row['MACD信号']} | {row['净值/MA50']:.2f} | {row['布林带位置']} | {trial_price:.4f} | {row['行动提示']} |\n"
         
         report += "\n---\n"
     else:
-        report += f"\n## **高弹性精选列表**\n\n"
-        # 修正: 移除转义字符，使用标准的 Markdown 格式
-        report += f"没有基金同时满足：最大回撤 >= {HIGH_ELASTICITY_MIN_DRAWDOWN*100:.0f}% 且 近一周连跌天数 = 1 的筛选条件。\n\n"
+        report += f"\n## **🥈【扩展列表】高弹性精选列表**\n\n"
+        # 修正 f-string 转义错误
+        report += f"没有基金满足：最大回撤 >= {HIGH_ELASTICITY_MIN_DRAWDOWN*100:.0f}% 且 近一周连跌天数 = 1 的筛选条件。\n\n"
         report += "\n---\n"
 
 
-    # 3. 原有预警基金列表 (所有符合条件的基金)
+    # 5. 原有预警基金列表 (所有符合条件的基金)
     report += f"\n## 所有预警基金列表 (共 {total_count} 只，按最大回撤降序排列)\n\n"
     
-    # 此处表格不需要行动提示，但需要保持列一致或排除
     report += f"| 排名 | 基金代码 | 最大回撤 (1M) | 连跌 (1M) | 连跌 (1W) | RSI(14) | MACD信号 | 净值/MA50 | 布林带位置 |\n"
     report += f"| :---: | :---: | ---: | ---: | ---: | ---: | :---: | ---: | :---: |\n"  
 
     for index, row in df_results.iterrows():
-        # 注意：此处没有使用行动提示列，因为该列表包含了非高弹性基金
         report += f"| {index} | `{row['基金代码']}` | **{row['最大回撤']:.2%}** | {row['最大连续下跌']} | {row['近一周连跌']} | {row['RSI']:.2f} | {row['MACD信号']} | {row['净值/MA50']:.2f} | {row['布林带位置']} |\n"
     
     report += "\n---\n"
     report += f"分析数据时间范围: 最近30个交易日 (通常约为1个月)。\n"
     
-    # 4. 新增行动策略总结 (已修复所有转义错误)
+    # 6. 新增行动策略总结 (已修复所有转义错误)
     report += f"\n## **高弹性策略执行纪律**\n\n"
     report += f"**1. 建仓与最大加仓（逆向原则）：**\n"
-    # 修复转义错误
     report += f"    * **试水建仓:** 当'行动提示'为 **'立即建立观察仓 (RSI极度超卖)' (RSI < 30)** 或 **'考虑试水建仓 (RSI超卖)' (RSI < 35)** 时，无论净值是否达到'试水买价 (跌3%)'，立即投入 **小额资金（例如 1/5 观察仓位）**进行建仓，以确保不踏空底部。\n"
-    # 修复转义错误
     report += f"    * **最大加仓:** 当基金在试水后，累计跌幅达到您的金字塔原则 **(例如从试水价下跌 5%)** 且 **RSI < 20** 时，执行**最大额加仓**（如 **1000** 元），实现快速降低成本。\n"
     report += f"**2. 波段止盈与清仓信号（顺势原则）：**\n"
     report += f"    * **确认反弹/止盈警惕:** 当目标基金的 **MACD 信号从 '观察/死叉' 变为 '金叉'** 时，表明反弹趋势确立，此时应视为 **分批止盈** 的警惕信号，而不是加仓。应在 **+5%** 止盈线出现时，果断赎回 **50%** 份额。\n"
@@ -300,7 +326,7 @@ def analyze_all_funds(target_codes=None):
                 if not np.isnan(rsi_val):
                     if rsi_val < 30:
                         action_prompt = '立即建立观察仓 (RSI极度超卖)'
-                    elif rsi_val < 35: # RSI 30 to 35 (已修正提示词)
+                    elif rsi_val < 35: # RSI 30 to 35 
                         action_prompt = '考虑试水建仓 (RSI超卖)'
                     else: # RSI >= 35
                         action_prompt = '高回撤观察 (RSI未超卖)'
