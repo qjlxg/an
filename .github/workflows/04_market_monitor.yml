@@ -2,7 +2,7 @@ name: Market Monitor - Incremental Update & Commit
 
 on:
   schedule:
-    - cron: '0 */3 * * *'        # 每3小时
+    - cron: '15 21,22,23 * * 1-5'
   push:
     paths:
       - 'C类.txt'
