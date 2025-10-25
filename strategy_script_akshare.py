@@ -8,49 +8,49 @@ import requests
 from bs4 import BeautifulSoup 
 import time
 import random
+import re # 确保导入 re 模块
 
 # --- 配置 ---
 DATA_DIR = 'fund_data'
-OUTPUT_DIR = '推荐结果'
-PB_THRESHOLD = 1.2        # PB < 1.2 的筛选条件
-TOP_N_RANK = 1            # 跌幅Top1
-FALLBACK_DAYS = 3         # 近3日跌幅
+OUTPUT_DIR = 'fetched_pb_data'  # 输出目录名称
 
-# CSV 文件中的列名
-DATE_COL = 'date'
-NAV_COL = 'net_value'
-
-# --- PB 数据获取函数 (使用 BeautifulSoup) ---
+# --- PB 数据获取函数 (使用 FundArchivesDatas.aspx?type=guzhi 接口修复) ---
 def fetch_pb_from_eastmoney(fund_code):
     """
-    【已修复】通过同步请求和 BeautifulSoup 解析天天基金 F10 基本概况页面（jbgk）获取最新的 PB 值。
+    【最终尝试：切换到 guzhi 估值接口】通过 FundArchivesDatas.aspx 接口的 guzhi (估值) 类型获取最新的 PB 值。
     """
-    # **【修复点：更新 URL 为 jbgk 接口】**
-    url = f"http://fundf10.eastmoney.com/jbgk_{fund_code}.html"
+    # **【关键修复点：URL 切换到 guzhi 接口】**
+    # 估值 (guzhi) 页面最有可能包含 PB 数据
+    url = f"https://fundf10.eastmoney.com/FundArchivesDatas.aspx?type=guzhi&code={fund_code}"
     
     # 伪装请求头
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-        'Referer': 'http://fundf10.eastmoney.com/'
+        'Referer': f'http://fundf10.eastmoney.com/guzhi_{fund_code}.html' # 模仿来自 F10 估值页面的请求
     }
     
-    # 随机延迟，防止请求过于频繁
+    # 随机延迟
     time.sleep(random.uniform(0.5, 1.5))
     
     try:
         response = requests.get(url, headers=headers, timeout=10)
-        response.encoding = 'utf-8'
-        html_text = response.text
         
-        # 使用 BeautifulSoup 解析 HTML
-        soup = BeautifulSoup(html_text, 'html.parser')
+        # 使用你原始代码中成功的提取模式：从 content:"" 中提取 HTML 片段
+        html_match = re.findall(r"content:\s*\"(.*?)\"\s*};", response.text, re.DOTALL)
         
-        # **【修复点：增强解析逻辑】**
-        # 尝试查找包含 '市净率' 文本的 <th> 或 <td> 单元格。
-        pb_label = soup.find(['th', 'td'], string='市净率')
+        if not html_match:
+            return None
+
+        # 解析提取到的 HTML 片段
+        # 注意：这里我们使用 BeautifulSoup 的内置功能来处理 HTML，避免复杂的字符串替换
+        rise_html = html_match[0].replace('\\"', '"').replace('\\n', '\n') 
+        rise_soup = BeautifulSoup(rise_html, 'html.parser')
+        
+        # 查找包含 '市净率' 文本的 <th> 或 <td> 单元格
+        pb_label = rise_soup.find(['th', 'td'], text=re.compile(r'市净率'))
         
         if pb_label:
-            # PB 值通常在标签的下一个兄弟单元格中，可能是 <td> 或 <th>
+            # PB 值通常在标签的下一个兄弟单元格中（我们假设是表格结构）
             pb_value_cell = pb_label.find_next_sibling(['td', 'th'])
             
             if pb_value_cell:
@@ -61,41 +61,15 @@ def fetch_pb_from_eastmoney(fund_code):
                     pb_value = float(pb_text)
                     return pb_value
         
-        print(f"警告：基金 {fund_code} 在 jbgk 页面未找到 PB 值或 PB 值为 '-'。")
         return None
             
-    except requests.exceptions.RequestException as e:
-        print(f"错误：获取基金 {fund_code} 的 PB 数据网络请求失败: {e}")
-        return None
-    except ValueError:
-        print(f"警告：基金 {fund_code} 找到 PB 文本但无法转换为数字。")
-        return None
     except Exception as e:
-        print(f"错误：解析基金 {fund_code} 的 PB 数据失败: {e}")
         return None
 
-def calculate_3day_fall(df):
-    """计算近3日跌幅（最新一日相比3日前）"""
-    if len(df) < FALLBACK_DAYS + 1:
-        return np.nan
-    
-    df_sorted = df.sort_values(by=DATE_COL, ascending=False)
-    
-    if len(df_sorted) <= FALLBACK_DAYS:
-        return np.nan
-        
-    latest_nav = df_sorted[NAV_COL].iloc[0]
-    nav_3days_ago = df_sorted[NAV_COL].iloc[FALLBACK_DAYS]
-    
-    if nav_3days_ago == 0 or pd.isna(latest_nav) or pd.isna(nav_3days_ago):
-        return np.nan
-        
-    fall_percentage = (latest_nav / nav_3days_ago - 1) * 100
-    
-    return fall_percentage
+# 移除了 calculate_3day_fall 函数
 
 def main():
-    print("--- 策略开始执行：实时 PB < 1.2 + 近3日跌幅 Top1 ---")
+    print("--- 策略已移除，开始执行：基金资料 (PB) 抓取 ---")
     
     shanghai_tz = pytz.timezone('Asia/Shanghai')
     now = datetime.now(shanghai_tz) 
@@ -110,6 +84,7 @@ def main():
         print(f"错误: 必需的 {DATA_DIR} 目录不存在。")
         return
 
+    # 保持参数来源不变：从 fund_data 目录下读取 CSV 文件名作为基金代码
     fund_codes = []
     for filename in os.listdir(DATA_DIR):
         if filename.endswith('.csv'):
@@ -121,72 +96,34 @@ def main():
 
     # 循环处理每个基金
     for fund_code in fund_codes:
-        file_path = os.path.join(DATA_DIR, f'{fund_code}.csv')
-        
         try:
-            # 1. 获取 PB 数据 (Web Scraping - 使用已修复的接口)
+            # 1. 获取 PB 数据 
             latest_pb = fetch_pb_from_eastmoney(fund_code)
             
-            # --- 策略筛选（PB < 1.2） ---
-            if latest_pb is None or latest_pb >= PB_THRESHOLD:
-                print(f"基金 {fund_code} 跳过：PB数据缺失或 PB ({latest_pb}) >= {PB_THRESHOLD}")
-                continue 
-            
-            # 2. 读取 CSV 文件并计算跌幅
-            df = pd.read_csv(file_path)
-            df[DATE_COL] = pd.to_datetime(df[DATE_COL], errors='coerce')
-            df[NAV_COL] = pd.to_numeric(df[NAV_COL], errors='coerce')
-
-            fall_3d = calculate_3day_fall(df.dropna(subset=[NAV_COL, DATE_COL]))
-            
+            # 2. 收集数据 (只收集 PB 数据)
             all_funds_data.append({
                 '基金代码': fund_code,
-                f'近{FALLBACK_DAYS}日跌幅(%)': fall_3d,
-                '最新PB': latest_pb,
+                '最新PB': latest_pb if latest_pb is not None else 'N/A',
             })
             
         except Exception as e:
-            print(f"处理文件 {fund_code}.csv 时发生未知错误: {e}")
             continue
 
     if not all_funds_data:
-        print(f"没有基金同时满足 PB < {PB_THRESHOLD} 条件和足够的净值数据。")
+        print(f"未能抓取到任何基金资料。")
         return
 
-    # 2. 筛选 近3日跌幅 Top1
+    # 3. 保存结果 
     results_df = pd.DataFrame(all_funds_data)
-    sort_column = f'近{FALLBACK_DAYS}日跌幅(%)'
-    
-    sorted_df = results_df.sort_values(
-        by=sort_column, 
-        ascending=True 
-    ).dropna(subset=[sort_column])
-
-    final_recommendation = sorted_df.head(TOP_N_RANK)
-    
-    if final_recommendation.empty:
-        print("满足 PB 条件的基金中，没有足够的跌幅数据来筛选 Top1。")
-        return
-
-    # 3. 保存结果
-    final_recommendation = final_recommendation[[
-        '基金代码', 
-        sort_column,
-        '最新PB'
-    ]]
-    final_recommendation[sort_column] = final_recommendation[sort_column].round(4)
-    final_recommendation['最新PB'] = final_recommendation['最新PB'].round(4)
 
     timestamp = now.strftime('%H%M%S')
-    output_filename = os.path.join(full_output_dir, f'推荐_{timestamp}.csv')
+    output_filename = os.path.join(full_output_dir, f'基金PB数据_{timestamp}.csv')
     
     os.makedirs(os.path.dirname(output_filename), exist_ok=True)
-    final_recommendation.to_csv(output_filename, index=False, encoding='utf-8-sig')
+    results_df.to_csv(output_filename, index=False, encoding='utf-8-sig')
     
-    print(f"策略筛选完成。推荐结果已保存到：{output_filename}")
-    print("推荐基金:")
-    print(final_recommendation)
-    print("--- 策略执行结束 ---")
+    print(f"基金资料 (PB) 抓取完成。结果已保存到：{output_filename}")
+    print("--- 脚本执行结束 ---")
 
 if __name__ == '__main__':
     main()
