@@ -10,8 +10,7 @@ on:
     branches:
       - main
     paths:
-      # 确保路径指向新的脚本名
-      - 'strategy_script_akshare.py' 
+      - 'strategy_script.py' 
       - '.github/workflows/strategy_runner.yml'
 
 jobs:
@@ -32,8 +31,8 @@ jobs:
 
     - name: 安装依赖
       run: |
-        # 增加安装 akshare 库，并移除不必要的 beautifulsoup4
-        pip install pandas numpy pytz requests akshare
+        # 安装 pandas, numpy, pytz, requests, beautifulsoup4 库
+        pip install pandas numpy pytz requests beautifulsoup4
         
     - name: 运行策略脚本
       id: run_script
@@ -45,13 +44,13 @@ jobs:
           exit 1
         fi
         
-        # 运行新的策略脚本
-        python strategy_script_akshare.py
+        # 运行策略
+        python strategy_script.py
 
     - name: 提交新生成的推荐结果
       uses: stefanzweifel/git-auto-commit-action@v5
       with:
-        commit_message: "自动策略运行: 添加新的基金推荐结果 (AKShare PB+跌幅Top1)"
+        commit_message: "自动策略运行: 添加新的基金推荐结果 (PB接口已修复并运行)"
         file_pattern: "推荐结果/**/*.csv" 
         skip_ci: true 
         commit_user_name: 'GitHub Actions Bot'
