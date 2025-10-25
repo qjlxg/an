@@ -5,7 +5,7 @@ import os
 from datetime import datetime
 import pytz
 import requests
-import re
+from bs4 import BeautifulSoup # 导入 BeautifulSoup，用于更可靠的 HTML 解析
 import time
 import random
 
@@ -16,18 +16,20 @@ PB_THRESHOLD = 1.2        # PB < 1.2 的筛选条件
 TOP_N_RANK = 1            # 跌幅Top1
 FALLBACK_DAYS = 3         # 近3日跌幅
 
-# CSV 文件中的列名 (匹配您提供的文件格式)
+# CSV 文件中的列名
 DATE_COL = 'date'
 NAV_COL = 'net_value'
-# CUM_NAV_COL 移除，不再用于筛选
 
-# --- PB 数据获取函数 ---
+# --- PB 数据获取函数 (使用 BeautifulSoup) ---
 def fetch_pb_from_eastmoney(fund_code):
-    """尝试从天天基金的估值页面获取最新的 PB 值。"""
+    """
+    通过同步请求和 BeautifulSoup 解析天天基金 F10 页面获取最新的 PB 值。
+    目标 URL: http://fundf10.eastmoney.com/jzzs_{fund_code}.html
+    """
     # 针对 PB/PE 数据的估值页面 URL
     url = f"http://fundf10.eastmoney.com/jzzs_{fund_code}.html"
     
-    # 伪装请求头，防止被网站屏蔽
+    # 伪装请求头
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
         'Referer': 'http://fundf10.eastmoney.com/'
@@ -41,23 +43,31 @@ def fetch_pb_from_eastmoney(fund_code):
         response.encoding = 'utf-8'
         html_text = response.text
         
-        # 尝试通过正则表达式在 HTML 中查找 PB 值
-        # 目标结构大致为：<td>市净率</td><td>1.2345</td>
-        # 或者在表格中的特定行/列
+        # 使用 BeautifulSoup 解析 HTML
+        soup = BeautifulSoup(html_text, 'html.parser')
         
-        # 查找包含 '市净率' 文本的行，并尝试提取其后的数字
-        # r'市净率.*?(\d+\.\d+)' 查找 '市净率' 后面的第一个浮点数
-        match = re.search(r'市净率.*?(\d+\.\d+)', html_text)
+        # 查找包含 '市净率' 文本的表格单元格 (td)
+        pb_row = soup.find('td', text='市净率')
         
-        if match:
-            pb_value = float(match.group(1))
-            return pb_value
-        else:
-            print(f"警告：基金 {fund_code} 页面结构已变化或无 PB 数据。")
-            return None
+        if pb_row:
+            # PB 值通常在 '市净率' 单元格的下一个兄弟单元格中
+            pb_value_td = pb_row.find_next_sibling('td')
+            
+            if pb_value_td:
+                # 提取文本并清理
+                pb_text = pb_value_td.text.strip()
+                if pb_text and pb_text != '-': 
+                    pb_value = float(pb_text)
+                    return pb_value
+        
+        print(f"警告：基金 {fund_code} 页面未找到 PB 值或 PB 值为 '-'。")
+        return None
             
     except requests.exceptions.RequestException as e:
         print(f"错误：获取基金 {fund_code} 的 PB 数据网络请求失败: {e}")
+        return None
+    except ValueError:
+        print(f"警告：基金 {fund_code} 找到 PB 文本但无法转换为数字。")
         return None
     except Exception as e:
         print(f"错误：解析基金 {fund_code} 的 PB 数据失败: {e}")
@@ -65,11 +75,9 @@ def fetch_pb_from_eastmoney(fund_code):
 
 def calculate_3day_fall(df):
     """计算近3日跌幅（最新一日相比3日前）"""
-    # 确保有足够的净值数据用于计算
     if len(df) < FALLBACK_DAYS + 1:
         return np.nan
     
-    # 确保日期降序排列，最新数据在顶部
     df_sorted = df.sort_values(by=DATE_COL, ascending=False)
     
     if len(df_sorted) <= FALLBACK_DAYS:
@@ -86,7 +94,7 @@ def calculate_3day_fall(df):
     return fall_percentage
 
 def main():
-    print("--- 策略开始执行：PB < 1.2 + 近3日跌幅 Top1 ---")
+    print("--- 策略开始执行：实时 PB < 1.2 + 近3日跌幅 Top1 ---")
     
     shanghai_tz = pytz.timezone('Asia/Shanghai')
     now = datetime.now(shanghai_tz) 
@@ -97,41 +105,48 @@ def main():
     
     all_funds_data = []
 
-    # 1. 遍历 fund_data 目录并计算
     if not os.path.exists(DATA_DIR):
         print(f"错误: 必需的 {DATA_DIR} 目录不存在。")
         return
 
+    fund_codes = []
     for filename in os.listdir(DATA_DIR):
         if filename.endswith('.csv'):
-            fund_code = filename.replace('.csv', '').zfill(6) 
-            file_path = os.path.join(DATA_DIR, filename)
-            
-            try:
-                # 1. 获取 PB 数据 (Web Scraping)
-                latest_pb = fetch_pb_from_eastmoney(fund_code)
-                
-                # --- 策略筛选（PB < 1.2） ---
-                if latest_pb is None or latest_pb >= PB_THRESHOLD:
-                    print(f"基金 {fund_code} 跳过：PB数据缺失或 PB ({latest_pb}) >= {PB_THRESHOLD}")
-                    continue 
-                
-                # 2. 读取 CSV 文件并计算跌幅
-                df = pd.read_csv(file_path)
-                df[DATE_COL] = pd.to_datetime(df[DATE_COL], errors='coerce')
-                df[NAV_COL] = pd.to_numeric(df[NAV_COL], errors='coerce')
+            fund_codes.append(filename.replace('.csv', '').zfill(6))
 
-                fall_3d = calculate_3day_fall(df.dropna(subset=[NAV_COL, DATE_COL]))
-                
-                all_funds_data.append({
-                    '基金代码': fund_code,
-                    f'近{FALLBACK_DAYS}日跌幅(%)': fall_3d,
-                    '最新PB': latest_pb,
-                })
-                
-            except Exception as e:
-                print(f"处理文件 {filename} 时发生未知错误: {e}")
-                continue
+    if not fund_codes:
+        print("错误: fund_data 目录下没有找到任何 CSV 文件。")
+        return
+
+    # 循环处理每个基金
+    for fund_code in fund_codes:
+        file_path = os.path.join(DATA_DIR, f'{fund_code}.csv')
+        
+        try:
+            # 1. 获取 PB 数据 (Web Scraping)
+            latest_pb = fetch_pb_from_eastmoney(fund_code)
+            
+            # --- 策略筛选（PB < 1.2） ---
+            if latest_pb is None or latest_pb >= PB_THRESHOLD:
+                print(f"基金 {fund_code} 跳过：PB数据缺失或 PB ({latest_pb}) >= {PB_THRESHOLD}")
+                continue 
+            
+            # 2. 读取 CSV 文件并计算跌幅
+            df = pd.read_csv(file_path)
+            df[DATE_COL] = pd.to_datetime(df[DATE_COL], errors='coerce')
+            df[NAV_COL] = pd.to_numeric(df[NAV_COL], errors='coerce')
+
+            fall_3d = calculate_3day_fall(df.dropna(subset=[NAV_COL, DATE_COL]))
+            
+            all_funds_data.append({
+                '基金代码': fund_code,
+                f'近{FALLBACK_DAYS}日跌幅(%)': fall_3d,
+                '最新PB': latest_pb,
+            })
+            
+        except Exception as e:
+            print(f"处理文件 {fund_code}.csv 时发生未知错误: {e}")
+            continue
 
     if not all_funds_data:
         print(f"没有基金同时满足 PB < {PB_THRESHOLD} 条件和足够的净值数据。")
@@ -141,7 +156,6 @@ def main():
     results_df = pd.DataFrame(all_funds_data)
     sort_column = f'近{FALLBACK_DAYS}日跌幅(%)'
     
-    # 排序：按跌幅升序（跌幅最大，即值最小/最负）
     sorted_df = results_df.sort_values(
         by=sort_column, 
         ascending=True 
