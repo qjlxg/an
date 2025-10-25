@@ -8,66 +8,73 @@ import requests
 from bs4 import BeautifulSoup 
 import time
 import random
-import re # 确保导入 re 模块
+import re 
+import json # 保持导入，尽管当前未使用，以备不时之需
 
 # --- 配置 ---
 DATA_DIR = 'fund_data'
 OUTPUT_DIR = 'fetched_pb_data'  # 输出目录名称
+REQUEST_TIMEOUT = 5 # 降低超时时间，加快跳过失败请求的速度
 
 # --- PB 数据获取函数 (使用 FundArchivesDatas.aspx?type=guzhi 接口修复) ---
 def fetch_pb_from_eastmoney(fund_code):
     """
     【最终尝试：切换到 guzhi 估值接口】通过 FundArchivesDatas.aspx 接口的 guzhi (估值) 类型获取最新的 PB 值。
     """
-    # **【关键修复点：URL 切换到 guzhi 接口】**
-    # 估值 (guzhi) 页面最有可能包含 PB 数据
     url = f"https://fundf10.eastmoney.com/FundArchivesDatas.aspx?type=guzhi&code={fund_code}"
     
     # 伪装请求头
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-        'Referer': f'http://fundf10.eastmoney.com/guzhi_{fund_code}.html' # 模仿来自 F10 估值页面的请求
+        'Referer': f'http://fundf10.eastmoney.com/guzhi_{fund_code}.html'
     }
     
     # 随机延迟
     time.sleep(random.uniform(0.5, 1.5))
     
     try:
-        response = requests.get(url, headers=headers, timeout=10)
+        # **【优化点：使用 REQUEST_TIMEOUT 变量】**
+        response = requests.get(url, headers=headers, timeout=REQUEST_TIMEOUT) 
         
-        # 使用你原始代码中成功的提取模式：从 content:"" 中提取 HTML 片段
+        # 使用原始代码中成功的提取模式：从 content:"" 中提取 HTML 片段
         html_match = re.findall(r"content:\s*\"(.*?)\"\s*};", response.text, re.DOTALL)
         
         if not html_match:
             return None
 
         # 解析提取到的 HTML 片段
-        # 注意：这里我们使用 BeautifulSoup 的内置功能来处理 HTML，避免复杂的字符串替换
-        rise_html = html_match[0].replace('\\"', '"').replace('\\n', '\n') 
+        # rise_html = html_match[0].replace('\\"', '"').replace('\\n', '\n') # 移除不必要的替换，交给 BeautifulSoup 处理
+        rise_html = html_match[0]
         rise_soup = BeautifulSoup(rise_html, 'html.parser')
         
         # 查找包含 '市净率' 文本的 <th> 或 <td> 单元格
         pb_label = rise_soup.find(['th', 'td'], text=re.compile(r'市净率'))
         
         if pb_label:
-            # PB 值通常在标签的下一个兄弟单元格中（我们假设是表格结构）
+            # PB 值通常在标签的下一个兄弟单元格中
             pb_value_cell = pb_label.find_next_sibling(['td', 'th'])
             
             if pb_value_cell:
                 # 提取文本并清理
                 pb_text = pb_value_cell.text.strip()
-                # 确保它不是空字符串或 '-'
                 if pb_text and pb_text != '-': 
                     pb_value = float(pb_text)
                     return pb_value
         
         return None
             
-    except Exception as e:
+    except requests.exceptions.Timeout:
+        # 捕获超时错误，立即返回 None
+        print(f"警告：基金 {fund_code} 请求超时 ({REQUEST_TIMEOUT}s)。")
+        return None
+    except requests.exceptions.RequestException:
+        # 捕获所有其他请求错误，立即返回 None
+        return None
+    except Exception:
+        # 捕获解析错误等，立即返回 None
         return None
 
-# 移除了 calculate_3day_fall 函数
-
+# main 函数部分保持不变，因为它只负责读取文件、调用 PB 函数和保存结果。
 def main():
     print("--- 策略已移除，开始执行：基金资料 (PB) 抓取 ---")
     
@@ -106,7 +113,7 @@ def main():
                 '最新PB': latest_pb if latest_pb is not None else 'N/A',
             })
             
-        except Exception as e:
+        except Exception:
             continue
 
     if not all_funds_data:
