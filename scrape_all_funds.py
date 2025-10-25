@@ -6,12 +6,13 @@ import glob
 import time
 import sys
 from datetime import datetime
-import pandas as pd # 新增依赖，用于生成 CSV
+import pandas as pd
+import concurrent.futures # 新增依赖，用于并行执行
 
 # 定义基金数据存放的目录
 FUND_DATA_DIR = 'fund_data'
-# 每次抓取后增加的延迟时间（秒）
-REQUEST_DELAY = 2
+# 定义最大并发线程数。根据服务器限制和网络条件，8-16通常是合理的初始值。
+MAX_WORKERS = 8 
 
 def get_fund_codes_from_files(directory):
     """
@@ -27,17 +28,20 @@ def get_fund_codes_from_files(directory):
 
 def fetch_fund_profile(fund_code):
     """
-    从天天基金网获取单个基金的基本概况信息，并打印抓取状态及部分内容。
+    从天天基金网获取单个基金的基本概况信息，并返回结果。
+    此函数将在并发线程中运行。
     """
     base_url = f"http://fund.eastmoney.com/{fund_code}.html"
+    # 注意：在并行环境中，User-Agent保持一致，但请求分散，有助于规避简单反爬。
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
     }
     
-    print(f"--- [INFO] 开始抓取基金代码: {fund_code} ---")
+    print(f"--- [INFO] 线程启动: 基金代码 {fund_code}")
 
     try:
-        response = requests.get(base_url, headers=headers, timeout=10)
+        # 设置一个合理的超时，避免线程卡死
+        response = requests.get(base_url, headers=headers, timeout=15)
         response.raise_for_status() 
         response.encoding = 'utf-8' 
         soup = BeautifulSoup(response.text, 'html.parser')
@@ -72,27 +76,21 @@ def fetch_fund_profile(fund_code):
         if manager_div:
             fund_data['基金经理'] = manager_div.text.strip()
         
-        # --- 详细日志输出 ---
-        if '基金名称' in fund_data:
-            print(f"   [成功] 名称: {fund_data.get('基金名称', 'N/A')}")
-            print(f"   [成功] 经理: {fund_data.get('基金经理', 'N/A')}")
-            print("   [数据预览 (部分)]: ")
-            print(f"     - 基金规模: {fund_data.get('基金规模', 'N/A')}")
-            print(f"     - 成立日期: {fund_data.get('成立日期', 'N/A')}")
-        else:
-            print("   [警告] 抓取到页面但未能解析出核心数据。")
-            
         fund_data['状态'] = '成功'
+        
+        # 详细日志输出，但只输出关键信息，避免日志过多拖慢速度
+        print(f"--- [成功] 基金代码 {fund_code}: 名称: {fund_data.get('基金名称', 'N/A')}, 经理: {fund_data.get('基金经理', 'N/A')}")
+        
         return fund_data
 
     except requests.exceptions.HTTPError as e:
-        print(f"   [失败] HTTP 错误 ({e.response.status_code}): 请求被拒绝或页面不存在。")
+        print(f"--- [失败] HTTP 错误 ({e.response.status_code}): 代码 {fund_code} 请求失败。")
         return {'基金代码': fund_code, '状态': f'失败: HTTP {e.response.status_code}'}
     except requests.exceptions.RequestException as e:
-        print(f"   [失败] 请求异常: 发生网络错误或超时。")
+        print(f"--- [失败] 请求异常: 代码 {fund_code} 网络错误或超时。")
         return {'基金代码': fund_code, '状态': f'失败: 请求异常'}
     except Exception as e:
-        print(f"   [失败] 解析异常: 解析数据失败。错误: {e}")
+        print(f"--- [失败] 解析异常: 代码 {fund_code} 数据解析失败。错误: {e}")
         return {'基金代码': fund_code, '状态': f'失败: 解析异常'}
 
 def main(output_file_path):
@@ -106,18 +104,30 @@ def main(output_file_path):
         print("未找到任何基金代码 (.csv 文件)。脚本结束。")
         return
 
-    print(f"\n[START] 准备抓取 {len(fund_codes)} 个基金代码: {', '.join(fund_codes)}\n")
+    print(f"\n[START] 准备使用 {MAX_WORKERS} 个并发线程抓取 {len(fund_codes)} 个基金...\n")
     
     all_profiles = []
     
-    for i, code in enumerate(fund_codes):
-        profile = fetch_fund_profile(code)
-        all_profiles.append(profile)
+    # 使用 ThreadPoolExecutor 实现并行抓取
+    with concurrent.futures.ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
+        # 将所有基金代码的抓取任务提交给执行器
+        future_to_code = {executor.submit(fetch_fund_profile, code): code for code in fund_codes}
         
-        if i < len(fund_codes) - 1:
-            print(f"   [INFO] 暂停 {REQUEST_DELAY} 秒，避免触发反爬...")
-            time.sleep(REQUEST_DELAY) 
+        total_tasks = len(fund_codes)
         
+        # 迭代已完成的任务，并收集结果
+        for i, future in enumerate(concurrent.futures.as_completed(future_to_code)):
+            code = future_to_code[future]
+            try:
+                profile = future.result()
+                all_profiles.append(profile)
+                
+                # 打印进度
+                print(f"[PROGRESS] {i+1}/{total_tasks} 任务完成。当前基金: {code}")
+            except Exception as exc:
+                print(f"[ERROR] 线程异常: 基金 {code} 在线程中产生异常: {exc}")
+                all_profiles.append({'基金代码': code, '状态': f'失败: 线程异常 {exc}'})
+                
     # --- 保存为 CSV 文件 ---
     df = pd.DataFrame(all_profiles)
     
@@ -135,7 +145,7 @@ def main(output_file_path):
     if output_dir and not os.path.exists(output_dir):
         os.makedirs(output_dir, exist_ok=True)
         
-    # 保存结果到 CSV 文件 (使用 utf-8-sig 编码，兼容 Excel 中文显示)
+    # 保存结果到 CSV 文件
     try:
         df.to_csv(output_file_path, index=False, encoding='utf-8-sig') 
         print(f"\n[DONE] 抓取完成。结果已保存为 CSV 到 {output_file_path}")
