@@ -14,22 +14,22 @@ shanghai_tz = pytz.timezone('Asia/Shanghai')
 
 # 获取当前日期和时间（上海时区）
 now = datetime.datetime.now(shanghai_tz)
-date_dir = now.strftime('%Y%m%d') # 今天的日期 (YYYYMMDD)
+date_only_str = now.strftime('%Y%m%d') # 今天的日期字符串 (YYYYMMDD)
 month_dir = now.strftime('%Y%m') # 今天的年月 (YYYYMM)
 timestamp = now.strftime('%Y%m%d_%H%M%S')
 
 # 基金数据目录
 fund_data_dir = 'fund_data'
 
-# **新的输出目录结构**：YYYYMM/YYYYMMDD
-output_base_dir = os.path.join(month_dir, date_dir)
-os.makedirs(output_base_dir, exist_ok=True) # 确保创建 YYYYMM/YYYYMMDD 目录
+# **新的输出目录结构**：YYYYMM/
+output_base_dir = month_dir
+os.makedirs(output_base_dir, exist_ok=True) # 确保创建 YYYYMM 目录
 
 # 定义筛选的低费率阈值
 MAX_MANAGEMENT_FEE = 1.00 # 管理费率不超过 1.00%
 MAX_CUSTODIAN_FEE = 0.20   # 托管费率不超过 0.20%
 # 最关键：持有7天以上的赎回费率不超过 0.00% (即为 0%)
-MAX_REDEMPTION_FEE_7D = 0.1
+MAX_REDEMPTION_FEE_7D = 0.00 
 # --- end 配置 ---
 
 
@@ -184,6 +184,7 @@ for key in sorted(list(all_keys)):
         final_keys.append(key)
 
 output_filename = f"basic_info_and_fees_all_funds_{timestamp}.csv"
+# 文件路径为 YYYYMM/文件名.csv
 output_path = os.path.join(output_base_dir, output_filename)
 
 try:
@@ -237,6 +238,7 @@ for fund in all_fund_data:
 
 # 写入低费率报告文件
 report_filename = f"low_fee_funds_report_{timestamp}.csv"
+# 文件路径为 YYYYMM/文件名.csv
 report_path = os.path.join(output_base_dir, report_filename)
 
 if low_fee_funds:
@@ -256,9 +258,9 @@ else:
 
 print(f"[{datetime.datetime.now(shanghai_tz).strftime('%H:%M:%S')}] 开始 Git 提交和推送...")
 
-# git add 整个 YYYYMM 目录，确保所有新文件和目录都被追踪
-subprocess.run(['git', 'add', month_dir]) 
-commit_result = subprocess.run(['git', 'commit', '-m', f"Add combined data and low-fee report for {date_dir} in {month_dir}"], capture_output=True, text=True)
+# git add YYYYMM 目录，确保该目录下的新文件都被追踪
+subprocess.run(['git', 'add', output_base_dir]) 
+commit_result = subprocess.run(['git', 'commit', '-m', f"Update combined data and low-fee report in {month_dir} for date {date_only_str}"], capture_output=True, text=True)
 if "nothing to commit" in commit_result.stdout or "nothing to commit" in commit_result.stderr:
     print(f"[{datetime.datetime.now(shanghai_tz).strftime('%H:%M:%S')}] 没有文件变动需要提交。")
 else:
