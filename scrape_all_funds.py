@@ -23,58 +23,99 @@ fund_data_dir = 'fund_data'
 output_base_dir = date_dir
 os.makedirs(output_base_dir, exist_ok=True)
 
-# 定义全局变量用于保存字段映射
-FIELD_MAPPING = {}
-
-# 定义一个函数来处理单个基金的抓取和解析
+# 定义一个函数来处理单个基金的所有抓取和解析任务
 def scrape_and_parse_fund(fund_code):
-    """抓取单个基金的基本概况信息，并返回一个包含键值对的字典。"""
+    """
+    抓取单个基金的基本概况信息和费率信息，并返回一个包含键值对的字典。
+    并行执行，保证速度。
+    """
     
-    # 构建URL
-    url = f"https://fundf10.eastmoney.com/jbgk_{fund_code}.html"
     result = {'基金代码': fund_code, '状态': '成功'}
     
+    # --- 1. 抓取基本概况信息 (jbgk) ---
+    jbgk_url = f"https://fundf10.eastmoney.com/jbgk_{fund_code}.html"
     try:
-        # 抓取页面内容，设置超时
-        response = requests.get(url, timeout=15) # 适当增加超时时间
-        if response.status_code != 200:
-            result['状态'] = f"抓取失败: Status code {response.status_code}"
-            return result
-        
-        # 解析HTML
-        soup = BeautifulSoup(response.text, 'html.parser')
-        
-        # 找到基本概况表格（class="info w790"）
-        table = soup.find('table', class_='info w790')
-        if not table:
-            result['状态'] = "抓取失败: 未找到表格"
-            return result
-        
-        # 提取表格数据并转换为字典
-        rows = table.find_all('tr')
-        for row in rows:
-            cols = row.find_all(['th', 'td'])
+        response = requests.get(jbgk_url, timeout=15)
+        if response.status_code == 200:
+            soup = BeautifulSoup(response.text, 'html.parser')
+            table = soup.find('table', class_='info w790')
             
-            # 基础格式：每行是 <th>Label</th> <td>Value</td>
-            if len(cols) >= 2:
-                label = cols[0].text.strip().replace('：', '').replace(':', '')
-                value = cols[1].text.strip()
-                result[label] = value
-                
-            # 扩展格式：每行可能是 <th>Label1</th> <td>Value1</td> <th>Label2</th> <td>Value2</td>
-            if len(cols) == 4:
-                label2 = cols[2].text.strip().replace('：', '').replace(':', '')
-                value2 = cols[3].text.strip()
-                result[label2] = value2
-                
-    except requests.exceptions.Timeout:
-        result['状态'] = "抓取失败: 请求超时"
+            if table:
+                rows = table.find_all('tr')
+                for row in rows:
+                    cols = row.find_all(['th', 'td'])
+                    
+                    # 提取基本概况表格数据 (Label: Value)
+                    if len(cols) >= 2:
+                        label = cols[0].text.strip().replace('：', '').replace(':', '')
+                        value = cols[1].text.strip()
+                        result[label] = value
+                    if len(cols) == 4:
+                        label2 = cols[2].text.strip().replace('：', '').replace(':', '')
+                        value2 = cols[3].text.strip()
+                        result[label2] = value2
+            else:
+                result['状态_概况'] = "抓取警告: 未找到概况表格"
+        else:
+            result['状态_概况'] = f"抓取失败: 概况页Status code {response.status_code}"
+            
     except requests.exceptions.RequestException as e:
-        result['状态'] = f"抓取失败: 网络错误 ({e})"
-    except Exception as e:
-        result['状态'] = f"抓取失败: 未知错误 ({e})"
+        result['状态_概况'] = f"抓取失败: 概况页网络错误 ({e})"
 
-    print(f"[{fund_code}] 状态: {result.get('状态')}")
+
+    # --- 2. 抓取费率信息 (jjfl) ---
+    fee_url = f"https://fundf10.eastmoney.com/jjfl_{fund_code}.html"
+    try:
+        fee_response = requests.get(fee_url, timeout=15)
+        if fee_response.status_code == 200:
+            fee_soup = BeautifulSoup(fee_response.text, 'html.parser')
+            
+            # a) 提取运作费用 (管理费、托管费、销售服务费)
+            run_fee_h4 = fee_soup.find('h4', string=lambda t: t and '运作费用' in t)
+            if run_fee_h4:
+                run_fee_table = run_fee_h4.find_next('table', class_='comm jjfl')
+                if run_fee_table:
+                    # 运作费用的表格结构是 <th>Label</th><td>Value</td> ... 重复三次
+                    run_fee_tds = run_fee_table.find_all(['td', 'th'])
+                    if len(run_fee_tds) == 6:
+                        # 确保键名统一并去掉"费率"
+                        result[run_fee_tds[0].text.strip().replace('费率', '')] = run_fee_tds[1].text.strip()
+                        result[run_fee_tds[2].text.strip().replace('费率', '')] = run_fee_tds[3].text.strip()
+                        result[run_fee_tds[4].text.strip().replace('费率', '')] = run_fee_tds[5].text.strip()
+
+            # b) 提取赎回费率
+            shfl_h4 = fee_soup.find('h4', string=lambda t: t and '赎回费率' in t)
+            if shfl_h4:
+                shfl_table = shfl_h4.find_next('table', class_='comm jjfl')
+                
+                if shfl_table and shfl_table.find('tbody'):
+                    fee_rows = shfl_table.find('tbody').find_all('tr')
+                    
+                    for row in fee_rows:
+                        cols = row.find_all(['td', 'th'])
+                        if len(cols) >= 3:
+                            # 适用期限 (Period)
+                            period = cols[1].text.strip()
+                            # 赎回费率 (Rate)
+                            rate = cols[2].text.strip()
+                            
+                            # 格式化键名，如 "赎回费率_小于7天"
+                            key = f"赎回费率_{period.replace(' ', '')}"
+                            result[key] = rate
+                else:
+                    result['状态_费率'] = "抓取警告: 未找到赎回费率表格"
+            
+        else:
+            result['状态_费率'] = f"抓取失败: 费率页Status code {fee_response.status_code}"
+            
+    except requests.exceptions.RequestException as e:
+        result['状态_费率'] = f"抓取失败: 费率页网络错误 ({e})"
+
+    print(f"[{fund_code}] 状态: {result.get('状态', '未知')}. 概况: {result.get('状态_概况', 'OK')}. 费率: {result.get('状态_费率', 'OK')}")
+    # 将最终的统一状态设为'失败'如果任何一个子任务失败
+    if '失败' in result.get('状态_概况', '') or '失败' in result.get('状态_费率', ''):
+        result['状态'] = '失败'
+        
     return result
 
 # --- 主执行逻辑 ---
@@ -82,15 +123,15 @@ def scrape_and_parse_fund(fund_code):
 # 收集所有基金代码
 fund_codes_to_process = []
 for filename in os.listdir(fund_data_dir):
-    # 确保只处理有效的基金代码文件（例如，不包含中文或日期等）
+    # 确保只处理有效的基金代码文件
     if filename.endswith('.csv') and re.match(r'^\d+\.csv$', filename):
         fund_code = filename.split('.')[0]
         fund_codes_to_process.append(fund_code)
 
-print(f"找到 {len(fund_codes_to_process)} 个基金准备开始并行抓取...")
+print(f"找到 {len(fund_codes_to_process)} 个基金准备开始并行抓取 (包含费率信息)...")
 
 # 使用线程池进行并行处理
-MAX_WORKERS = 40 # 增加线程数以进一步加速
+MAX_WORKERS = 40 # 保持较高的线程数以维持加速
 all_fund_data = []
 
 with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
@@ -109,26 +150,31 @@ for fund_data in all_fund_data:
 
 # 将字段排序，确保 "基金代码" 和 "状态" 在最前面
 sorted_keys = ['基金代码', '状态']
-for key in sorted(list(all_keys)):
-    if key not in sorted_keys:
-        sorted_keys.append(key)
+# 将费率相关的字段也放在前面，便于查看
+fee_keys = [k for k in all_keys if '费' in k or '费率' in k]
+fee_keys = sorted(list(set(fee_keys)))
 
-output_filename = f"basic_info_all_funds_{timestamp}.csv"
+# 重新组织表头顺序: 基金代码, 状态, 费率相关, 其他概况信息
+final_keys = sorted_keys + fee_keys
+for key in sorted(list(all_keys)):
+    if key not in final_keys:
+        final_keys.append(key)
+
+output_filename = f"basic_info_and_fees_all_funds_{timestamp}.csv"
 output_path = os.path.join(output_base_dir, output_filename)
 
 print(f"开始写入合并文件: {output_path}")
 
 try:
     with open(output_path, 'w', newline='', encoding='utf-8') as csvfile:
-        writer = csv.DictWriter(csvfile, fieldnames=sorted_keys)
+        writer = csv.DictWriter(csvfile, fieldnames=final_keys)
         
         # 写入表头
         writer.writeheader()
         
         # 写入所有行数据
         for fund_data in all_fund_data:
-            # 填充缺失的字段，确保行与表头匹配
-            writer.writerow({k: v for k, v in fund_data.items() if k in sorted_keys})
+            writer.writerow({k: v for k, v in fund_data.items() if k in final_keys})
 
     print(f"成功保存合并文件: {output_path}")
 
@@ -137,7 +183,7 @@ except Exception as e:
 
 # Git推送结果到仓库
 subprocess.run(['git', 'add', output_base_dir])
-commit_result = subprocess.run(['git', 'commit', '-m', f"Add basic info file {output_filename} for {date_dir}"], capture_output=True, text=True)
+commit_result = subprocess.run(['git', 'commit', '-m', f"Add combined info and fee file {output_filename} for {date_dir}"], capture_output=True, text=True)
 if "nothing to commit" in commit_result.stdout or "nothing to commit" in commit_result.stderr:
     print("没有文件变动需要提交。")
 else:
