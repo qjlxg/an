@@ -50,7 +50,7 @@ def clean_fee_rate(fee_str):
             return None
     return None
 
-# --- 抓取和解析函数 ---
+# --- 抓取和解析函数 (并行任务) ---
 
 def scrape_and_parse_fund(fund_code):
     """
@@ -62,7 +62,7 @@ def scrape_and_parse_fund(fund_code):
     # --- 1. 抓取基本概况信息 (jbgk) ---
     jbgk_url = f"https://fundf10.eastmoney.com/jbgk_{fund_code}.html"
     try:
-        # 设置更短的超时时间，以便在并行抓取时能更快报告失败，而不是一直等待 15 秒
+        # 优化点：超时设置为 10 秒
         response = requests.get(jbgk_url, timeout=10) 
         if response.status_code == 200:
             soup = BeautifulSoup(response.text, 'html.parser')
@@ -73,7 +73,7 @@ def scrape_and_parse_fund(fund_code):
                 for row in rows:
                     cols = row.find_all(['th', 'td'])
                     
-                    # 提取基本概况表格数据 (Label: Value)
+                    # 提取基本概况表格数据
                     if len(cols) >= 2:
                         label = cols[0].text.strip().replace('：', '').replace(':', '')
                         value = cols[1].text.strip()
@@ -153,12 +153,13 @@ for filename in os.listdir(fund_data_dir):
 
 print(f"[{datetime.datetime.now(shanghai_tz).strftime('%H:%M:%S')}] 找到 {len(fund_codes_to_process)} 个基金，准备开始并行抓取...")
 
-# 使用线程池进行并行处理
+# 使用线程池进行并行处理 (MAX_WORKERS = 40)
 MAX_WORKERS = 40
 all_fund_data = []
 
 with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
     results = executor.map(scrape_and_parse_fund, fund_codes_to_process)
+    # 强制迭代等待所有线程完成
     all_fund_data = list(results) 
 
 print(f"[{datetime.datetime.now(shanghai_tz).strftime('%H:%M:%S')}] 所有抓取任务完成。")
@@ -208,6 +209,7 @@ for fund in all_fund_data:
     if fund.get('状态') != '成功':
         continue
         
+    # 费率清洗和校验逻辑
     mgmt_fee = clean_fee_rate(fund.get('管理费', ''))
     cust_fee = clean_fee_rate(fund.get('托管费', ''))
     redemption_fee_7d = clean_fee_rate(fund.get('赎回费率_大于等于7天', ''))
@@ -250,11 +252,11 @@ if low_fee_funds:
 else:
     print(f"[{datetime.datetime.now(shanghai_tz).strftime('%H:%M:%S')}] 没有找到完全符合低费率条件的基金。")
 
-# --- 3. Git推送结果到仓库 ---
+# --- 3. Git推送结果到仓库 (保留在 Python 脚本中) ---
 
 print(f"[{datetime.datetime.now(shanghai_tz).strftime('%H:%M:%S')}] 开始 Git 提交和推送...")
 
-# Git add 整个 YYYYMM 目录，确保所有子目录（YYYYMMDD）下的文件都被追踪
+# git add 整个 YYYYMM 目录，确保所有新文件和目录都被追踪
 subprocess.run(['git', 'add', month_dir]) 
 commit_result = subprocess.run(['git', 'commit', '-m', f"Add combined data and low-fee report for {date_dir} in {month_dir}"], capture_output=True, text=True)
 if "nothing to commit" in commit_result.stdout or "nothing to commit" in commit_result.stderr:
