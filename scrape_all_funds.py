@@ -18,8 +18,10 @@ def get_fund_codes_from_files(directory):
     从指定目录下的CSV文件名中提取基金代码。
     """
     codes = set()
+    # 查找目录中所有的.csv文件
     for filepath in glob.glob(os.path.join(directory, '*.csv')):
         filename = os.path.basename(filepath)
+        # 提取文件名中数字部分作为代码
         match = re.search(r'(\d+)', filename)
         if match:
             codes.add(match.group(1))
@@ -34,9 +36,11 @@ def fetch_fund_profile(fund_code):
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
     }
     
+    # 打印开始日志
     print(f"--- [INFO] 开始抓取基金代码: {fund_code} ---")
 
     try:
+        # 发起HTTP GET请求
         response = requests.get(base_url, headers=headers, timeout=10)
         response.raise_for_status() 
         response.encoding = 'utf-8' 
@@ -76,12 +80,17 @@ def fetch_fund_profile(fund_code):
             
             if found_info:
                  print("   [成功] 抓取概况信息 (规模/日期/管理人)")
+            else:
+                 print("   [警告] 未能解析到主要概况信息")
+
 
         # 3. 查找基金经理
         manager_div = soup.select_one('.manager_item p a')
         if manager_div:
             fund_data['基金经理'] = manager_div.text.strip()
             print(f"   [成功] 抓取经理: {fund_data['基金经理']}")
+        else:
+            print("   [警告] 未能解析到基金经理")
             
         return fund_data
 
@@ -92,7 +101,7 @@ def fetch_fund_profile(fund_code):
         print(f"   [失败] 请求异常: 基金代码 {fund_code} 发生网络错误或超时。")
         return {'基金代码': fund_code, '状态': f'抓取失败: 请求异常'}
     except Exception as e:
-        print(f"   [失败] 解析异常: 基金代码 {fund_code} 解析数据失败。")
+        print(f"   [失败] 解析异常: 基金代码 {fund_code} 解析数据失败。错误: {e}")
         return {'基金代码': fund_code, '状态': f'解析失败: {str(e)}'}
 
 def main(output_file_path):
@@ -124,13 +133,18 @@ def main(output_file_path):
         os.makedirs(output_dir, exist_ok=True)
         
     # 保存结果到 JSON 文件
-    with open(output_file_path, 'w', encoding='utf-8') as f:
-        json.dump(all_profiles, f, ensure_ascii=False, indent=4)
+    try:
+        with open(output_file_path, 'w', encoding='utf-8') as f:
+            json.dump(all_profiles, f, ensure_ascii=False, indent=4)
         
-    print(f"\n[DONE] 抓取完成。结果已保存到 {output_file_path}")
+        print(f"\n[DONE] 抓取完成。结果已保存到 {output_file_path}")
+    except Exception as e:
+        print(f"\n[ERROR] 写入文件失败: {e}")
+
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
+        # 如果参数不正确，打印所有抓取到的数据以供调试
         print("用法: python scrape_all_funds.py <output_file_path>")
         sys.exit(1)
         
