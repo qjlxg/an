@@ -1,40 +1,81 @@
-name: 抓取基金概况并保存 (无需 requirements.txt)
+name: 基金概况抓取 - 定时/手动/代码变动运行
 
 on:
-  # 允许手动触发工作流
+  # 1. 允许手动触发
   workflow_dispatch:
-  # 如果需要定时运行，可以取消注释下面代码
-  # schedule:
-  #   - cron: '0 0 * * *' # 每天 UTC 0点 (北京时间早上8点) 运行
+  
+  # 2. 当脚本或配置变动时自动运行
+  push:
+    branches:
+      - main # 确保你的主分支名称正确，若为 master 请修改
+    paths:
+      - 'scrape_all_funds.py'
+      - '.github/workflows/scrape_funds.yml'
+      - 'fund_data/**' # 当 fund_data 目录内容变化时也触发
+
+# 授予写入权限给 GITHUB_TOKEN，这是自动提交所必需的
+permissions:
+  contents: write
 
 jobs:
   scrape:
     runs-on: ubuntu-latest
     
+    # 设置时区为上海 (Asia/Shanghai)
+    env:
+      TZ: Asia/Shanghai
+
     steps:
       - name: 检出代码
+        # fetch-depth: 0 确保拉取完整历史记录，以便进行提交
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 
 
       - name: 设置 Python 环境
         uses: actions/setup-python@v5
         with:
           python-version: '3.x'
 
-      - name: 安装依赖 (直接安装)
-        # 不使用 requirements.txt，直接安装需要的库
+      - name: 安装依赖 (requests 和 beautifulsoup4)
         run: pip install requests beautifulsoup4
 
-      - name: 运行基金信息抓取脚本
-        # 运行你保存的 Python 脚本
-        run: python scrape_all_funds.py
-
-      - name: 保存抓取结果到仓库 (Artifact)
-        # 将生成的 JSON 文件作为工作流产物保存，您可以下载查看
-        uses: actions/upload-artifact@v4
-        with:
-          name: fund-profiles-scraped
-          path: fund_profiles_latest.json
+      - name: 计算输出路径和文件名 (上海时区)
+        id: set_path
+        run: |
+          # 格式化目录：YYYY/MM/DD
+          DATE_DIR=$(date +%Y/%m/%d)
+          # 格式化文件名：YYYYMMDD_HHmmss
+          TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+          FILENAME="fund_profiles_${TIMESTAMP}.json"
           
-      - name: 打印结果到日志
-        # 打印一下结果，方便在 Actions 日志中直接查看
-        run: cat fund_profiles_latest.json
+          # 完整的输出路径
+          OUTPUT_PATH="${DATE_DIR}/${FILENAME}"
+          
+          echo "创建目录: ${DATE_DIR}"
+          echo "生成文件: ${FILENAME}"
+          # 将路径设置为环境变量供后续步骤使用
+          echo "OUTPUT_PATH=${OUTPUT_PATH}" >> $GITHUB_ENV
+
+      - name: 运行基金信息抓取脚本
+        # 传入动态生成的路径给 Python 脚本
+        run: python scrape_all_funds.py "${{ env.OUTPUT_PATH }}"
+
+      - name: 配置 Git 用户并提交更改
+        run: |
+          # 1. 配置 Git 身份
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+          
+          # 2. 添加动态生成的输出文件。如果目录不存在，脚本会自动创建。
+          git add "${{ env.OUTPUT_PATH }}"
+          
+          # 3. 提交更改：使用 git status --porcelain 检查是否有新增或修改的文件
+          if git status --porcelain | grep -q 'fund_profiles_'; then
+              git commit -m "数据抓取：更新基金概况至 ${{ env.OUTPUT_PATH }}"
+              # 4. 推送更改到当前分支
+              git push
+              echo "✅ 成功提交抓取结果到仓库。"
+          else
+              echo "⚠️ 没有新的数据文件生成或更改，无需提交。"
+          fi
