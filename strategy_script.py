@@ -5,7 +5,7 @@ import os
 from datetime import datetime
 import pytz
 import requests
-from bs4 import BeautifulSoup # 导入 BeautifulSoup，用于更可靠的 HTML 解析
+from bs4 import BeautifulSoup 
 import time
 import random
 
@@ -24,9 +24,7 @@ NAV_COL = 'net_value'
 def fetch_pb_from_eastmoney(fund_code):
     """
     通过同步请求和 BeautifulSoup 解析天天基金 F10 页面获取最新的 PB 值。
-    目标 URL: http://fundf10.eastmoney.com/jzzs_{fund_code}.html
     """
-    # 针对 PB/PE 数据的估值页面 URL
     url = f"http://fundf10.eastmoney.com/jzzs_{fund_code}.html"
     
     # 伪装请求头
@@ -47,7 +45,8 @@ def fetch_pb_from_eastmoney(fund_code):
         soup = BeautifulSoup(html_text, 'html.parser')
         
         # 查找包含 '市净率' 文本的表格单元格 (td)
-        pb_row = soup.find('td', text='市净率')
+        # FIX: 修复 DeprecationWarning，将 text 替换为 string
+        pb_row = soup.find('td', string='市净率') 
         
         if pb_row:
             # PB 值通常在 '市净率' 单元格的下一个兄弟单元格中
