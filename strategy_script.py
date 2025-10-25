@@ -9,47 +9,50 @@ from bs4 import BeautifulSoup
 import time
 import random
 import re 
+import json 
 
 # --- 配置 ---
 DATA_DIR = 'fund_data'
 OUTPUT_DIR = 'fetched_pb_data'  # 输出目录名称
-REQUEST_TIMEOUT = 10 # 维持超时时间，确保有足够时间接收完整页面
+REQUEST_TIMEOUT = 10 # 请求超时时间
 
-# --- PB 数据获取函数 (使用 基金档案主页 修复) ---
+# --- PB 数据获取函数 (使用 资产配置页面 修复) ---
 def fetch_pb_from_eastmoney(fund_code):
     """
-    【最终尝试：切换到基金档案主页面】解析整个 F10 档案页面，从中搜索 PB 值。
+    【最终修复：切换到资产配置页面】解析 F10 资产配置页面，从中搜索 PB 值。
     """
-    # **【关键修复点：URL 切换到基金档案主页】**
-    url = f"http://fundf10.eastmoney.com/{fund_code}.html" 
+    # **【关键修复点：URL 切换到 zcpz 接口】**
+    # 资产配置 (zcpz) 页面最有可能包含 PB 数据
+    url = f"http://fundf10.eastmoney.com/zcpz_{fund_code}.html" 
     
     # 伪装请求头
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-        'Referer': 'http://fundf10.eastmoney.com/'
+        'Referer': f'http://fundf10.eastmoney.com/{fund_code}.html'
     }
     
     # 随机延迟
     time.sleep(random.uniform(0.5, 1.5))
     
     try:
-        # **【注意：主页面的编码通常是 UTF-8】**
         response = requests.get(url, headers=headers, timeout=REQUEST_TIMEOUT) 
-        response.encoding = 'utf-8' # 尝试 UTF-8 编码
+        # 很多 F10 页面使用 GBK 编码，如果 UTF-8 乱码则自动检测
+        if 'charset=gb2312' in response.text.lower() or 'charset=gbk' in response.text.lower():
+            response.encoding = 'gbk'
+        else:
+            response.encoding = 'utf-8'
+            
         html_text = response.text
         
-        # 使用 BeautifulSoup 解析整个 HTML
         soup = BeautifulSoup(html_text, 'html.parser')
         
         # 查找包含 '市净率' 文本的 <th> 或 <td> 单元格
-        # 使用 re.compile 确保查找更灵活
         pb_label = soup.find(['th', 'td'], text=re.compile(r'市净率'))
         
         if pb_label:
-            # PB 值通常在标签的下一个兄弟单元格中
-            # 向上找到包含它的表格（table），向下找到它的值
+            # PB 值通常在标签的下一个兄弟单元格中，或者在同一个表格的下一行
             
-            # 尝试获取标签的下一个兄弟节点
+            # 尝试获取标签的下一个兄弟节点（最常见的情况）
             pb_value_cell = pb_label.find_next_sibling(['td', 'th'])
             
             if pb_value_cell:
@@ -61,13 +64,14 @@ def fetch_pb_from_eastmoney(fund_code):
         return None
             
     except requests.exceptions.Timeout:
+        print(f"警告：基金 {fund_code} 请求超时 ({REQUEST_TIMEOUT}s)。")
         return None
     except requests.exceptions.RequestException:
         return None
     except Exception:
         return None
 
-# main 函数部分保持不变
+# main 函数保持不变，只负责读取文件、调用 PB 函数和保存结果。
 def main():
     print("--- 策略已移除，开始执行：基金资料 (PB) 抓取 ---")
     
@@ -84,7 +88,7 @@ def main():
         print(f"错误: 必需的 {DATA_DIR} 目录不存在。")
         return
 
-    # 保持参数来源不变：从 fund_data 目录下读取 CSV 文件名作为基金代码
+    # 从 fund_data 目录下读取 CSV 文件名作为基金代码
     fund_codes = []
     for filename in os.listdir(DATA_DIR):
         if filename.endswith('.csv'):
