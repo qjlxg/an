@@ -2,7 +2,7 @@ name: 02-recommended_cn_funds.csv fund
 
 on:
   schedule:
-    - cron: '0 9 * * *'  # 每天北京时间17:00运行（UTC+8为9:00 UTC）
+    - cron: '15 21,22,23 * * 1-5'
   workflow_dispatch:  # 支持手动触发
   push:
     paths:
