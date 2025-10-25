@@ -1,5 +1,5 @@
 # .github/workflows/strategy_runner.yml
-name: 基金策略自动运行
+name: 策略自动运行
 
 on:
   # 1. 手动运行
