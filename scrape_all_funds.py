@@ -49,7 +49,7 @@ def clean_fee_rate(fee_str):
             return None
     return None
 
-# --- 抓取和解析函数 (与上一版本相同) ---
+
 
 def scrape_and_parse_fund(fund_code):
     """
@@ -153,7 +153,7 @@ for filename in os.listdir(fund_data_dir):
 print(f"找到 {len(fund_codes_to_process)} 个基金准备开始并行抓取...")
 
 # 使用线程池进行并行处理
-MAX_WORKERS = 10
+MAX_WORKERS = 8
 all_fund_data = []
 
 with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
