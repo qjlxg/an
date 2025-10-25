@@ -131,7 +131,7 @@ for filename in os.listdir(fund_data_dir):
 print(f"找到 {len(fund_codes_to_process)} 个基金准备开始并行抓取 (包含费率信息)...")
 
 # 使用线程池进行并行处理
-MAX_WORKERS = 40 # 保持较高的线程数以维持加速
+MAX_WORKERS = 10 # 保持较高的线程数以维持加速
 all_fund_data = []
 
 with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
