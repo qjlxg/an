@@ -1,17 +1,13 @@
-# strategy_script_akshare.py
+# strategy_script.py
 import pandas as pd
 import numpy as np
 import os
 from datetime import datetime
 import pytz
-# 移除 requests 和 beautifulsoup4
-# import requests 
-# from bs4 import BeautifulSoup 
+import requests
+from bs4 import BeautifulSoup 
 import time
 import random
-
-# 引入 AKShare
-import akshare as ak 
 
 # --- 配置 ---
 DATA_DIR = 'fund_data'
@@ -24,42 +20,60 @@ FALLBACK_DAYS = 3         # 近3日跌幅
 DATE_COL = 'date'
 NAV_COL = 'net_value'
 
-# --- PB 数据获取函数 (使用 AKShare) ---
-def fetch_pb_from_akshare(fund_code):
+# --- PB 数据获取函数 (使用 BeautifulSoup) ---
+def fetch_pb_from_eastmoney(fund_code):
     """
-    通过 AKShare 获取基金的最新 PB 值。
-    【注意】：AKShare 没有直接且稳定的“实时 PB”接口。
-    此处假设我们找到了一个可以替代的数据接口，例如：
-    从东方财富的基金持仓数据中，尝试获取类似数据。
-    
-    【实际实现建议】：如果找不到实时PB，可以获取每日净值数据中
-    包含的“单位净值累计净值比”或类似指标进行替代。
-    
-    此处以一个通用的 AKShare 接口（例如，获取基金基本信息）作为示例
-    但请注意，你需要查阅 AKShare 文档，找到真正包含 PB 的接口。
+    【已修复】通过同步请求和 BeautifulSoup 解析天天基金 F10 基本概况页面（jbgk）获取最新的 PB 值。
     """
+    # **【修复点：更新 URL 为 jbgk 接口】**
+    url = f"http://fundf10.eastmoney.com/jbgk_{fund_code}.html"
+    
+    # 伪装请求头
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+        'Referer': 'http://fundf10.eastmoney.com/'
+    }
+    
+    # 随机延迟，防止请求过于频繁
+    time.sleep(random.uniform(0.5, 1.5))
+    
     try:
-        # 尝试使用基金最新规模数据接口（仅为示例，此接口可能不含PB）
-        # 请根据 AKShare 文档，找到正确的 PB 接口替换 'fund_em_info'
-        df_info = ak.fund_em_info(fund=fund_code, indicator="单位净值累计净值比") 
+        response = requests.get(url, headers=headers, timeout=10)
+        response.encoding = 'utf-8'
+        html_text = response.text
         
-        # 实际操作中，你需要解析 df_info 来获取 PB 或近似值
-        # 由于 fund_em_info 并不包含 PB，我们这里返回一个硬编码值来模拟成功获取
-        # 假设我们成功获取了 PB，我们随机生成一个符合筛选条件的 PB，以演示流程
-        if df_info is not None and not df_info.empty:
-             # 在实际应用中，你需要从 df_info 中提取 PB 值
-             # 这里使用随机数代替，以便让后续逻辑可以跑起来
-             simulated_pb = round(random.uniform(0.9, 1.19), 4)
-             print(f"基金 {fund_code} 成功通过 AKShare 模拟获取 PB: {simulated_pb}")
-             return simulated_pb
+        # 使用 BeautifulSoup 解析 HTML
+        soup = BeautifulSoup(html_text, 'html.parser')
         
-        print(f"警告：基金 {fund_code} 通过 AKShare 接口获取数据失败或数据为空。")
+        # **【修复点：增强解析逻辑】**
+        # 尝试查找包含 '市净率' 文本的 <th> 或 <td> 单元格。
+        pb_label = soup.find(['th', 'td'], string='市净率')
+        
+        if pb_label:
+            # PB 值通常在标签的下一个兄弟单元格中，可能是 <td> 或 <th>
+            pb_value_cell = pb_label.find_next_sibling(['td', 'th'])
+            
+            if pb_value_cell:
+                # 提取文本并清理
+                pb_text = pb_value_cell.text.strip()
+                # 确保它不是空字符串或 '-'
+                if pb_text and pb_text != '-': 
+                    pb_value = float(pb_text)
+                    return pb_value
+        
+        print(f"警告：基金 {fund_code} 在 jbgk 页面未找到 PB 值或 PB 值为 '-'。")
         return None
             
-    except Exception as e:
-        print(f"错误：通过 AKShare 获取基金 {fund_code} 的 PB 数据失败: {e}")
+    except requests.exceptions.RequestException as e:
+        print(f"错误：获取基金 {fund_code} 的 PB 数据网络请求失败: {e}")
         return None
-# ... (calculate_3day_fall 和 main 函数保持不变，但 main 中调用新的 PB 函数) ...
+    except ValueError:
+        print(f"警告：基金 {fund_code} 找到 PB 文本但无法转换为数字。")
+        return None
+    except Exception as e:
+        print(f"错误：解析基金 {fund_code} 的 PB 数据失败: {e}")
+        return None
+
 def calculate_3day_fall(df):
     """计算近3日跌幅（最新一日相比3日前）"""
     if len(df) < FALLBACK_DAYS + 1:
@@ -99,7 +113,6 @@ def main():
     fund_codes = []
     for filename in os.listdir(DATA_DIR):
         if filename.endswith('.csv'):
-            # 注意：此处假设 CSV 文件名即为 fund_code，如 '000001.csv'
             fund_codes.append(filename.replace('.csv', '').zfill(6))
 
     if not fund_codes:
@@ -108,14 +121,11 @@ def main():
 
     # 循环处理每个基金
     for fund_code in fund_codes:
-        # 由于 AKShare 的接口可能有限制，这里增加一个随机延迟
-        time.sleep(random.uniform(1, 3)) 
         file_path = os.path.join(DATA_DIR, f'{fund_code}.csv')
         
         try:
-            # 1. 获取 PB 数据 (使用 AKShare 替代 Web Scraping)
-            # 调用更新后的函数
-            latest_pb = fetch_pb_from_akshare(fund_code)
+            # 1. 获取 PB 数据 (Web Scraping - 使用已修复的接口)
+            latest_pb = fetch_pb_from_eastmoney(fund_code)
             
             # --- 策略筛选（PB < 1.2） ---
             if latest_pb is None or latest_pb >= PB_THRESHOLD:
