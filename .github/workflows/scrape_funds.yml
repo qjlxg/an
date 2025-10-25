@@ -1,0 +1,40 @@
+name: 抓取基金概况并保存 (无需 requirements.txt)
+
+on:
+  # 允许手动触发工作流
+  workflow_dispatch:
+  # 如果需要定时运行，可以取消注释下面代码
+  # schedule:
+  #   - cron: '0 0 * * *' # 每天 UTC 0点 (北京时间早上8点) 运行
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 设置 Python 环境
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: 安装依赖 (直接安装)
+        # 不使用 requirements.txt，直接安装需要的库
+        run: pip install requests beautifulsoup4
+
+      - name: 运行基金信息抓取脚本
+        # 运行你保存的 Python 脚本
+        run: python scrape_all_funds.py
+
+      - name: 保存抓取结果到仓库 (Artifact)
+        # 将生成的 JSON 文件作为工作流产物保存，您可以下载查看
+        uses: actions/upload-artifact@v4
+        with:
+          name: fund-profiles-scraped
+          path: fund_profiles_latest.json
+          
+      - name: 打印结果到日志
+        # 打印一下结果，方便在 Actions 日志中直接查看
+        run: cat fund_profiles_latest.json
