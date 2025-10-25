@@ -1,19 +1,19 @@
-name: 基金概况抓取 - 定时/手动/代码变动运行
+name: 基金概况抓取 - 自动保存到仓库
 
 on:
-  # 1. 允许手动触发
+  # 1. 允许手动触发工作流
   workflow_dispatch:
   
-  # 2. 当脚本或配置变动时自动运行
+  # 2. 当关键文件变动时自动运行
   push:
     branches:
-      - main # 确保你的主分支名称正确，若为 master 请修改
+      - main # <<< 请务必检查并替换为您的主分支名称 (如: master)
     paths:
       - 'scrape_all_funds.py'
       - '.github/workflows/scrape_funds.yml'
-      - 'fund_data/**' # 当 fund_data 目录内容变化时也触发
+      - 'fund_data/**' # 当 fund_data 目录中任何文件变化时触发
 
-# 授予写入权限给 GITHUB_TOKEN，这是自动提交所必需的
+# 授予 GITHUB_TOKEN 写入权限，这是自动提交所必需的
 permissions:
   contents: write
 
@@ -38,6 +38,7 @@ jobs:
           python-version: '3.x'
 
       - name: 安装依赖 (requests 和 beautifulsoup4)
+        # 满足“不要用 requirements.txt”的要求
         run: pip install requests beautifulsoup4
 
       - name: 计算输出路径和文件名 (上海时区)
@@ -45,37 +46,39 @@ jobs:
         run: |
           # 格式化目录：YYYY/MM/DD
           DATE_DIR=$(date +%Y/%m/%d)
-          # 格式化文件名：YYYYMMDD_HHmmss
+          # 格式化文件名：fund_profiles_YYYYMMDD_HHmmss.json
           TIMESTAMP=$(date +%Y%m%d_%H%M%S)
           FILENAME="fund_profiles_${TIMESTAMP}.json"
           
           # 完整的输出路径
           OUTPUT_PATH="${DATE_DIR}/${FILENAME}"
           
-          echo "创建目录: ${DATE_DIR}"
-          echo "生成文件: ${FILENAME}"
+          echo "生成的输出路径: ${OUTPUT_PATH}"
           # 将路径设置为环境变量供后续步骤使用
           echo "OUTPUT_PATH=${OUTPUT_PATH}" >> $GITHUB_ENV
 
       - name: 运行基金信息抓取脚本
-        # 传入动态生成的路径给 Python 脚本
+        # 传入动态生成的路径给 Python 脚本，脚本会输出详细日志
         run: python scrape_all_funds.py "${{ env.OUTPUT_PATH }}"
 
       - name: 配置 Git 用户并提交更改
+        # 实现“直接推送到仓库，不要上传工件”的要求
         run: |
           # 1. 配置 Git 身份
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"
           
-          # 2. 添加动态生成的输出文件。如果目录不存在，脚本会自动创建。
+          # 2. 添加动态生成的输出文件
+          # 使用 'git add -A' 确保添加新建的目录和文件
           git add "${{ env.OUTPUT_PATH }}"
           
-          # 3. 提交更改：使用 git status --porcelain 检查是否有新增或修改的文件
-          if git status --porcelain | grep -q 'fund_profiles_'; then
-              git commit -m "数据抓取：更新基金概况至 ${{ env.OUTPUT_PATH }}"
+          # 3. 检查是否有文件更改 (status --porcelain)
+          # 'git status --porcelain' 在有文件新增/修改时会输出内容
+          if git status --porcelain | grep -q "${{ env.OUTPUT_PATH }}"; then
+              git commit -m "数据抓取：自动更新基金概况至 ${{ env.OUTPUT_PATH }}"
               # 4. 推送更改到当前分支
               git push
-              echo "✅ 成功提交抓取结果到仓库。"
+              echo "✅ 成功提交抓取结果到仓库的 ${DATE_DIR} 目录。"
           else
-              echo "⚠️ 没有新的数据文件生成或更改，无需提交。"
+              echo "⚠️ 脚本运行成功，但未检测到新的数据文件或更改，跳过提交。"
           fi
