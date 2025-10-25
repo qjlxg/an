@@ -20,17 +20,15 @@ def calculate_technical_indicators(df):
     要求df必须按日期降序排列。
     """
     if 'value' not in df.columns or len(df) < 50:
-        # MACD和MA50至少需要较长数据
         return {
             'RSI': np.nan, 'MACD信号': '数据不足', '净值/MA50': np.nan, 
             '布林带位置': '数据不足', '最新净值': df['value'].iloc[0] if not df.empty else np.nan,
-            '当日跌幅': np.nan # 新增当日跌幅
+            '当日跌幅': np.nan 
         }
     
-    # 确保我们使用按时间升序的副本进行计算
     df_asc = df.iloc[::-1].copy()
     
-    # 1. RSI (14) - 计算不变
+    # 1. RSI (14)
     delta = df_asc['value'].diff()
     gain = (delta.where(delta > 0, 0)).rolling(window=14).mean()
     loss = (-delta.where(delta < 0, 0)).rolling(window=14).mean()
@@ -38,7 +36,7 @@ def calculate_technical_indicators(df):
     df_asc['RSI'] = 100 - (100 / (1 + rs))
     rsi_latest = df_asc['RSI'].iloc[-1]
     
-    # 2. MACD, MA50, 布林带 - 计算不变
+    # 2. MACD, MA50, 布林带 (此处代码不变，但保留在完整脚本中)
     ema_12 = df_asc['value'].ewm(span=12, adjust=False).mean()
     ema_26 = df_asc['value'].ewm(span=26, adjust=False).mean()
     df_asc['MACD'] = ema_12 - ema_26
@@ -87,7 +85,7 @@ def calculate_technical_indicators(df):
         '净值/MA50': round(net_to_ma50, 2), 
         '布林带位置': bollinger_pos,
         '最新净值': round(value_latest, 4),
-        '当日跌幅': round(daily_drop, 4) # 新增
+        '当日跌幅': round(daily_drop, 4) 
     }
 
 # --- 其他不变的辅助函数 (extract_fund_codes, calculate_consecutive_drops, calculate_max_drawdown) ---
@@ -106,7 +104,8 @@ def extract_fund_codes(report_content):
             if len(parts) >= 11: 
                 fund_code = parts[2]
                 action_signal = parts[10]
-                if action_signal.startswith('买入信号'): # 仅筛选买入信号（RSI < 35且当日大跌）
+                # 筛选 Buy Signal 1 和 Buy Signal 2
+                if action_signal.startswith('买入信号'): 
                     try:
                         if fund_code.isdigit():
                             codes.add(fund_code)
@@ -138,7 +137,7 @@ def calculate_max_drawdown(series):
     mdd = drawdown.max()
     return mdd
 
-# --- 修正后的生成报告函数（新增极度超卖精选列表并置于首位） ---
+# --- 修正后的生成报告函数（重新划分三个优先级列表） ---
 def generate_report(results, timestamp_str):
     now_str = timestamp_str
 
@@ -168,41 +167,35 @@ def generate_report(results, timestamp_str):
     report += f"**新增分析维度：近一周（5日）连跌天数、当日跌幅、关键技术指标（RSI, MACD等）和基于RSI的行动提示。**\n"
     report += f"---"
     
-    # 2. 【新增】极度超卖精选列表筛选 (最严格的条件)
-    # 条件：最大回撤 >= 10% 且 近一周连跌天数 == 1 且 RSI < 35 且 当日跌幅 >= 3%
-    df_elastic = df_results[
+    # --- 核心筛选：所有满足 高弹性基础条件 的基金 ---
+    # 条件：最大回撤 >= 10% 且 近一周连跌天数 == 1
+    df_base_elastic = df_results[
         (df_results['最大回撤'] >= HIGH_ELASTICITY_MIN_DRAWDOWN) & 
-        (df_results['近一周连跌'] == 1)
-    ].copy() 
-
-    # 筛选出满足 RSI < 35 AND 当日跌幅 >= 3% 的技术共振基金
-    df_strict_elastic = df_elastic[
-        ((df_elastic['RSI'] < 35)) &
-        (df_elastic['当日跌幅'] >= MIN_DAILY_DROP_PERCENT)
+        (df_results['近一周连跌'] == 1) &
+        (df_results['RSI'] < 35) # 仅筛选RSI超卖的，非超卖的直接放入第三优先级
     ].copy()
     
-    # 3. 生成【技术共振】极度超卖精选列表报告部分 (置于最前)
-    if not df_strict_elastic.empty:
-        df_strict_elastic = df_strict_elastic.sort_values(by=['当日跌幅', 'RSI'], ascending=[False, True]).reset_index(drop=True)
-        df_strict_elastic.index = df_strict_elastic.index + 1
+    
+    # 2. 【🥇 第一优先级：即时恐慌买入】
+    # 条件：df_base_elastic + 当日跌幅 >= 3%
+    df_buy_signal_1 = df_base_elastic[
+        (df_base_elastic['当日跌幅'] >= MIN_DAILY_DROP_PERCENT)
+    ].copy()
+    
+    if not df_buy_signal_1.empty:
+        df_buy_signal_1 = df_buy_signal_1.sort_values(by=['当日跌幅', 'RSI'], ascending=[False, True]).reset_index(drop=True)
+        df_buy_signal_1.index = df_buy_signal_1.index + 1
         
-        strict_count = len(df_strict_elastic)
-        
-        report += f"\n## **🥇【最高优先级】当日恐慌买入信号** ({strict_count}只)\n\n"
-        
-        report += f"此列表是所有预警中，**最具操作性的极度超跌标的**。需同时满足：\n"
-        report += f"1. 长期超跌 ($\ge$ {HIGH_ELASTICITY_MIN_DRAWDOWN*100:.0f}%) + 低位企稳 (连跌1天)\n"
-        report += f"2. 中期超卖 (RSI < 35)\n"
-        report += f"3. **当日恐慌性大跌 ($\ge$ {MIN_DAILY_DROP_PERCENT*100:.0f}%)**\n\n"
+        report += f"\n## **🥇 第一优先级：【即时恐慌买入】** ({len(df_buy_signal_1)}只)\n\n"
+        report += f"**条件：** 长期超跌 ($\ge$ {HIGH_ELASTICITY_MIN_DRAWDOWN*100:.0f}%) + 低位企稳 + RSI超卖 ($ < 35\%$) + **当日跌幅 $\ge$ {MIN_DAILY_DROP_PERCENT*100:.0f}%**\n"
+        report += f"**纪律：** 市场恐慌时出手，本金充足时应优先配置此列表。**按当日跌幅降序排列。**\n\n"
         
         report += f"| 排名 | 基金代码 | 最大回撤 (1M) | **当日跌幅** | 连跌 (1M) | RSI(14) | MACD信号 | 净值/MA50 | 试水买价 (跌3%) | 行动提示 |\n"
         report += f"| :---: | :---: | ---: | ---: | ---: | ---: | :---: | ---: | :---: | :---: |\n"  
 
-        for index, row in df_strict_elastic.iterrows():
+        for index, row in df_buy_signal_1.iterrows():
             latest_value = row.get('最新净值', 1.0)
             trial_price = latest_value * 0.97
-            
-            # 强化行动提示：满足当日大跌条件后，RSI < 35 的提示改为更积极的“买入信号”
             action_prompt = '买入信号 (RSI超卖 + 当日大跌)'
             if row['RSI'] < 30:
                 action_prompt = '买入信号 (RSI极度超卖 + 当日大跌)'
@@ -211,47 +204,74 @@ def generate_report(results, timestamp_str):
         
         report += "\n---\n"
     else:
-        report += f"\n## **🥇【最高优先级】当日恐慌买入信号**\n\n"
-        report += f"**恭喜，没有发现同时满足所有严格筛选条件（高回撤、低位企稳、RSI < 35 和 当日跌幅 $\ge$ {MIN_DAILY_DROP_PERCENT*100:.0f}%）的基金。** 市场恐慌度不足。\n\n"
+        report += f"\n## **🥇 第一优先级：【即时恐慌买入】**\n\n"
+        report += f"**今日没有基金同时满足所有严格条件，市场恐慌度不足。**\n\n"
+        report += "\n---\n"
+        
+    # 3. 【🥈 第二优先级：技术共振建仓】
+    # 条件：df_base_elastic - df_buy_signal_1
+    funds_to_exclude_1 = df_buy_signal_1['基金代码'].tolist()
+    df_buy_signal_2 = df_base_elastic[~df_base_elastic['基金代码'].isin(funds_to_exclude_1)].copy()
+
+    if not df_buy_signal_2.empty:
+        df_buy_signal_2 = df_buy_signal_2.sort_values(by=['RSI', '最大回撤'], ascending=[True, False]).reset_index(drop=True)
+        df_buy_signal_2.index = df_buy_signal_2.index + 1
+        
+        report += f"\n## **🥈 第二优先级：【技术共振建仓】** ({len(df_buy_signal_2)}只)\n\n"
+        report += f"**条件：** 长期超跌 ($\ge$ {HIGH_ELASTICITY_MIN_DRAWDOWN*100:.0f}%) + 低位企稳 + RSI超卖 ($ < 35\%$) + **当日跌幅 $< {MIN_DAILY_DROP_PERCENT*100:.0f}\%$**\n"
+        report += f"**纪律：** 适合在本金有限时优先配置，或在非大跌日进行建仓。**按 RSI 升序排列。**\n\n"
+        
+        report += f"| 排名 | 基金代码 | 最大回撤 (1M) | **当日跌幅** | 连跌 (1M) | RSI(14) | MACD信号 | 净值/MA50 | 试水买价 (跌3%) | 行动提示 |\n"
+        report += f"| :---: | :---: | ---: | ---: | ---: | ---: | :---: | ---: | :---: | :---: |\n"  
+
+        for index, row in df_buy_signal_2.iterrows():
+            latest_value = row.get('最新净值', 1.0)
+            trial_price = latest_value * 0.97
+            # 这里的行动提示来自 analyze_all_funds 函数，RSI < 35 对应 '考虑试水建仓 (RSI超卖)'
+            action_prompt = row['行动提示'] 
+            
+            report += f"| {index} | `{row['基金代码']}` | **{row['最大回撤']:.2%}** | {row['当日跌幅']:.2%} | {row['最大连续下跌']} | **{row['RSI']:.2f}** | {row['MACD信号']} | {row['净值/MA50']:.2f} | {trial_price:.4f} | **{action_prompt}** |\n"
+        
+        report += "\n---\n"
+    else:
+        report += f"\n## **🥈 第二优先级：【技术共振建仓】**\n\n"
+        report += f"所有满足 **长期超跌+RSI超卖** 基础条件的基金，均已进入 **第一优先级列表**。\n\n"
         report += "\n---\n"
 
-    # 4. 生成【扩展列表】高弹性精选列表报告部分 (原列表，作为观察池)
-    # 此列表现在是所有满足 10%回撤 + 连跌1天 的基金 (RSI < 35 或 当日大跌 的已在上一个列表出现)
-    if not df_elastic.empty:
-        # 从 df_elastic 中排除 df_strict_elastic 中已有的基金，以避免重复
-        funds_to_exclude = df_strict_elastic['基金代码'].tolist()
-        df_extended_elastic = df_elastic[~df_elastic['基金代码'].isin(funds_to_exclude)].copy()
+    # 4. 【🥉 第三优先级：扩展观察池】
+    # 条件：满足 10%回撤 + 连跌1天，但 RSI >= 35
+    df_extended_elastic = df_results[
+        (df_results['最大回撤'] >= HIGH_ELASTICITY_MIN_DRAWDOWN) & 
+        (df_results['近一周连跌'] == 1) &
+        (df_results['RSI'] >= 35) # RSI未超卖
+    ].copy()
 
-        if not df_extended_elastic.empty:
-            df_extended_elastic = df_extended_elastic.sort_values(by='最大回撤', ascending=False).reset_index(drop=True)
-            df_extended_elastic.index = df_extended_elastic.index + 1
-            
-            extended_count = len(df_extended_elastic)
-            
-            report += f"\n## **🥈【扩展列表】高弹性观察池** ({extended_count}只)\n\n"
-            
-            report += f"此列表包含：**最大回撤 $\ge$ {HIGH_ELASTICITY_MIN_DRAWDOWN*100:.0f}%** 且 **近一周连跌天数 = 1** 的所有基金（排除了已进入最高优先级列表的）。\n\n"
-            
-            # 表格新增 当日跌幅
-            report += f"| 排名 | 基金代码 | 最大回撤 (1M) | **当日跌幅** | 连跌 (1M) | RSI(14) | MACD信号 | 净值/MA50 | 试水买价 (跌3%) | 行动提示 |\n"
-            report += f"| :---: | :---: | ---: | ---: | ---: | ---: | :---: | ---: | :---: | :---: |\n"  
+    if not df_extended_elastic.empty:
+        df_extended_elastic = df_extended_elastic.sort_values(by='最大回撤', ascending=False).reset_index(drop=True)
+        df_extended_elastic.index = df_extended_elastic.index + 1
+        
+        report += f"\n## **🥉 第三优先级：【扩展观察池】** ({len(df_extended_elastic)}只)\n\n"
+        report += f"**条件：** 长期超跌 ($\ge$ {HIGH_ELASTICITY_MIN_DRAWDOWN*100:.0f}%) + 低位企稳，但 **RSI $\ge 35$ (未超卖)**。\n"
+        report += f"**纪律：** 风险较高，仅作为观察和备选，等待 RSI 进一步进入超卖区。**按最大回撤降序排列。**\n\n"
+        
+        report += f"| 排名 | 基金代码 | 最大回撤 (1M) | **当日跌幅** | 连跌 (1M) | RSI(14) | MACD信号 | 净值/MA50 | 试水买价 (跌3%) | 行动提示 |\n"
+        report += f"| :---: | :---: | ---: | ---: | ---: | ---: | :---: | ---: | :---: | :---: |\n"  
 
-            for index, row in df_extended_elastic.iterrows():
-                latest_value = row.get('最新净值', 1.0)
-                trial_price = latest_value * 0.97
-                
-                report += f"| {index} | `{row['基金代码']}` | **{row['最大回撤']:.2%}** | {row['当日跌幅']:.2%} | {row['最大连续下跌']} | {row['RSI']:.2f} | {row['MACD信号']} | {row['净值/MA50']:.2f} | {trial_price:.4f} | {row['行动提示']} |\n"
+        for index, row in df_extended_elastic.iterrows():
+            latest_value = row.get('最新净值', 1.0)
+            trial_price = latest_value * 0.97
             
-            report += "\n---\n"
-        else:
-            report += f"\n## **🥈【扩展列表】高弹性观察池**\n\n"
-            report += f"所有满足 **最大回撤 $\ge$ {HIGH_ELASTICITY_MIN_DRAWDOWN*100:.0f}%** 且 **近一周连跌天数 = 1** 的基金，均已进入 **最高优先级列表**。\n\n"
-            report += "\n---\n"
+            report += f"| {index} | `{row['基金代码']}` | **{row['最大回撤']:.2%}** | {row['当日跌幅']:.2%} | {row['最大连续下跌']} | {row['RSI']:.2f} | {row['MACD信号']} | {row['净值/MA50']:.2f} | {trial_price:.4f} | {row['行动提示']} |\n"
+        
+        report += "\n---\n"
+    else:
+        report += f"\n## **🥉 第三优先级：【扩展观察池】**\n\n"
+        report += f"没有基金满足 **长期超跌** 且 **RSI $\ge 35$** 的观察条件。\n\n"
+        report += "\n---\n"
 
     # 5. 原有预警基金列表 (所有符合条件的基金)
     report += f"\n## 所有预警基金列表 (共 {total_count} 只，按最大回撤降序排列)\n\n"
     
-    # 表格新增 当日跌幅
     report += f"| 排名 | 基金代码 | 最大回撤 (1M) | **当日跌幅** | 连跌 (1M) | 连跌 (1W) | RSI(14) | MACD信号 | 净值/MA50 | 布林带位置 |\n"
     report += f"| :---: | :---: | ---: | ---: | ---: | ---: | :---: | ---: | :---: | :---: |\n"  
 
@@ -264,8 +284,8 @@ def generate_report(results, timestamp_str):
     # 6. 新增行动策略总结 (已修复所有转义错误)
     report += f"\n## **高弹性策略执行纪律**\n\n"
     report += f"**1. 建仓与最大加仓（逆向原则）：**\n"
-    report += f"    * **最高优先级：** 仅当基金出现在 **🥇【最高优先级】当日恐慌买入信号** 列表中时，才应考虑立即建仓。\n"
-    report += f"    * **试水建仓:** 当'行动提示'为 **'买入信号'** 时，立即投入 **小额资金（例如 1/5 观察仓位）**进行建仓。\n"
+    report += f"    * **最高优先级：** 仅当基金出现在 **🥇 第一优先级** 列表中时，才应考虑立即建仓。\n"
+    report += f"    * **次高优先级：** **🥈 第二优先级** 列表中的基金，适合本金有限或市场非大跌日时，根据 RSI 排名（RSI越低越优先）进行分批建仓。\n"
     report += f"    * **最大加仓:** 当基金在试水后，累计跌幅达到您的金字塔原则 **(例如从试水价下跌 5%)** 且 **RSI < 20** 时，执行**最大额加仓**（如 **1000** 元），实现快速降低成本。\n"
     report += f"**2. 波段止盈与清仓信号（顺势原则）：**\n"
     report += f"    * **确认反弹/止盈警惕:** 当目标基金的 **MACD 信号从 '观察/死叉' 变为 '金叉'** 时，表明反弹趋势确立，此时应视为 **分批止盈** 的警惕信号，而不是加仓。应在 **+5%** 止盈线出现时，果断赎回 **50%** 份额。\n"
@@ -276,7 +296,7 @@ def generate_report(results, timestamp_str):
     return report
 
 
-# --- 原有函数：在分析时计算技术指标和行动提示 (RSI提示已修正) ---
+# --- 原有函数：在分析时计算技术指标和行动提示 ---
 def analyze_all_funds(target_codes=None): 
     """
     遍历基金数据目录，分析每个基金，并返回符合条件的基金列表。
@@ -305,7 +325,6 @@ def analyze_all_funds(target_codes=None):
             
             df = pd.read_csv(filepath)
             df['date'] = pd.to_datetime(df['date'])
-            # 确保主df按日期降序排列
             df = df.sort_values(by='date', ascending=False).reset_index(drop=True) 
             df = df.rename(columns={'net_value': 'value'})
             
@@ -315,24 +334,22 @@ def analyze_all_funds(target_codes=None):
             df_recent_month = df.head(30)
             df_recent_week = df.head(5)
             
-            # 1. 连续下跌和回撤指标
             max_drop_days_month = calculate_consecutive_drops(df_recent_month['value'])
             mdd_recent_month = calculate_max_drawdown(df_recent_month['value'])
             max_drop_days_week = calculate_consecutive_drops(df_recent_week['value'])
 
-            # 2. 技术指标 (使用完整的df进行计算)
             tech_indicators = calculate_technical_indicators(df)
             rsi_val = tech_indicators.get('RSI', np.nan)
             daily_drop_val = tech_indicators.get('当日跌幅', 0.0)
 
-            # 3. 行动提示逻辑 (针对高弹性精选标准)
+            # --- 3. 行动提示逻辑 (针对高弹性精选标准) ---
             action_prompt = '不适用 (非高弹性精选)'
             
             # 只有满足 10%回撤 和 连跌1天 基础条件时，才触发行动提示逻辑
             if mdd_recent_month >= HIGH_ELASTICITY_MIN_DRAWDOWN and max_drop_days_week == 1:
                 
                 if not np.isnan(rsi_val):
-                    # 【最高优先级】 RSI极度超卖 + 当日大跌
+                    # 【最高优先级】 RSI极度超卖 + 当日大跌 (仅用于生成报告中的 action_prompt 字段)
                     if rsi_val < 30 and daily_drop_val >= MIN_DAILY_DROP_PERCENT:
                         action_prompt = '买入信号 (RSI极度超卖 + 当日大跌)'
                     
@@ -340,11 +357,11 @@ def analyze_all_funds(target_codes=None):
                     elif rsi_val < 35 and daily_drop_val >= MIN_DAILY_DROP_PERCENT:
                         action_prompt = '买入信号 (RSI超卖 + 当日大跌)'
                         
-                    # 【次级观察】 满足所有条件，但当日未大跌
+                    # 【次级观察】 RSI超卖，但当日未大跌
                     elif rsi_val < 35:
                          action_prompt = '考虑试水建仓 (RSI超卖)'
                     
-                    # 仅满足回撤和连跌1天，RSI未超卖
+                    # 仅满足回撤和连跌1天，RSI未超卖 (RSI >= 35)
                     else: 
                         action_prompt = '高回撤观察 (RSI未超卖)'
 
@@ -355,14 +372,12 @@ def analyze_all_funds(target_codes=None):
                     '最大回撤': mdd_recent_month,  
                     '最大连续下跌': max_drop_days_month,
                     '近一周连跌': max_drop_days_week,
-                    # --- 整合技术指标 ---
                     'RSI': tech_indicators['RSI'],
                     'MACD信号': tech_indicators['MACD信号'],
                     '净值/MA50': tech_indicators['净值/MA50'],
                     '布林带位置': tech_indicators['布林带位置'],
                     '最新净值': tech_indicators['最新净值'],
-                    '当日跌幅': daily_drop_val, # 新增
-                    # --- 整合行动提示 ---
+                    '当日跌幅': daily_drop_val,
                     '行动提示': action_prompt
                 }
                 qualifying_funds.append(fund_data)
@@ -378,13 +393,11 @@ if __name__ == '__main__':
     
     # 0. 获取当前时间戳和目录名
     try:
-        # 使用 Asia/Shanghai 时区（UTC+8）
         now = pd.Timestamp.now(tz='Asia/Shanghai') 
         timestamp_for_report = now.strftime('%Y-%m-d %H:%M:%S')
         timestamp_for_filename = now.strftime('%Y%m%d_%H%M%S')
         DIR_NAME = now.strftime('%Y%m') 
     except Exception:
-        # 异常处理，使用默认时间戳
         timestamp_for_report = pd.Timestamp.now().strftime('%Y-%m-d %H:%M:%S')
         timestamp_for_filename = pd.Timestamp.now().strftime('%Y%m%d_%H%M%S')
         DIR_NAME = pd.Timestamp.now().strftime('%Y%m')
@@ -400,7 +413,6 @@ if __name__ == '__main__':
         with open('market_monitor_report.md', 'r', encoding='utf-8') as f:
             report_content = f.read()
         
-        # 提取目标基金代码 (只提取具有明确买入信号的基金)
         target_funds = extract_fund_codes(report_content)
         
         print(f"已从报告中提取 {len(target_funds)} 个 '买入信号' 的基金代码。")
