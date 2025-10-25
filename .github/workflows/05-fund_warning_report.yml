@@ -3,8 +3,8 @@ on:
   # 1. 自动触发条件：当以下文件被修改并推送到仓库时，工作流自动运行
   push:
     paths:
-      - 'fund_analyzer.py'
-      - '.github/workflows/fund_analysis.yml'
+      - 'analyzer.py'
+      - '.github/workflows/05-fund_warning_report.yml'
       - 'fund_data/**.csv'
       
   # 2. 定时运行条件：周一到周五的 21:15, 22:15, 23:15 运行
