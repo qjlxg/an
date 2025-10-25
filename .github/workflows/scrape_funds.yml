@@ -1,4 +1,4 @@
-name: 基金概况抓取 - 自动保存到仓库
+name: 基金概况抓取 - 自动保存到仓库 (最终版)
 
 on:
   # 1. 允许手动触发工作流
@@ -7,7 +7,7 @@ on:
   # 2. 当关键文件变动时自动运行
   push:
     branches:
-      - main # <<< 请务必检查并替换为您的主分支名称 (如: master)
+      - main # <<< 请务必检查并替换为您的主分支名称 (例如：master 或 main)
     paths:
       - 'scrape_all_funds.py'
       - '.github/workflows/scrape_funds.yml'
@@ -27,7 +27,7 @@ jobs:
 
     steps:
       - name: 检出代码
-        # fetch-depth: 0 确保拉取完整历史记录，以便进行提交
+        # 必须拉取完整历史记录 (fetch-depth: 0)，以便 Git 能够正确地进行提交和推送
         uses: actions/checkout@v4
         with:
           fetch-depth: 0 
@@ -37,18 +37,18 @@ jobs:
         with:
           python-version: '3.x'
 
-      - name: 安装依赖 (requests 和 beautifulsoup4)
-        # 满足“不要用 requirements.txt”的要求
-        run: pip install requests beautifulsoup4
+      - name: 安装依赖 (requests, beautifulsoup4, pandas)
+        # 并行抓取需要 pandas 处理 CSV
+        run: pip install requests beautifulsoup4 pandas
 
       - name: 计算输出路径和文件名 (上海时区)
         id: set_path
         run: |
           # 格式化目录：YYYY/MM/DD
           DATE_DIR=$(date +%Y/%m/%d)
-          # 格式化文件名：fund_profiles_YYYYMMDD_HHmmss.json
+          # 格式化文件名：fund_profiles_YYYYMMDD_HHmmss.csv
           TIMESTAMP=$(date +%Y%m%d_%H%M%S)
-          FILENAME="fund_profiles_${TIMESTAMP}.json"
+          FILENAME="fund_profiles_${TIMESTAMP}.csv"
           
           # 完整的输出路径
           OUTPUT_PATH="${DATE_DIR}/${FILENAME}"
@@ -57,28 +57,28 @@ jobs:
           # 将路径设置为环境变量供后续步骤使用
           echo "OUTPUT_PATH=${OUTPUT_PATH}" >> $GITHUB_ENV
 
-      - name: 运行基金信息抓取脚本
-        # 传入动态生成的路径给 Python 脚本，脚本会输出详细日志
+      - name: 运行基金信息抓取脚本 (并行加速并打印详细日志)
+        # 脚本将自动使用多线程加速抓取
         run: python scrape_all_funds.py "${{ env.OUTPUT_PATH }}"
 
-      - name: 配置 Git 用户并提交更改
-        # 实现“直接推送到仓库，不要上传工件”的要求
+      - name: 配置 Git 用户并提交更改 (修复并确保提交)
         run: |
           # 1. 配置 Git 身份
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"
           
-          # 2. 添加动态生成的输出文件
-          # 使用 'git add -A' 确保添加新建的目录和文件
-          git add "${{ env.OUTPUT_PATH }}"
+          # 2. 检查并添加新生成的文件/目录
+          # git add -f 强制添加文件，包括新目录
+          git add -f "${{ env.OUTPUT_PATH }}"
           
-          # 3. 检查是否有文件更改 (status --porcelain)
-          # 'git status --porcelain' 在有文件新增/修改时会输出内容
-          if git status --porcelain | grep -q "${{ env.OUTPUT_PATH }}"; then
-              git commit -m "数据抓取：自动更新基金概况至 ${{ env.OUTPUT_PATH }}"
-              # 4. 推送更改到当前分支
-              git push
-              echo "✅ 成功提交抓取结果到仓库的 ${DATE_DIR} 目录。"
+          # 3. 检查暂存区是否有内容 (最可靠的检查方式)
+          # 如果 git diff --cached --exit-code --quiet 失败，则说明暂存区有新的更改
+          if git diff --cached --exit-code --quiet; then
+              echo "⚠️ Git 暂存区没有新的更改，跳过提交。"
           else
-              echo "⚠️ 脚本运行成功，但未检测到新的数据文件或更改，跳过提交。"
+              # 4. 提交更改
+              git commit -m "数据抓取(CSV)：自动更新基金概况至 ${{ env.OUTPUT_PATH }}"
+              # 5. 推送更改到当前分支
+              git push
+              echo "✅ 成功提交抓取结果到仓库。"
           fi
