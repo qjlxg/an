@@ -6,7 +6,7 @@ import numpy as np
 # --- 配置参数 (双重筛选条件) ---
 FUND_DATA_DIR = 'fund_data'
 MIN_CONSECUTIVE_DROP_DAYS = 3 # 连续下跌天数的阈值 (用于30日)
-MIN_MONTH_DRAWDOWN = 0.06     # 1个月回撤的阈值 (6%)
+MIN_MONTH_DRAWDOWN = 0.06      # 1个月回撤的阈值 (6%)
 # 新增：高弹性筛选的最低回撤阈值 (例如 10%)
 HIGH_ELASTICITY_MIN_DRAWDOWN = 0.10 
 REPORT_BASE_NAME = 'fund_warning_report' 
@@ -87,7 +87,7 @@ def calculate_technical_indicators(df):
         '最新净值': round(value_latest, 4)
     }
 
-# --- 修改后的函数：解析 Markdown 报告并提取基金代码 (核心修改) ---
+# --- 修改后的函数：解析 Markdown 报告并提取基金代码 ---
 def extract_fund_codes(report_content):
     codes = set()
     lines = report_content.split('\n')
@@ -103,27 +103,18 @@ def extract_fund_codes(report_content):
         if in_table and line.strip() and line.count('|') >= 8: 
             parts = [p.strip() for p in line.split('|')]
             
-            # 行动信号通常在倒数第二列 (parts[-2] ), 基金代码在第二列 (parts[1])
-            if len(parts) > 7:
-                action_signal = parts[-3]  # 根据提供的 report.md 片段，行动信号似乎在倒数第三列
-                # 假设表格列为：| 基金代码 | ... | 投资建议 | 行动信号 | ... |
-                # 索引: [0], [1], ..., [-4], [-3], [-2], [-1]
-                # 重新检查发现报告片段：| 排名 | 基金代码 | 最大回撤 (1M) | 连跌 (1M) | 连跌 (1W) | RSI(14) | MACD信号 | 净值/MA50 | 布林带位置 | 行动提示 |
-                # parts[1] is 排名, parts[2] is 基金代码, parts[10] is 行动提示 (从0开始计)
-                
-                # 调整为 parts[2] = 基金代码, parts[10] = 行动提示
-                if len(parts) >= 11:  # 确保至少有11个部分，即10列
-                    fund_code = parts[2]
-                    action_signal = parts[10]
+            if len(parts) >= 11: 
+                fund_code = parts[2]
+                action_signal = parts[10]
 
-                    # 核心修改：筛选 '买入' 或 '关注买入'
-                    if action_signal == '买入' or action_signal = '关注买入':
-                        try:
-                            # 确保基金代码是数字
-                            if fund_code.isdigit():
-                                codes.add(fund_code)
-                        except ValueError:
-                            continue 
+                # 核心修改：筛选 '买入' 或 '关注买入'
+                if action_signal == '立即建立观察仓 (RSI极度超卖)' or action_signal == '考虑试水建仓 (RSI超卖)':
+                    try:
+                        # 确保基金代码是数字
+                        if fund_code.isdigit():
+                            codes.add(fund_code)
+                    except ValueError:
+                        continue 
                         
     return list(codes)
 
@@ -156,7 +147,7 @@ def calculate_max_drawdown(series):
     mdd = drawdown.max()
     return mdd
 
-# --- 修改后的生成报告函数（新增试水买价列） ---
+# --- 修改后的生成报告函数（新增试水买价 (跌3%)） ---
 def generate_report(results, timestamp_str):
     now_str = timestamp_str
 
@@ -211,7 +202,7 @@ def generate_report(results, timestamp_str):
 
         for index, row in df_elastic.iterrows():
             latest_value = row.get('最新净值', 1.0)
-            trial_price = latest_value * 0.97   # 跌3%试水
+            trial_price = latest_value * 0.97    # 跌3%试水
             
             report += f"| {index} | `{row['基金代码']}` | **{row['最大回撤']:.2%}** | {row['最大连续下跌']} | {row['近一周连跌']} | {row['RSI']:.2f} | {row['MACD信号']} | {row['净值/MA50']:.2f} | {row['布林带位置']} | {trial_price:.4f} | **{row['行动提示']}** |\n"
         
@@ -236,18 +227,21 @@ def generate_report(results, timestamp_str):
     report += "\n---\n"
     report += f"分析数据时间范围: 最近30个交易日 (通常约为1个月)。\n"
     
-    # 4. 新增行动策略总结
+    # 4. 新增行动策略总结 (已按照金字塔逆向原则修改)
     report += f"\n## **高弹性策略执行纪律**\n\n"
-    report += f"**1. 正式加仓/最大买入的确认信号：**"
-    report += f"   * 无论'行动提示'为何，只有当目标基金的 **MACD 信号从'观察/死叉'变为'金叉'**时，才能进行最大一笔的正式加仓。\n"
-    report += f"   * 在'金叉'出现前，买入资金应视为'观察仓'或'试探仓'，总仓位应保持在较低水平（例如总计划资金的 1/5）。\n"
-    report += f"**2. 风险控制（严格止损）：**"
-    report += f"   * 为所有买入的基金设置严格的止损线。建议从买入平均成本价开始计算，一旦跌幅达到 **8%-10%**，应**立即**卖出清仓，避免深度套牢。\n"
+    report += f"**1. 建仓与最大加仓（逆向原则）：**\n"
+    report += f"   * **试水建仓:** 当'行动提示'为 **'立即建立观察仓 (RSI极度超卖)' (RSI < 30)** 或 **'考虑试水建仓 (RSI超卖)' (RSI < 35)** 时，无论净值是否达到'试水买价 (跌3%)'，立即投入 **小额资金（例如 1/5 观察仓位）**进行建仓，以确保不踏空底部。\n"
+    report += f"   * **最大加仓:** 当基金在试水后，累计跌幅达到您的金字塔原则 **(例如从试水价下跌 $\mathbf{5\%}$ )** 且 **RSI < 20** 时，执行**最大额加仓**（如 $\mathbf{1000}$ 元），实现快速降低成本。\n"
+    report += f"**2. 波段止盈与清仓信号（顺势原则）：**\n"
+    report += f"   * **确认反弹/止盈警惕:** 当目标基金的 **MACD 信号从 '观察/死叉' 变为 '金叉'** 时，表明反弹趋势确立，此时应视为 **分批止盈** 的警惕信号，而不是加仓。应在 $\mathbf{+5\%}$ 止盈线出现时，果断赎回 $\mathbf{50\%}$ 份额。\n"
+    report += f"   * **趋势反转/清仓:** 当 **MACD 信号从 '金叉' 变为 '死叉'** 或 **净值跌破 MA50 (净值/MA50 < 1.0)** 且您的**平均成本已实现 $5\%$ 利润**时，应考虑**清仓止盈**。\n"
+    report += f"**3. 风险控制（严格止损）：**\n"
+    report += f"   * 为所有买入的基金设置严格的止损线。建议从买入平均成本价开始计算，一旦跌幅达到 **8%-10%**，应**立即**卖出清仓，避免深度套牢。\n"
     
     return report
 
 
-# --- 原有函数：在分析时计算技术指标和行动提示 ---
+# --- 原有函数：在分析时计算技术指标和行动提示 (RSI提示已修正) ---
 def analyze_all_funds(target_codes=None): 
     """
     遍历基金数据目录，分析每个基金，并返回符合条件的基金列表。
@@ -302,8 +296,8 @@ def analyze_all_funds(target_codes=None):
                 if not np.isnan(rsi_val):
                     if rsi_val < 30:
                         action_prompt = '立即建立观察仓 (RSI极度超卖)'
-                    elif rsi_val < 35: # RSI 30 to 35
-                        action_prompt = '等待回调加仓 (RSI超卖)'
+                    elif rsi_val < 35: # RSI 30 to 35 (已修正提示词)
+                        action_prompt = '考虑试水建仓 (RSI超卖)'
                     else: # RSI >= 35
                         action_prompt = '高回撤观察 (RSI未超卖)'
 
@@ -319,6 +313,7 @@ def analyze_all_funds(target_codes=None):
                     'MACD信号': tech_indicators['MACD信号'],
                     '净值/MA50': tech_indicators['净值/MA50'],
                     '布林带位置': tech_indicators['布林带位置'],
+                    '最新净值': tech_indicators['最新净值'],
                     # --- 整合行动提示 ---
                     '行动提示': action_prompt
                 }
@@ -357,9 +352,10 @@ if __name__ == '__main__':
         with open('market_monitor_report.md', 'r', encoding='utf-8') as f:
             report_content = f.read()
         
+        # 提取目标基金代码 (只提取具有明确买入信号的基金)
         target_funds = extract_fund_codes(report_content)
-        # 打印信息修改为新的筛选条件
-        print(f"已从报告中提取 {len(target_funds)} 个 '买入' 或 '关注买入' 信号的基金代码。")
+        
+        print(f"已从报告中提取 {len(target_funds)} 个 '立即建立观察仓/考虑试水建仓' 信号的基金代码。")
         
     except FileNotFoundError:
         print("警告：未找到 market_monitor_report.md 文件，将分析 FUND_DATA_DIR 目录下的所有文件。")
