@@ -29,7 +29,7 @@ os.makedirs(output_base_dir, exist_ok=True) # 确保创建 YYYYMM/YYYYMMDD 目�
 MAX_MANAGEMENT_FEE = 1.00 # 管理费率不超过 1.00%
 MAX_CUSTODIAN_FEE = 0.20   # 托管费率不超过 0.20%
 # 最关键：持有7天以上的赎回费率不超过 0.00% (即为 0%)
-MAX_REDEMPTION_FEE_7D = 0.00 
+MAX_REDEMPTION_FEE_7D = 0.1
 # --- end 配置 ---
 
 
