@@ -26,10 +26,12 @@ output_base_dir = month_dir
 os.makedirs(output_base_dir, exist_ok=True) # 确保创建 YYYYMM 目录
 
 # 定义筛选的低费率阈值
-MAX_MANAGEMENT_FEE = 1.00 # 管理费率不超过 1.00%
-MAX_CUSTODIAN_FEE = 0.20   # 托管费率不超过 0.20%
-# 最关键：持有7天以上的赎回费率不超过 0.00% (即为 0%)
-MAX_REDEMPTION_FEE_7D = 0.00 
+#如果您只关心赎回费率 $0.00\%$ 的基金，并且想忽略管理费和托管费，可以将它们的最大值设置为一个极高的、实际不会触发限制的数字，来达到“忽略”的目的。
+# 放宽管理费率到 1.50%
+MAX_MANAGEMENT_FEE = 1.50  #99.00 
+MAX_CUSTODIAN_FEE = 0.20   #99.00
+# 保持赎回费率不变
+MAX_REDEMPTION_FEE_7D = 0.00
 # --- end 配置 ---
 
 
