@@ -7,12 +7,16 @@ import time
 import sys
 from datetime import datetime
 import pandas as pd
-import concurrent.futures # 用于并行执行
+import concurrent.futures
+import random # 新增依赖，用于生成随机延迟
 
 # 定义基金数据存放的目录
 FUND_DATA_DIR = 'fund_data'
 # 定义最大并发线程数。
 MAX_WORKERS = 8 
+# 定义每次请求后的随机延迟范围（秒）
+MIN_DELAY = 1.0
+MAX_DELAY = 3.0
 
 def get_fund_codes_from_files(directory):
     """
@@ -32,10 +36,17 @@ def fetch_fund_profile(fund_code):
     """
     base_url = f"http://fund.eastmoney.com/{fund_code}.html"
     headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+        # 使用更完整的浏览器头部信息
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+        'Accept-Language': 'zh-CN,zh;q=0.8,en;q=0.6',
+        'Connection': 'keep-alive',
     }
     
-    print(f"--- [INFO] 线程启动: 基金代码 {fund_code}")
+    # 线程启动后，先进行随机延迟，模拟真实用户行为
+    delay = random.uniform(MIN_DELAY, MAX_DELAY)
+    print(f"--- [INFO] 线程启动: 基金代码 {fund_code}，延迟 {delay:.2f}s")
+    time.sleep(delay)
 
     try:
         response = requests.get(base_url, headers=headers, timeout=15)
@@ -46,15 +57,26 @@ def fetch_fund_profile(fund_code):
         fund_data = {'基金代码': fund_code, '抓取时间': datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
         
         # 抓取页面主要文本内容，用于正则匹配费用信息
-        main_content = soup.select_one('.bs_jjcc_cont') 
-        full_text = main_content.text if main_content else response.text
+        # 尝试查找包含核心信息的区块，防止反爬页面影响
+        main_info_container = soup.select_one('.bs_jjcc_cont') 
+        full_text = main_info_container.text if main_info_container else response.text
         
-        # 1. 查找基金名称、经理、规模等基础信息 (与之前保持一致)
+        # 1. 查找基金名称、经理、规模等基础信息 
         title_tag = soup.select_one('.fundDetail-tit .dataName')
         if title_tag:
             name_match = re.search(r'(.+?)\((\d+)\)', title_tag.text.strip())
             if name_match:
                 fund_data['基金名称'] = name_match.group(1).strip()
+            # 否则，可能是反爬页面，或者名称解析失败
+            else:
+                fund_data['基金名称'] = title_tag.text.strip()
+        
+        # 检查是否成功抓取到主要信息，否则标记为失败页面
+        if not fund_data.get('基金名称') or '天天基金' in fund_data.get('基金名称', ''):
+             # 检查页面是否被重定向或内容缺失（反爬页面的典型特征）
+            if not soup.select_one('.info.w100'): 
+                raise Exception("页面内容缺失或被反爬机制拦截")
+
 
         info_list = soup.select('.info.w100 li')
         if info_list:
@@ -76,7 +98,7 @@ def fetch_fund_profile(fund_code):
             fund_data['基金经理'] = manager_div.text.strip()
             
         
-        # 2. 抓取费用信息 (新增逻辑，使用正则匹配)
+        # 2. 抓取费用信息 (使用正则匹配)
         fee_patterns = {
             '管理费率': r'管理费率([\d\.]+%)',
             '托管费率': r'托管费率([\d\.]+%)',
@@ -85,16 +107,13 @@ def fetch_fund_profile(fund_code):
 
         for key, pattern in fee_patterns.items():
             match = re.search(pattern, full_text)
-            if match:
-                fund_data[key] = match.group(1).strip()
-            else:
-                fund_data[key] = 'N/A' # 找不到则标记为 N/A
+            fund_data[key] = match.group(1).strip() if match else 'N/A'
 
         fund_data['状态'] = '成功'
         
-        # 详细日志输出，包含新增的费用信息
+        # 详细日志输出
         print(f"--- [成功] 基金代码 {fund_code}: 名称: {fund_data.get('基金名称', 'N/A')}")
-        print(f"   [费用] 管理费率: {fund_data.get('管理费率', 'N/A')}, 托管费率: {fund_data.get('托管费率', 'N/A')}, 销售服务费率: {fund_data.get('销售服务费率', 'N/A')}")
+        print(f"   [费用] 管理费率: {fund_data.get('管理费率', 'N/A')}, 托管费率: {fund_data.get('托管费率', 'N/A')}")
         
         return fund_data
 
@@ -105,8 +124,12 @@ def fetch_fund_profile(fund_code):
         print(f"--- [失败] 请求异常: 代码 {fund_code} 网络错误或超时。")
         return {'基金代码': fund_code, '状态': f'失败: 请求异常'}
     except Exception as e:
-        print(f"--- [失败] 解析异常: 代码 {fund_code} 数据解析失败。错误: {e}")
-        return {'基金代码': fund_code, '状态': f'失败: 解析异常'}
+        if "页面内容缺失" in str(e):
+             print(f"--- [失败] 反爬拦截: 代码 {fund_code} 页面内容被拦截。")
+             return {'基金代码': fund_code, '状态': '失败: 反爬拦截'}
+        else:
+             print(f"--- [失败] 解析异常: 代码 {fund_code} 数据解析失败。错误: {e}")
+             return {'基金代码': fund_code, '状态': f'失败: 解析异常'}
 
 def main(output_file_path):
     if not os.path.isdir(FUND_DATA_DIR):
@@ -162,7 +185,6 @@ def main(output_file_path):
         
     # 保存结果到 CSV 文件
     try:
-        # 使用 utf-8-sig 编码，兼容 Excel 中文显示
         df.to_csv(output_file_path, index=False, encoding='utf-8-sig') 
         print(f"\n[DONE] 抓取完成。结果已保存为 CSV 到 {output_file_path}")
         print(f"[DONE] CSV 包含 {len(df)} 条记录。")
