@@ -1,0 +1,98 @@
+name: 📊 Index Analysis Report Generation
+
+# --- 触发条件配置 ---
+on:
+  # 1. 允许手动触发
+  workflow_dispatch:
+  
+  # 2. 当关键文件变动时自动触发
+  push:
+    branches:
+      - main
+    paths:
+      - 'index_analysis.py'       # 量化分析脚本变动
+      - 'fund_basic_data_c_class.csv' # 依赖的数据文件变动
+      - '.github/workflows/analyze_index.yml' # 工作流文件本身变动
+      
+  # 3. 每日定时自动运行（上海时间早上 8:00）
+  schedule:
+    # 0 0 * * * 是 UTC 0:00，通过时区转换，相当于上海时间 8:00
+    - cron: '0 0 * * *'
+
+jobs:
+  analyze_and_push:
+    runs-on: ubuntu-latest
+    
+    # 确保有写入权限来提交文件
+    permissions:
+      contents: write
+
+    steps:
+      # 步骤 1: 检出仓库代码
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # 步骤 2: 设置 Python 环境
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      # 步骤 3: 安装依赖 (移除了 apt-get 命令)
+      - name: Install dependencies (AkShare, TA-Lib)
+        run: |
+          python -m pip install --upgrade pip
+          pip install pandas akshare
+          
+          # 尝试直接安装 ta-lib
+          # 如果直接安装失败，用户可能需要使用特定的预编译 wheel 文件
+          pip install ta-lib
+
+      # 步骤 4: 运行指数分析脚本 (生成 index_analysis_report.txt)
+      - name: Run index analysis script and save report
+        run: python -u index_analysis.py > index_analysis_report.txt
+
+      # 步骤 5: 设置文件路径和时间戳 (使用纯 Bash 命令设置上海时区)
+      - name: Set path and timestamp variables (Shanghai Time)
+        id: vars
+        run: |
+          # 纯 Bash 脚本，使用 TZ 环境变量设置时区来生成时间戳
+          export TZ='Asia/Shanghai'
+          TIMESTAMP=$(date +'%Y%m%d%H%M%S')
+          YEAR_MONTH=$(date +'%Y/%m')
+          
+          # 定义最终路径和文件名
+          REPORT_FILENAME="index_analysis_report_${TIMESTAMP}.txt"
+          REPORT_NEW_PATH="${YEAR_MONTH}/${REPORT_FILENAME}"
+          
+          echo "REPORT_NEW_PATH=${REPORT_NEW_PATH}" >> $GITHUB_OUTPUT
+          echo "YEAR_MONTH=${YEAR_MONTH}" >> $GITHUB_OUTPUT
+          echo "COMMIT_MESSAGE=Automated analysis report: ${YEAR_MONTH} index signals" >> $GITHUB_OUTPUT
+
+      # 步骤 6: 移动文件到指定目录并重命名
+      - name: Move and rename report to target path
+        run: |
+          # 确保目标目录存在
+          mkdir -p ${{ steps.vars.outputs.YEAR_MONTH }}
+          
+          # 移动和重命名 分析报告文件
+          mv index_analysis_report.txt ${{ steps.vars.outputs.REPORT_NEW_PATH }}
+
+      # 步骤 7: 配置 Git 提交信息
+      - name: Configure Git
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+
+      # 步骤 8: 提交并推送更改
+      - name: Commit and push new report
+        run: |
+          git add ${{ steps.vars.outputs.YEAR_MONTH }}
+          git commit -m "${{ steps.vars.outputs.COMMIT_MESSAGE }}"
+          git push
+
+      # 步骤 9: 打印推送结果
+      - name: Success message
+        run: echo "🎉 量化分析报告已成功推送到仓库的 /${{ steps.vars.outputs.YEAR_MONTH }}/ 目录下。"

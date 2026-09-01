@@ -1,0 +1,75 @@
+name: 05-fund_warning_report
+on:
+  # 1. 自动触发条件：当以下文件被修改并推送到仓库时，工作流自动运行
+  push:
+    paths:
+      - 'analyzer.py'
+      - '.github/workflows/05-fund_warning_report.yml'
+      - 'fund_data/**.csv'
+      
+  # 2. 定时运行条件：周一到周五的 21:15, 22:15, 23:15 运行
+  schedule:
+    # 表达式：分钟 小时 日 月 星期
+    # '15 21,22,23 * * 1-5' 表示：
+    # 星期一到星期五 (1-5) 的 每月每日 (*) 的 21, 22, 23 点 (21,22,23) 的 第 15 分钟 (15)
+    - cron: '15 21,22,23 * * 1-5'
+    
+  # 3. 允许手动触发
+  workflow_dispatch:
+
+jobs:
+  analyze_funds:
+    # 设置时区为北京时间
+    env:
+      TZ: Asia/Shanghai
+      
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        # 确保拉取完整历史记录，以便后续 git rebase/pull 操作正确执行
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 
+
+      - name: Set up Python
+        uses: actions/setup-python@v5 
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pandas requests
+
+      - name: Run fund analysis script
+        id: analysis
+        run: python analyzer.py
+
+      - name: Commit and push report (Manual Git Commands)
+        # 仅在脚本成功运行后提交文件
+        if: success()
+        run: |
+          # 配置 Git 身份
+          git config user.name "GitHub Actions Bot"
+          git config user.email "actions@github.com"
+          
+          # 查找并添加所有生成的报告文件
+          # 修复了 git-auto-commit-action 的文件模式匹配问题
+          git add '**/fund_warning_report_*.md'
+          
+          # 检查是否有文件更改，如果没有则退出
+          if [ -z "$(git status --porcelain)" ]; then
+            echo "No changes to commit. Exiting."
+            exit 0
+          fi
+          
+          # 提交更改
+          git commit -m "Automated fund analysis report update"
+          
+          # 解决非快进(non-fast-forward)错误：拉取远程更改并 rebase
+          # 这确保了本地提交基于远程的最新提交，解决定时任务之间的冲突
+          git pull --rebase
+          
+          # 推送更改
+          git push

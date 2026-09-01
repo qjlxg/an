@@ -1,0 +1,96 @@
+name: Fund Sell Decision Workflow-4
+on:
+  push:
+    paths:
+      - 'sell_decision.py'
+      - 'strategy_3_0_executor.py' # <-- 确保策略 3.0 脚本修改时也触发
+      - 'holdings_config.yaml'
+      - '.github/workflows/fund_decision.yml'
+  schedule:
+    - cron: '0 0 * * *' # 每日0点运行（上海时间约8点，净值更新后）
+  workflow_dispatch: # 手动触发
+jobs:
+  analyze_fund_decisions:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests pandas numpy tenacity tabulate lxml pyyaml
+          pip install pandas_ta
+
+      # --- 1. 执行技术指标卖出决策 ---
+      - name: Run sell decision script (Technical)
+        run: |
+          # sell_decision.py 会生成 sell_decision_results.csv
+          python sell_decision.py || echo "Script failed, check logs for details" >&2
+        continue-on-error: true
+
+      # --- 2. 执行策略 3.0 极简纪律 (纯净值买入/止盈) ---
+      - name: Run Strategy 3.0 Executor (Pure Value)
+        # 运行 strategy_3_0_executor.py 并将输出保存到 strategy_3_0_decision.txt
+        run: |
+          python strategy_3_0_executor.py > strategy_3_0_decision.txt || echo "Strategy 3.0 script failed" >&2
+        continue-on-error: true
+
+      - name: Rename CSV/TXT results with timestamp and directory structure
+        run: |
+          TIMESTAMP=$(date -u +'%Y%m%d_%H%M%S')
+          YEAR_MONTH=$(date -u +'%Y/%m')
+          NEW_FILE_DIR="reports/${YEAR_MONTH}"
+          
+          # 存档技术指标 CSV
+          CSV_PATH="${NEW_FILE_DIR}/sell_decision_results_${TIMESTAMP}.csv"
+          # 存档策略 3.0 TXT
+          TXT_PATH="${NEW_FILE_DIR}/strategy_3_0_decision_${TIMESTAMP}.txt"
+
+          mkdir -p "$NEW_FILE_DIR"
+          
+          ARCHIVED_FILES=""
+
+          if [ -f sell_decision_results.csv ]; then
+            mv sell_decision_results.csv "$CSV_PATH"
+            echo "Archived CSV file as $CSV_PATH"
+            ARCHIVED_FILES="$ARCHIVED_FILES $CSV_PATH"
+          else
+            echo "Results CSV file not found, skipping CSV archive."
+          fi
+          
+          if [ -f strategy_3_0_decision.txt ]; then
+            mv strategy_3_0_decision.txt "$TXT_PATH"
+            echo "Archived TXT file as $TXT_PATH"
+            ARCHIVED_FILES="$ARCHIVED_FILES $TXT_PATH"
+          else
+            echo "Strategy 3.0 decision file not found, skipping TXT archive."
+          fi
+
+          if [ -n "$ARCHIVED_FILES" ]; then
+            echo "ARCHIVED_FILES=$ARCHIVED_FILES" >> $GITHUB_ENV
+          else
+            echo "Error: No files were archived. Cannot commit results." >&2
+            exit 1
+          fi
+
+      - name: Commit and push changes
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # 将所有存档文件添加到 Git
+          for file_path in $ARCHIVED_FILES; do
+              git add "$file_path"
+          done
+          
+          COMMIT_MSG="Archive fund decision reports: ${TIMESTAMP} [$(date -u +'%Y-%m-%d %H:%M:%S UTC')]"
+          git commit -m "$COMMIT_MSG" || echo "No changes to commit"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,0 +1,37 @@
+name: Strategy Backtest Engine
+
+on:
+  push:
+    paths:
+      - 'backtest_engine.py'
+      - '.github/workflows/backtest.yml' # 脚本或YML变动自动触发
+  workflow_dispatch: # 支持手动点击运行
+
+jobs:
+  backtest:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install Dependencies
+        run: pip install pandas numpy
+
+      - name: Run Parallel Backtest
+        run: python backtest_engine.py
+
+      - name: Commit Backtest Reports
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "AI-Backtest-Bot"
+          git add backtest_detail.csv backtest_summary.csv
+          git commit -m "自动回测更新: $(date +'%Y-%m-%d') | 包含并行加速统计" || exit 0
+          git push

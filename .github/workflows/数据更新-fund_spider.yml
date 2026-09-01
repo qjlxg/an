@@ -1,0 +1,87 @@
+name: 数据更新
+
+on:
+  
+  schedule:
+    - cron: '0 13 * * *' 
+  
+  # 通过手动触发
+  workflow_dispatch:
+  
+  # 在推送到主分支时触发，且仅当指定的文件发生变化时
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/数据更新-fund_spider.yml'
+      - 'fund_spider.py'
+      - 'C类.txt'
+
+jobs:
+  run_spider:
+    # 使用最新的 Ubuntu 操作系统环境
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 检出代码 (Checkout repository)
+      uses: actions/checkout@v4
+      with:
+        # 确保获取完整的 Git 历史记录
+        fetch-depth: 0 
+
+    - name: 设置 Python 环境
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.x'
+        
+    - name: 设置时区 
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y tzdata 
+        sudo timedatectl set-timezone 'Asia/Shanghai'
+        
+    - name: 安装 Python 依赖
+      run: |
+        # 安装 fund_spider.py 所需的所有库
+        pip install pandas requests aiohttp beautifulsoup4 tenacity json5 jsbeautifier lxml
+        
+    - name: 运行基金爬虫脚本
+      run: |
+        echo "开始执行 fund_spider.py..."
+        # 运行爬虫脚本，抓取并更新数据
+        python fund_spider.py
+        
+    - name: ⭐ 解决推送冲突：暂存、拉取、恢复 (Git Stash/Pull 修复)
+      run: |
+        # 配置 Git 用户信息
+        git config user.name "github-actions[bot]"
+        git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        
+        # 1. 检查是否有本地更改（爬虫脚本的输出）
+        if ! git diff-index --quiet HEAD --; then
+          echo "发现本地更改，正在暂存..."
+          git stash
+          STASHED=true
+        else
+          echo "无本地更改，跳过暂存。"
+          STASHED=false
+        fi
+        
+        # 2. 拉取并合并远程 main 分支的最新更改
+        echo "拉取远程最新更改..."
+        git pull origin main
+        
+        # 3. 如果之前有暂存，则恢复暂存的更改
+        if [ "$STASHED" = true ]; then
+          echo "恢复暂存的更改..."
+          git stash pop || true
+          git add fund_data/*.csv || true 
+        fi
+        
+    - name: 检查并提交更改 (Commit and Push changes)
+      uses: stefanzweifel/git-auto-commit-action@v5
+      with:
+        commit_message: "🤖 净值数据更新完成"
+        # 最终修复：移除不存在的 'fund_fee_result.csv' 以避免 pathspec 错误。
+        file_pattern: 'C类.txt fund_data/*.csv'
+        commit_options: '--allow-empty'

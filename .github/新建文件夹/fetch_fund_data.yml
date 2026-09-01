@@ -1,0 +1,84 @@
+# .github/workflows/data_collection.yml
+name: 💰 Fund Data Collector
+
+on:
+  # 1. 允许手动运行工作流
+  workflow_dispatch:
+    inputs:
+      logLevel:
+        description: 'Log level'
+        required: true
+        default: 'warning'
+  
+  # 2. 当 fund_data_collector_final.py 或此工作流文件 (yml) 发生变动时自动运行
+  push:
+    branches:
+      - main
+    paths:
+      # 【更新点 1: 脚本文件名更新】
+      - 'fund_data_collector_final.py' 
+      - '.github/workflows/data_collection.yml'
+
+jobs:
+  collect_data:
+    runs-on: ubuntu-latest
+    # 设置所有步骤的默认时区为上海时区 (CST, UTC+8)
+    env:
+      TZ: Asia/Shanghai
+
+    steps:
+      - name: ⬇️ Checkout repository
+        uses: actions/checkout@v4
+        # 允许 actions/checkout 访问后续步骤中创建的提交
+        with:
+          fetch-depth: 0 
+
+      - name: ⚙️ Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x' 
+
+      - name: 📦 Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          # 假设您的 craw_tools.get_ua 也在本地，或者您已安装了所有依赖
+          pip install requests beautifulsoup4 pandas numpy
+
+      # 运行 Python 脚本
+      - name: 🚀 Run data collection script
+        run: python fund_data_collector_final.py
+        # 【更新点 2: 脚本文件名更新】
+
+      # 检查是否有新的 CSV 文件生成
+      - name: 🕵️ Check for new data files
+        id: check_files
+        # 【优化点 1: 检查 'file/' 目录下的所有 CSV 文件，而非年/月目录】
+        run: |
+          # 检查 'file/' 目录下是否有 CSV 文件存在
+          NEW_FILES=$(find file -name "*.csv" -type f 2>/dev/null | xargs)
+          echo "files=$NEW_FILES" >> $GITHUB_OUTPUT
+        shell: bash
+        
+      # 提交新的 CSV 文件到仓库
+      - name: 💾 Commit and Push new data
+        if: steps.check_files.outputs.files != '' # 只有当有新文件时才执行
+        run: |
+          # 配置 Git 用户信息
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          
+          # 检查并添加 'file/' 目录下所有文件
+          # 使用 git add -N . 和 git diff 检查是否有任何文件（包括 file/ 目录下的）发生变化
+          git add -N .
+          if ! git diff --exit-code --quiet; then
+            # 文件有变化，进行添加和提交
+            git add .
+            # 提交信息使用本地 TZ 设置的时间
+            COMMIT_MESSAGE="📈 Data update: $(date +'%Y-%m-%d %H:%M:%S') CST"
+            git commit -m "${COMMIT_MESSAGE}"
+            # 推送到 origin main 分支
+            git push origin main 
+            echo "Successfully committed and pushed new data."
+          else
+            echo "No new changes to commit."
+          fi

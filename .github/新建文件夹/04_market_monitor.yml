@@ -1,0 +1,94 @@
+name: Market Monitor - Incremental Update & Commit
+
+on:
+  schedule:
+    - cron: '15 21,22,23 * * 1-5'
+  push:
+    paths:
+      - 'C类.txt'
+      - 'market_monitor.py'
+      - '.github/workflows/04_market_monitor.yml'
+  workflow_dispatch:
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # 缓存：加速，但不依赖（即使失效也从仓库恢复）
+      - name: Cache fund data (optional speedup)
+        uses: actions/cache@v4
+        with:
+          path: fund_data
+          key: ${{ runner.os }}-fund-data-${{ github.run_id }}
+          restore-keys: |
+            ${{ runner.os }}-fund-data-
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pandas numpy requests tenacity beautifulsoup4 lxml html5lib tabulate
+
+      - name: Validate C类.txt
+        run: |
+          if [ ! -f "C类.txt" ]; then
+            echo "C类.txt 不存在！"
+            exit 1
+          fi
+          codes=$(wc -l < C类.txt)
+          echo "加载 $codes 个基金代码"
+
+      - name: Run Market Monitor (Incremental Update)
+        run: |
+          echo "开始增量更新..."
+          python market_monitor.py
+        env:
+          # --- 步骤 1/2: 设置 Python 运行时的时区 ---
+          TZ: Asia/Shanghai
+
+      - name: Show Summary
+        run: |
+          echo "=== 报告预览 ==="
+          head -20 market_monitor_report.md
+
+          echo "=== 更新文件 ==="
+          git status --porcelain | grep -E "(fund_data|report|log)" || echo "无变更"
+
+          echo "=== fund_data 文件数 ==="
+          find fund_data -name "*.csv" | wc -l
+
+      - name: Commit & Push All Updates
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+
+          git add market_monitor_report.md
+          git add market_monitor.log
+          git add fund_data/*.csv  # 只提交 CSV，防意外文件
+
+          if git diff --staged --quiet; then
+            echo "无数据更新，跳过提交"
+          else
+            # --- 步骤 2/2: 设置 Git 提交信息的时区 ---
+            # 使用 TZ='Asia/Shanghai' 来获取上海时间 (UTC+8)
+            SHANGHAI_TIME=$(TZ='Asia/Shanghai' date '+%Y-%m-%d %H:%M')
+            
+            git commit -m "Auto: Update fund data & report [${SHANGHAI_TIME}]"
+            
+            git pull --rebase
+            git push
+            echo "已推送更新"
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

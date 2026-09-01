@@ -1,0 +1,71 @@
+name: 💰 Fund Analysis & Push
+
+# 触发器配置
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - 'analyze_funds.py'
+      - '.github/workflows/analysis.yml'
+      - 'fund_data/*.csv'
+
+env:
+  TZ: Asia/Shanghai
+  # 【核心修正：确保此文件名与 Python 脚本中的 'OUTPUT_FILE' 变量完全一致】
+  OUTPUT_FILE: fund_analysis_summary.csv
+
+jobs:
+  analyze_and_push:
+    runs-on: ubuntu-latest
+    
+    steps:
+      
+      # 步骤 1: 检出代码
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          
+      # 步骤 2: 设置 Python 环境
+      - name: 🐍 Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12' 
+          
+      # 步骤 3: 安装依赖
+      # 完整的依赖列表：pandas, numpy, requests, beautifulsoup4
+      - name: ⚙️ Install Dependencies (Pandas, NumPy, Requests, BeautifulSoup)
+        run: pip install pandas numpy requests beautifulsoup4
+        
+      # 步骤 4: 执行分析脚本
+      - name: 📈 Run Fund Analysis Script
+        # 确保您的 Python 脚本文件名是 analyze_funds.py
+        run: python analyze_funds.py
+        
+      # 步骤 5: 提交并推送结果到仓库
+      - name: ⬆️ Commit and Push Results (${{ env.OUTPUT_FILE }})
+        run: |
+          # 设置 Git 用户信息
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # 检查文件是否存在
+          if [ -f ${{ env.OUTPUT_FILE }} ]; then
+            # 强制添加文件（包括新的或修改的文件）
+            git add ${{ env.OUTPUT_FILE }}
+            
+            # 检查是否有待提交的更改
+            if git status --porcelain | grep -q ${{ env.OUTPUT_FILE }}; then
+              git commit -m "Auto: Update fund analysis summary (Data Cleansing & Fixes Applied) [skip ci]"
+              # 推送到仓库
+              git push
+              echo "Successfully pushed updated analysis summary."
+            else
+              echo "${{ env.OUTPUT_FILE }} 文件内容未发生实质性变化。跳过提交。"
+            fi
+          else
+            echo "错误：脚本未能生成 ${{ env.OUTPUT_FILE }}。"
+            exit 1
+          fi

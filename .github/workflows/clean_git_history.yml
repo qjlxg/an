@@ -1,0 +1,34 @@
+name: Clean Git Commit History
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 1 * *'
+
+permissions:
+  contents: write
+
+jobs:
+  clean-history:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Reconstruct branch and purge history
+        run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "GitHub Action Bot"
+          
+          git checkout --orphan temp_pure_branch
+          
+          git add .
+          
+          git commit -m "chore: reset repository to pure factory state and purge history"
+          
+          git push origin temp_pure_branch:main --force
+          
+          echo "Repository history has been completely purged and minimized."

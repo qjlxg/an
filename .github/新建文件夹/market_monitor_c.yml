@@ -1,0 +1,137 @@
+name: Run Market Monitor_c
+
+on:
+  schedule:
+    # 每天晚上北京时间21点开始每半小时运行一次，连续运行2次。
+    # 北京时间21:00和21:30对应UTC时间13:00和13:30
+    - cron: '0,30 13 * * *'
+  push:
+    paths:
+      - 'analysis_report.md'
+      - 'result_C类.txt'
+      - 'market_monitor_c.py'
+      - '.github/workflows/market_monitor_c.yml'
+  workflow_dispatch:
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+    
+    timeout-minutes: 60 
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Cache fund data
+        uses: actions/cache@v4
+        with:
+          path: fund_data
+          key: ${{ runner.os }}-fund-data
+          restore-keys: |
+            ${{ runner.os }}-fund-data
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install --upgrade pandas numpy requests tenacity lxml tabulate
+        
+      - name: Run Market Monitor script and Move Report
+        id: run_script
+        run: |
+          # 💡 改进：设置时区，确保文件名时间戳是北京时间
+          export TZ='Asia/Shanghai'
+          
+          # 清除脚本实际生成的新日志文件
+          rm -f market_monitor_c.log
+          
+          # 运行脚本，并检查新的日志文件
+          python market_monitor_c.py || { echo "Script failed, check market_monitor_c.log"; cat market_monitor_c.log 2>/dev/null || echo "No log file generated"; exit 1; }
+          
+          # 格式化日期和时间
+          REPORT_YEAR=$(date +'%Y')
+          REPORT_MONTH=$(date +'%m')
+          REPORT_DATE=$(date +'%Y-%m-%d')
+          TIMESTAMP=$(date +'%H%M%S')
+          
+          # 构造目标目录 (e.g., 2025/10)
+          TARGET_DIR="${REPORT_YEAR}/${REPORT_MONTH}"
+          
+          # 构造新的报告文件名 (e.g., 2025-10-09_210000_c.md)
+          NEW_REPORT_NAME="${REPORT_DATE}_${TIMESTAMP}_c.md"
+          TARGET_PATH="${TARGET_DIR}/${NEW_REPORT_NAME}"
+
+          # 检查并创建目标目录 (如果不存在则创建)
+          echo "Creating target directory: ${TARGET_DIR}"
+          mkdir -p "${TARGET_DIR}"
+          
+          # 检查报告文件是否存在并移动到目标路径
+          if [ -f market_monitor_report_c.md ]; then
+            echo "Moving market_monitor_report_c.md to ${TARGET_PATH}"
+            mv market_monitor_report_c.md "${TARGET_PATH}"
+            # ⚠️ 修正：使用 $GITHUB_OUTPUT 设置输出
+            echo "new_report_path=${TARGET_PATH}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Check generated files
+        run: |
+          echo "Checking generated files:"
+          
+          # 读取输出的方式保持不变
+          NEW_REPORT_PATH=${{ steps.run_script.outputs.new_report_path }}
+          
+          # 检查并打印新的报告文件内容
+          if [ -f "${NEW_REPORT_PATH}" ]; then
+            echo "Contents of ${NEW_REPORT_PATH}:"
+            cat "${NEW_REPORT_PATH}"
+            # 检查新的文件名
+            ls -l "${NEW_REPORT_PATH}" 2>/dev/null
+          fi
+          
+          # 检查并打印新的日志文件内容 (日志文件仍保留在根目录)
+          if [ -f market_monitor_c.log ]; then
+            echo "Contents of market_monitor_c.log:"
+            cat market_monitor_c.log
+          fi
+          
+          if [ -d fund_data ]; then
+            echo "Fund data directory contents (still in root):"
+            ls -l fund_data
+          fi
+
+      - name: Commit and push results
+        run: |
+          git config --global user.name 'GitHub Action'
+          git config --global user.email 'action@github.com'
+          
+          # 获取新报告文件路径
+          NEW_REPORT_PATH=${{ steps.run_script.outputs.new_report_path }}
+          
+          # 提交新的报告文件路径 (包括目录)
+          if [ -n "${NEW_REPORT_PATH}" ]; then
+            git add "${NEW_REPORT_PATH}"
+            REPORT_FILENAME=$(basename "${NEW_REPORT_PATH}")
+          fi
+          
+          # 提交日志文件和 fund_data (保留在根目录)
+          git add market_monitor_c.log
+          git add fund_data
+          
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            # 提交信息中包含报告文件名
+            COMMIT_MESSAGE="Update market monitor report (${REPORT_FILENAME}) and fund data - $(date)"
+            git commit -m "${COMMIT_MESSAGE}"
+            git push
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        continue-on-error: true

@@ -1,0 +1,120 @@
+name: 回测与报告推送 (Fund Backtest and Report Push)
+
+# --- 触发条件配置 ---
+on:
+  # 1. 手动触发：允许在 GitHub Actions 界面手动运行
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: '手动运行的原因 (可选)'
+        required: false
+        default: 'Manual trigger for V5.0 backtesting'
+
+  # 2. 自动触发：当特定文件变动时自动运行
+  push:
+    branches:
+      - main  # 假设您的主分支是 main
+    paths:
+      # 兼容所有 backtester 脚本
+      - 'backtester*.py'
+      - '.github/workflows/backtest_and_push.yml'
+
+# 定义环境变量
+env:
+  TZ: 'Asia/Shanghai'
+  # ***** 关键修复 1: 报告文件名更新为 V5.0 脚本的输出 *****
+  REPORT_FILE_NAME: 'fund_backtest_v5_report.md'
+  REPORT_DIR: 'backtest_reports' # 报告保存的目录
+
+jobs:
+  run_backtest_and_push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: ⏱️ 设置时区 (上海)
+        run: echo "TZ=${{ env.TZ }}" >> $GITHUB_ENV
+
+      - name: ⬇️ 检出代码 (Checkout repository)
+        # 增加 fetch-depth，确保能正确执行 git pull/rebase
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 
+
+      - name: 🐍 设置 Python 环境
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: 📥 安装依赖 (Install dependencies)
+        # V5.0 脚本依赖 pandas, numpy 和 pytz
+        run: |
+          python -m pip install --upgrade pip
+          pip install pandas numpy pytz
+
+      - name: 📂 检查数据目录 (Check fund_data directory)
+        run: |
+          if [ ! -d "fund_data" ]; then
+            echo "::error:: fund_data 目录不存在！请在仓库根目录创建该目录并放入CSV文件。"
+            exit 1
+          fi
+
+      # ***** 关键修复 2: 运行 V5.0 脚本 *****
+      - name: 🚀 运行 V5.0 回测脚本 (Run backtester_v5.py)
+        run: python backtester_v5.py
+
+      # ***** 新增步骤: 检查文件是否生成，防止 mv 报错 *****
+      - name: 🔍 检查报告文件是否生成 (防mv报错)
+        id: check_report
+        run: |
+          if [ -f "${{ env.REPORT_FILE_NAME }}" ]; then
+            echo "report_found=true" >> $GITHUB_OUTPUT
+            echo "✅ 报告文件 ${{ env.REPORT_FILE_NAME }} 成功找到。"
+          else
+            echo "report_found=false" >> $GITHUB_OUTPUT
+            echo "❌ 报告文件 ${{ env.REPORT_FILE_NAME }} 未生成，脚本可能因数据不足而跳过或报错。"
+          fi
+
+      # 只有当报告文件找到时，才执行后续的 Git 操作 (使用 if 条件)
+      - name: ⚙️ 配置 Git 用户信息
+        if: steps.check_report.outputs.report_found == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: 📁 移动和暂存报告文件
+        if: steps.check_report.outputs.report_found == 'true'
+        run: |
+          mkdir -p ${{ env.REPORT_DIR }}
+
+          # 生成带时区的精确时间戳 (已修复：使用单引号包裹格式字符串)
+          TIMESTAMP=$(TZ='${{ env.TZ }}' date '+%Y%m%d_%H%M%S')
+          TARGET_FILE="${{ env.REPORT_DIR }}/backtest_report_${TIMESTAMP}.md"
+
+          # 移动报告文件
+          mv ${{ env.REPORT_FILE_NAME }} ${TARGET_FILE}
+
+          git add ${TARGET_FILE}
+
+          # 此外，创建一个名为 "latest.md" 的文件，用于快速查看最新结果
+          cp ${TARGET_FILE} ${{ env.REPORT_DIR }}/latest.md
+          git add ${{ env.REPORT_DIR }}/latest.md
+
+      - name: ⬆️ 推送报告到仓库 (Push report to repository)
+        if: steps.check_report.outputs.report_found == 'true'
+        run: |
+          if git diff --cached --exit-code; then
+            echo "没有新的报告文件生成，无需提交。"
+          else
+            # 提交信息也改为 V5 (已修复：使用单引号包裹格式字符串)
+            COMMIT_MSG="🤖 Auto-generated V5 backtest report: $(TZ='${{ env.TZ }}' date '+%Y-%m-%d %H:%M:%S')"
+            git commit -m "${COMMIT_MSG}"
+
+            # ⭐️ 关键修复：在推送前先拉取并合并远程更改
+            # 使用 --rebase 避免生成额外的合并提交，解决 'fetch first' 错误。
+            echo "尝试拉取远程更新并合并..."
+            git pull --rebase origin main
+
+            # 再次推送
+            echo "尝试推送至远程仓库..."
+            git push
+          fi

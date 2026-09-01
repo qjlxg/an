@@ -1,0 +1,67 @@
+# .github/workflows/scrape_fund_data.yml
+name: 📈 基本资料 CSV
+
+# 触发条件配置
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - 'fund_scraper_g.py' 
+      - 'C类.txt'         
+      - '.github/workflows/fund_scraper_g.yml' 
+
+jobs:
+  scrape_and_push:
+    runs-on: ubuntu-latest
+    
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests beautifulsoup4 pandas
+
+      # 步骤 4: 运行数据抓取脚本
+      - name: Run fund scraper script
+        # 使用 -u 选项强制 Python 不缓冲输出
+        run: python -u fund_scraper_g.py 
+
+      # 步骤 5: 配置 Git 提交信息
+      - name: Configure Git
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+
+      # 步骤 6: 检查并提交/推送更改
+      - name: Commit and push changes
+        id: commit_push
+        run: |
+          git add fund_basic_data_c_class.csv
+          
+          if git diff --cached --exit-code; then
+            echo "::notice file=fund_basic_data_c_class.csv::fund_basic_data_c_class.csv 没有内容变动，跳过提交和推送。"
+            echo "push_status=no_change" >> $GITHUB_OUTPUT
+          else
+            git commit -m "📈 Update fund_basic_data_c_class.csv (Automated by GitHub Actions)"
+            git push
+            echo "push_status=success" >> $GITHUB_OUTPUT
+          fi
+          
+      # 步骤 7: 打印推送结果（可选）
+      - name: Check push status
+        if: steps.commit_push.outputs.push_status == 'success'
+        run: echo "🎉 fund_basic_data_c_class.csv 已成功更新并推送到仓库。"

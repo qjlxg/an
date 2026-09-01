@@ -1,0 +1,78 @@
+name: 💰 info
+
+on:
+  # 1. 允许手动运行
+  workflow_dispatch:
+  
+  # 2. 当脚本或工作流文件变动时自动运行
+  push:
+    branches:
+      - main  # 替换为您的主分支名称
+    paths:
+      - 'fund_script_full_info.py' # 统一的脚本文件名
+      - '.github/workflows/fund_info_worker.yml'
+
+# 设置全局环境变量，用于确保后续日志中的时间戳和 git 提交时间使用上海时区
+env:
+  TZ: Asia/Shanghai # 设置时区为上海
+
+jobs:
+  fetch_and_push:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: ⬇️ 检出代码
+        uses: actions/checkout@v4
+
+      - name: 🐍 设置 Python 环境
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: 📦 安装 Requests, Pandas 和 BeautifulSoup4 依赖
+        # 爬虫需要 requests 和 bs4，CSV 输出需要 pandas
+        run: pip install requests pandas beautifulsoup4
+
+      - name: 🏃 运行基金信息并行脚本
+        # 运行您指定的脚本文件
+        run: python fund_script_full_info.py
+      
+      - name: 🔍 检查文件变动
+        id: git-check
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          
+          OUTPUT_FILE="fund_details.csv"
+          
+          # 检查是否有文件变动
+          if [ -n "$(git status --porcelain ${OUTPUT_FILE})" ]; then
+            echo "changes=true" >> $GITHUB_OUTPUT
+            echo "发现文件变动，准备推送。"
+          else
+            echo "changes=false" >> $GITHUB_OUTPUT
+            echo "文件没有变动，跳过推送步骤。"
+          fi
+
+      - name: ⬆️ 推送结果到仓库
+        if: steps.git-check.outputs.changes == 'true'
+        run: |
+          OUTPUT_FILE="fund_details.csv"
+          
+          # 添加生成的结果文件
+          git add ${OUTPUT_FILE}
+          
+          # 提交更改
+          timestamp=$(date "+%Y-%m-%d %H:%M:%S")
+          COMMIT_MESSAGE="🤖 Auto update fund info (Full Data/CSV): ${timestamp} (Asia/Shanghai)"
+          
+          git commit -m "${COMMIT_MESSAGE}"
+          
+          # 🚨 关键修改: 尝试拉取远程更改并合并，解决推送冲突
+          # --rebase 避免创建额外的合并提交
+          git pull --rebase origin main || true # 允许 pull 失败，防止工作流中止
+          
+          # 推送到远程仓库，-f 强制推送（如果 pull 失败，可能会覆盖远程更改，但对于自动生成文件来说通常是可接受的）
+          # 考虑到这是自动生成的结果文件，我们使用 git push origin main 即可，如果失败则需要用户干预。
+          # 鉴于之前失败，我们使用 --force-with-lease 来解决冲突，但更安全的是 pull --rebase
+          git push

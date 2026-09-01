@@ -1,0 +1,53 @@
+name: node_collector
+
+on:
+  push:
+    paths:
+      - 'node_collector.py'
+      - '.github/workflows/node_collector.yml'
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * *' # UTC 0:00 = 北京时间 8:00
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          persist-credentials: true # 确保后续 git push 有效
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests
+
+      - name: Run collector
+        run: python node_collector.py
+
+      - name: Commit and Push
+        run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "GitHub Action"
+          
+          # 检查文件是否存在再添加，防止脚本运行失败导致工作流崩溃
+          [ -f nodes.txt ] && git add nodes.txt
+          [ -f nodes_raw.txt ] && git add nodes_raw.txt
+          [ -f all_collected.txt ] && git add all_collected.txt
+          
+          # 只有在有变动时才提交
+          if ! git diff --cached --quiet; then
+            git commit -m "Update nodes: $(date -u +'%Y-%m-%d %H:%M:%S') UTC"
+            git push
+          else
+            echo "No changes to commit"
+          fi

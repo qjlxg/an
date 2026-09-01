@@ -1,0 +1,36 @@
+.container {
+  height: 300px;
+}
+
+.content-wrapper {
+  // width: 320px;
+  height: 300px;
+  margin-top: -16px;
+  padding: 20px;
+  overflow: auto;
+  background-color: lightblue;
+}
+
+.content {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.content-item {
+  display: flex;
+  // width: 156px;
+  // min-width: 156px;
+  // max-width: 30%;
+  flex: 30%;
+  // flex-basis: 156px;
+  align-items: center;
+  justify-content: center;
+  min-width: 156px;
+  max-width: 30%;
+  height: 156px;
+  // margin-right: 12px;
+  margin-bottom: 12px;
+  color: #fff;
+  font-size: 24px;
+  background-color: lightcoral;
+}

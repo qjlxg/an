@@ -1,0 +1,47 @@
+name: 01-Download and Update Index Data
+
+on:
+  # 定时任务：每天早上 9:00 (北京时间) 运行
+  schedule:
+   - cron: '0 */3 * * *'
+  workflow_dispatch:
+  # 在指定文件更改时自动运行
+  push:
+    paths:
+      - 'download_index_data.py'
+      - '.github/workflows/download_data.yml'
+
+jobs:
+  download-data:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # 授予写入权限，以便可以推送更新后的数据文件
+
+    steps:
+      - name: Checkout repository # 拉取代码
+        uses: actions/checkout@v4
+
+      - name: Set up Python # 设置 Python 环境
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies # 安装所需的库
+        run: |
+          pip install pandas requests tenacity lxml
+
+      - name: Run data downloader script # 运行数据下载器
+        run: |
+          python download_index_data.py
+
+      - name: Commit and push changes # 提交并推送更新后的数据文件
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add index_data
+          if ! git diff-index --quiet HEAD; then
+            git commit -m "feat(data): Update index data from automated workflow"
+            git push
+          else
+            echo "No changes to commit, skipping push."
+          fi

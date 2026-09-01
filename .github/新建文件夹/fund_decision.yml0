@@ -1,0 +1,67 @@
+name: Fund Sell Decision Workflow-4
+on:
+  push:
+    paths:
+      - 'sell_decision.py'
+      - 'holdings_config.yaml'
+      - '.github/workflows/fund_decision.yml'
+  schedule:
+    - cron: '0 0 * * *' # 优化：每日0点运行（上海时间约8点，净值更新后）
+  workflow_dispatch: # 手动触发
+jobs:
+  analyze_fund_decisions:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'  # 升级到 3.12 以支持 pandas_ta
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests pandas numpy tenacity tabulate lxml pyyaml
+          pip install pandas_ta  # 现在可以正常安装
+
+      - name: Run sell decision script
+        run: |
+          python sell_decision.py || echo "Script failed, check logs for details" >&2
+        continue-on-error: true
+
+      - name: Rename CSV results with timestamp and directory structure
+        run: |
+          TIMESTAMP=$(date -u +'%Y%m%d_%H%M%S')
+          YEAR_MONTH=$(date -u +'%Y/%m')
+          NEW_FILE_DIR="reports/${YEAR_MONTH}"
+          NEW_FILE_NAME="sell_decision_results_${TIMESTAMP}.csv"
+          NEW_FILE_PATH="${NEW_FILE_DIR}/${NEW_FILE_NAME}"
+
+          if [ -f sell_decision_results.csv ]; then
+            mkdir -p "$NEW_FILE_DIR"
+            mv sell_decision_results.csv "$NEW_FILE_PATH"
+            echo "Successfully archived CSV file as $NEW_FILE_PATH"
+            echo "ARCHIVED_FILE_PATH=$NEW_FILE_PATH" >> $GITHUB_ENV
+          else
+            echo "Results CSV file (sell_decision_results.csv) not found, skipping rename." >&2
+            exit 1
+          fi
+
+      - name: Commit and push changes
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+          if [ -n "$ARCHIVED_FILE_PATH" ]; then
+            git add "$ARCHIVED_FILE_PATH"
+          else
+            echo "Error: ARCHIVED_FILE_PATH not set. Cannot commit results." >&2
+            exit 1
+          fi
+
+          git commit -m "Archive fund decision report: $ARCHIVED_FILE_PATH [$(date -u +'%Y-%m-%d %H:%M:%S UTC')]" || echo "No changes to commit"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

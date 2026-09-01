@@ -1,0 +1,51 @@
+# --- holdings_config.yaml (基于 2025-11-25 截图数据更新) ---
+
+parameters:
+  rsi_window: 14
+  ma_window: 50
+  bb_window: 20
+  rsi_overbought_threshold: 80 
+  consecutive_days_threshold: 3
+  profit_lock_days: 14
+  volatility_window: 7
+  volatility_threshold: 0.03
+  decline_days_threshold: 5
+  trailing_stop_loss_pct: 0.08
+  macd_divergence_window: 60
+  adx_window: 14
+  adx_threshold: 30
+
+# =========================================================
+# --- 基金持仓数据 (请手动核对 buy_date) ---
+# =========================================================
+
+008327: 
+  # 东财通信 C
+  cost_nav: 2.2709          # 持有成本本单位
+  buy_date: 2025-10-31      # 示例日期，请替换为实际买入日期
+  
+009645: 
+  # 东方阿尔法优势产业混合 C
+  cost_nav: 1.7734          # 持有成本本单位
+  buy_date: 2025-10-31      # 示例日期，请替换为实际买入日期
+  
+007816: 
+  # 嘉实新兴科技 100 ETF 联接 C
+  cost_nav: 1.4280          # 持有成本本单位
+  buy_date: 2025-05-10      # 示例日期，请替换为实际买入日期
+
+003305: 
+  # 前海开源沪港深核心资源混合 C
+  cost_nav: 4.5177          # 持有成本本单位
+  buy_date: 2025-10-31      # 示例日期，请替换为实际买入日期
+  
+011372: 
+  # 华商远见价值混合 C
+  cost_nav: 0.7121          # 持有成本本单位
+  buy_date: 2025-10-31      # 示例日期，请替换为实际买入日期
+  
+019548: 
+  # 招商纳斯达克 100 C
+  # 注意：该成本为上一次对话中提供的值，请务必核对！
+  cost_nav: 1.3829          # 暂定值，请核对
+  buy_date: 2025-10-31      # 示例日期，请替换为实际买入日期

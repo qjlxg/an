@@ -1,0 +1,71 @@
+name: 02-recommended_cn_funds.csv fund
+
+on:
+  schedule:
+    - cron: '15 21,22,23 * * 1-5'
+  workflow_dispatch:  # 支持手动触发
+  push:
+    paths:
+      - '.github/workflows/integrate_fund_rank.yml'  # 当此 YML 改动时触发
+
+jobs:
+  analyze-funds:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'  # 匹配你的脚本
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          # 安装 Chromium（apt 触发 snap）
+          sudo apt-get install -y chromium-browser
+          # 停止 Chromium daemon
+          sudo snap stop chromium.daemon || echo "Chromium daemon not running"
+          # 验证 Chromium
+          chromium-browser --version
+
+      - name: Setup ChromeDriver
+        uses: nanasess/setup-chromedriver@v2
+        with:
+          chromedriver-version: '140.0.7339.185'  # 匹配 Chromium 140.x
+        env:
+          CHROMEDRIVER_FORCE_DOWNLOAD: 'true'
+
+      - name: Verify ChromeDriver
+        run: |
+          chromedriver --version
+          which chromedriver
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install --timeout 300 pandas requests akshare selenium
+
+      - name: Run integrate_fund_rank.py
+        run: python integrate_fund_rank.py 2025-08-23 2025-09-23
+        env:
+          TZ: Asia/Shanghai  # 北京时间
+
+      - name: Commit and push results
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add result_*.txt recommended_cn_funds.csv fund_rank_integrate.log
+          git commit -m "Update fund analysis results for $(date +%Y-%m-%d)" || echo "No changes to commit"
+          git push
+        continue-on-error: true
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: fund-reports
+          path: |
+            result_*.txt
+            recommended_cn_funds.csv
+            fund_rank_integrate.log

@@ -1,0 +1,42 @@
+name: ETF Strategy Runner
+
+on:
+  schedule:
+    - cron: '0 1,4,7,10,13,16,19,22 * * *'
+  push:
+    paths:
+      - 'strategy_engine.py'
+      - '.github/workflows/strategy_engine.yml'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
+
+    - name: Install dependencies
+      run: pip install pandas tabulate
+
+    - name: Run Engine
+      run: python strategy_engine.py
+
+    - name: Commit and Push
+      run: |
+        git config --local user.email "bot@github.com"
+        git config --local user.name "StrategyBot"
+        git add .
+        if ! git diff --cached --quiet; then
+          git commit -m "AutoUpdate $(date +'%Y-%m-%d %H:%M')"
+          git push
+        fi

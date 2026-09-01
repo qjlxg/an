@@ -1,0 +1,73 @@
+name: 07-fund_warning_report.yml
+on:
+  # 1. 自动触发条件：当以下文件被修改并推送到仓库时，工作流自动运行
+  push:
+    paths:
+      - 'analyzer_V5.py'
+      - '.github/workflows/07-fund_warning_report.yml'
+      - 'fund_data/**.csv'
+      
+
+  schedule:
+    - cron: '0 18 * * *' 
+    
+  # 3. 允许手动触发
+  workflow_dispatch:
+
+jobs:
+  analyze_funds:
+    # 设置时区为北京时间，确保报告中的时间戳正确
+    env:
+      TZ: Asia/Shanghai
+      
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        # 确保拉取完整历史记录，以便后续 git rebase/pull 操作正确执行
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          # 安装 pandas 和 requests，确保脚本运行环境完整
+          pip install pandas requests
+
+      - name: Run fund analysis script
+        id: analysis
+        run: python analyzer_V5.py
+
+      - name: Commit and push report
+        # 仅在脚本成功运行后提交文件
+        if: success()
+        run: |
+          # 配置 Git 身份
+          git config user.name "GitHub Actions Bot"
+          git config user.email "actions@github.com"
+          
+          # 查找并添加所有生成的 Markdown 报告文件
+          # 脚本生成的文件名格式为 fund_warning_report_v5_merged_table_YYYYMMDD_HHMMSS.md
+          git add '**/fund_warning_report_*.md'
+          
+          # 检查是否有文件更改，如果没有则退出
+          if [ -z "$(git status --porcelain)" ]; then
+            echo "No changes to commit. Exiting."
+            exit 0
+          fi
+          
+          # 提交更改
+          git commit -m "Automated fund analysis report update: $(date +%Y-%m-%d)"
+          
+          # 解决非快进(non-fast-forward)错误：拉取远程更改并 rebase
+          # 这确保了本地提交基于远程的最新提交，解决定时任务之间的冲突
+          git pull --rebase
+          
+          # 推送更改
+          git push

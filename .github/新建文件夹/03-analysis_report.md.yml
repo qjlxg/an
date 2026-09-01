@@ -1,0 +1,130 @@
+name: 03-analysis_report.md
+# 触发工作流的事件
+on:
+  # 允许手动在 GitHub 界面上运行工作流
+  workflow_dispatch:
+  # 定时任务，例如每 3 小时运行一次
+  schedule:
+    - cron: '0 */3 * * *'
+  # 当 fund_analyzer.py 或工作流文件本身被修改并推送时，自动运行
+  push:
+    paths:
+      - 'fund_analyzer.py' # 假设您的分析脚本名称
+      - '.github/workflows/run_fund_analysis.yml'
+
+# 为整个工作流提供权限
+permissions:
+  contents: write
+
+# 定义工作任务
+jobs:
+  run-script-and-commit:
+    runs-on: ubuntu-latest
+    # 增加超时时间，以防并发请求过多导致的长尾延迟
+    timeout-minutes: 360 
+
+    # 设置环境变量
+    env:
+      TZ: Asia/Shanghai
+      # 显式设置路径，确保 Selenium 找到驱动
+      CHROME_BINARY_PATH: /usr/bin/chromium-browser
+      CHROMEDRIVER_PATH: /usr/bin/chromedriver
+      # 定义主报告文件名，与Python脚本中的 LATEST_REPORT_NAME 保持一致
+      LATEST_REPORT_NAME: analysis_report.md
+
+    steps:
+      - name: Checkout repository
+        # ⚠️ 确保拉取所有历史记录，这对 git pull --rebase 非常重要
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10' 
+
+      - name: Install dependencies and setup Selenium
+        run: |
+          # 更新 pip 和安装 Python 库
+          python -m pip install --upgrade pip
+          pip install pandas numpy requests beautifulsoup4 lxml akshare selenium --upgrade
+
+          # 安装 Chromium 浏览器和 ChromeDriver
+          sudo apt-get update
+          sudo apt-get install -y chromium-browser chromium-chromedriver
+          
+          # 检查版本和路径（用于调试）
+          chromium-browser --version
+          which chromedriver
+          
+      - name: Run Python script
+        # 运行基金分析脚本。脚本会生成时间戳报告和根目录的 analysis_report.md
+        run: |
+          python fund_analyzer.py
+          
+      - name: Commit new analysis report and data
+        # 新增 id: commit_step 用于后续步骤引用
+        id: commit_step
+        run: |
+          # 配置 Git
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          
+          # =========================================================
+          # 健壮的文件添加：使用多个 git add，并对可能不存在的文件使用 '|| true'
+          # =========================================================
+          
+          # 1. 添加主报告文件 (核心文件，必须存在)
+          git add ${{ env.LATEST_REPORT_NAME }}
+          
+          # 2. 添加缓存和日志文件 (非核心文件，如果不存在则忽略错误)
+          git add fund_cache.json || true
+          git add fund_analyzer.log || true
+          
+          # 3. 添加动态生成的月度目录下的所有文件 (归档文件)
+          MONTH_DIR=$(date +%Y%m)
+          git add $MONTH_DIR/* || true
+          
+          # 检查是否有更改，如果有则提交。
+          if git diff --staged --quiet; then
+            # 💡 修复：使用新的 $GITHUB_OUTPUT 语法替代 ::set-output
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+            echo "No changes detected. Skipping commit."
+          else
+            # 💡 修复：移除 git commit 中的 '-d "$TZ"' 避免 'invalid date' 错误
+            git commit -m "Auto-generated analysis report: $(date +'%Y-%m-%d %H:%M:%S')"
+            # 💡 修复：使用新的 $GITHUB_OUTPUT 语法替代 ::set-output
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+            echo "Successfully committed changes."
+          fi
+          
+      - name: Push changes (with Rebase resilience)
+        # 仅在有新提交时才尝试推送
+        if: steps.commit_step.outputs.has_changes == 'true'
+        run: |
+          MAIN_BRANCH=${GITHUB_REF##*/} # 自动检测当前分支名（通常是 main 或 master）
+          
+          # 尝试直接推送。
+          # ⚠️ 关键修复：添加 '|| true'，确保即使推送失败，脚本也能继续执行后续的 if 判断和 rebase 逻辑。
+          git push || true
+          
+          # =========================================================
+          # 【推送冲突处理】: 如果直接推送失败 (上一个命令 $? 非零)，执行拉取变基后再次推送
+          # =========================================================
+          if [ $? -ne 0 ]; then
+            echo "尝试直接推送失败，远程仓库有新提交。正在执行 git pull --rebase..."
+            
+            # 1. 拉取远程更改并进行变基 (rebase)，将本地的自动提交放在最前面
+            git pull --rebase origin $MAIN_BRANCH
+            
+            # 2. 重新尝试推送
+            echo "变基完成，重新推送..."
+            git push
+            
+            # 3. 检查第二次推送是否成功
+            if [ $? -ne 0 ]; then
+              echo "致命错误：即使执行了 git pull --rebase，推送仍失败。请检查仓库状态。"
+              exit 1 # 确保工作流失败
+            fi
+          fi

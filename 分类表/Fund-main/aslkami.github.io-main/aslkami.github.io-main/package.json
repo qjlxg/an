@@ -1,0 +1,52 @@
+{
+  "private": true,
+  "name": "dumi-doc",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "npx -p node@16.8.0 dumi dev",
+    "docs:build": "npx -p node@16.8.0 dumi build",
+    "docs:deploy": "gh-pages -d docs-dist",
+    "build": "npx -p node@16.8.0 father-build",
+    "deploy": "npm run docs:build && npm run docs:deploy",
+    "prettier": "prettier --write \"**/*.{js,jsx,tsx,ts,less,md,json}\"",
+    "test": "umi-test",
+    "test:coverage": "umi-test --coverage",
+    "prepublishOnly": "npm run build"
+  },
+  "module": "es/index.js",
+  "typings": "es/index.d.ts",
+  "gitHooks": {
+    "pre-commit": "lint-staged"
+  },
+  "lint-staged": {
+    "*.{js,jsx,less,md,json}": [
+      "prettier --write"
+    ],
+    "*.ts?(x)": [
+      "prettier --parser=typescript --write"
+    ]
+  },
+  "dependencies": {
+    "@ant-design/icons": "^5.3.7",
+    "ahooks": "^3.8.0",
+    "antd": "^4.19.1",
+    "classnames": "^2.3.2",
+    "react": "^16.12.0 || ^17.0.0 || ^18.*.*",
+    "tapable": "^2.2.1"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^5.15.1",
+    "@testing-library/react": "^12.1.2",
+    "@types/jest": "^27.0.3",
+    "@umijs/fabric": "^2.8.1",
+    "@umijs/plugin-sass": "^1.1.1",
+    "@umijs/test": "^3.0.5",
+    "dumi": "^1.1.0",
+    "father-build": "^1.17.2",
+    "gh-pages": "^3.2.3",
+    "lint-staged": "^10.0.7",
+    "prettier": "^2.2.1",
+    "promises-aplus-tests": "^1.2.1",
+    "yorkie": "^2.0.0"
+  }
+}

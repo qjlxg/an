@@ -1,0 +1,2 @@
+基金数据下载https://webapi.cninfo.com.cn/#/thematicStatistics  
+https://akshare.akfamily.xyz/data/fund/fund_public.html

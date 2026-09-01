@@ -1,0 +1,66 @@
+name: Fund Analysis Automation (C Class)
+
+on:
+  # 自动触发：当指定的路径文件变动时自动运行
+  push:
+    branches:
+      - main # 或你的主要分支名称
+    paths:
+      - 'fund_analysis_c_class.py' 
+      - 'C类.txt'
+      - '.github/workflows/run_analysis.yml' # 自身变动时也触发
+      
+  # 手动触发：允许用户通过 GitHub Actions 界面点击按钮运行
+  workflow_dispatch:
+    # 可以在手动运行时添加参数，这里不加，保持简单。
+
+jobs:
+  run_script_and_push_results:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Python environment
+      uses: actions/setup-python@v3
+      with:
+        python-version: '3.9'
+        
+    - name: Install dependencies
+      run: |
+        # 安装你脚本所需的库
+        python -m pip install --upgrade pip
+        pip install pandas requests lxml numpy PyQt5
+
+    - name: Set up Shanghai Time Zone
+      # 设置时区为上海，确保时间戳是上海时间
+      run: |
+        sudo timedatectl set-timezone Asia/Shanghai
+
+    - name: Run Python Script (Assuming script is named 'fund_analysis_c_class.py')
+      # 确保你的 Python 脚本名与此处的 'fund_analysis_c_class.py' 对应
+      run: python fund_analysis_c_class.py
+
+    - name: Configure Git
+      run: |
+        git config user.name "GitHub Actions Bot"
+        git config user.email "actions-bot@users.github.com"
+      
+    - name: Commit and Push Results
+      # 查找所有新生成的 CSV 文件并提交
+      run: |
+        # 查找所有 CSV 文件并添加到 Git
+        git add --all *.csv
+        # 查找年月目录下的所有 CSV 文件并添加到 Git 
+        git add --all 20*/
+        
+        # 检查是否有文件变动
+        if ! git diff --cached --exit-code; then
+          # 使用 GITHUB_SHA 作为提交信息的一部分，区分自动/手动触发
+          COMMIT_MSG="Auto-generated: Fund analysis results for C Class funds (Shanghai Time) triggered by ${{ github.event_name }}"
+          git commit -m "${COMMIT_MSG}"
+          git push
+        else
+          echo "No changes in generated CSV files. Skipping commit."
+        fi
